@@ -1,7 +1,7 @@
 #프로파일 설정
 spring:
   profiles:
-    active: dev 세팅
+    active: dev #세팅
 
 #dev
 ---
