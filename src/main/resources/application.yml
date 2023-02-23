@@ -6,6 +6,9 @@ spring:
 #dev
 ---
 spring:
+  config:
+    activate:
+      on-profile: dev
   #db 세팅
   datasource:
     url: jdbc:oracle:thin:@blueblue_high?TNS_ADMIN=C:\\study\\oracleDB\\Wallet_blueblue
@@ -17,13 +20,12 @@ spring:
     user: #스프링 시큐리티 기본 로그인 계정정보
       name: dev
       password: 1234
-  config:
-    activate:
-      on-profile: dev
+  #frontTemplateEngine
   thymeleaf:
     prefix: classpath:templates/ #view prefix
     suffix: .html
     cache: false
+  #DB ORM
   jpa:
     show-sql: true
     properties:
