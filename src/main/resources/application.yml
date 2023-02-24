@@ -11,10 +11,10 @@ spring:
       on-profile: dev
   #db 세팅
   datasource:
-    url: jdbc:oracle:thin:@blueblue_high?TNS_ADMIN=/home/portfolio/oracle-cloud/database/Wallet_blueblue/
+    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=/home/portfolio/oracle-cloud/database/Wallet_PortfolioDB/
     driver-class-name: oracle.jdbc.OracleDriver
-    username: DEVUSER
-    password: BlueBlue129323
+    username: PortfolioDev1
+    password: Portfolio1_777
   #스프링 시큐리티
   security:
     user: #스프링 시큐리티 기본 로그인 계정정보
@@ -22,7 +22,7 @@ spring:
       password: 1234
   #frontTemplateEngine
   thymeleaf:
-    prefix: classpath:templates/ #view prefix
+    prefix: classpath:/templates #view prefix
     suffix: .html
     cache: false
   #DB ORM
@@ -46,7 +46,7 @@ logging:
 
 #서버
 server:
-  port: 80
+  port: 8080
   servlet:
     context-path: /
     encoding:

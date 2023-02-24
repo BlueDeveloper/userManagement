@@ -43,26 +43,26 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE); // 우선순위 제일 높게 설정
 
         //{권한없는 페이지 접근}
-        registry.addViewController("/api/view/access-denied").setViewName("page/user/denied");//{유저_로그인}
+        registry.addViewController("/api/view/access-denied").setViewName("/page/user/denied");//{유저_로그인}
 
         //{유저}
-        registry.addViewController("/api/view/user/login").setViewName("page/user/login");//{유저_로그인}
-        registry.addViewController("/api/view/user/signUp").setViewName("page/user/signUp");//{유저_회원가입}
-        registry.addViewController("/api/user/myPage").setViewName("page/user/myPage");//{유저_마이페이지}
+        registry.addViewController("/api/view/user/login").setViewName("/page/user/login");//{유저_로그인}
+        registry.addViewController("/api/view/user/signUp").setViewName("/page/user/signUp");//{유저_회원가입}
+        registry.addViewController("/api/user/myPage").setViewName("/page/user/myPage");//{유저_마이페이지}
 
         //{관리자}
-        registry.addViewController("/api/admin/myPage").setViewName("page/admin/myPage");//{관리자_페이지}
+        registry.addViewController("/api/admin/myPage").setViewName("/page/admin/myPage");//{관리자_페이지}
 
         //{공지사항}
-        registry.addViewController("/api/view/notice/list").setViewName("page/notice/notice_list");//{공지사항_리스트}
-        registry.addViewController("/api/view/notice/detail").setViewName("page/notice/notice_detail");//{공지사항_상세보기}
-        registry.addViewController("/api/admin/notice/insert").setViewName("page/notice/notice_insert");//{공지사항_수정하기}
+        registry.addViewController("/api/view/notice/list").setViewName("/page/notice/notice_list");//{공지사항_리스트}
+        registry.addViewController("/api/view/notice/detail").setViewName("/page/notice/notice_detail");//{공지사항_상세보기}
+        registry.addViewController("/api/admin/notice/insert").setViewName("/page/notice/notice_insert");//{공지사항_수정하기}
 
         //{오시는길}
-        registry.addViewController("/api/view/item/items").setViewName("page/items/items.html");//{오시는 길}
+        registry.addViewController("/api/view/item/items").setViewName("/page/items/items.html");//{오시는 길}
 
         //{예약하기}
-        registry.addViewController("/api/view/reservation/list").setViewName("page/reservation/reservation_list");//{예약하기_리스트}
+        registry.addViewController("/api/view/reservation/list").setViewName("/page/reservation/reservation_list");//{예약하기_리스트}
     }
 
     // 정적 자원 핸들
