@@ -11,7 +11,7 @@ spring:
       on-profile: dev
   #db 세팅
   datasource:
-    url: jdbc:oracle:thin:@blueblue_high?TNS_ADMIN=/portfolio/oracle-cloud/database/Wallet_blueblue
+    url: jdbc:oracle:thin:@blueblue_high?TNS_ADMIN=/home/portfolio/oracle-cloud/database/Wallet_blueblue/
     driver-class-name: oracle.jdbc.OracleDriver
     username: DEVUSER
     password: BlueBlue129323
