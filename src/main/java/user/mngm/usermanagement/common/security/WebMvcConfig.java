@@ -39,7 +39,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("page/main"); // /에 해당하는 요청은 main.html 로 보내버림
+        registry.addViewController("/").setViewName("/page/main"); // /에 해당하는 요청은 main.html 로 보내버림
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE); // 우선순위 제일 높게 설정
 
         //{권한없는 페이지 접근}
