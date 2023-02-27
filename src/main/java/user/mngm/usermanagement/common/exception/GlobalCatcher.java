@@ -15,7 +15,7 @@ import org.thymeleaf.exceptions.TemplateEngineException;
 // 에러에 대한 각각의 화면처리가 필요하면 return 화면 변경 바람
 @ControllerAdvice
 public class GlobalCatcher {
-    private final String DEFAULT_EXCEPTION_PAGE = "/common/error/exception"; // 기본 예외처리 페이지
+    private final String DEFAULT_EXCEPTION_PAGE = "/common/exception/catcher"; // 기본 예외처리 페이지
 
     // RequestMappingMethod 불일치 핸들러
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
