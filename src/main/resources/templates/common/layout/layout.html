@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <title>회원관리프로그램</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.rtl.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-grid.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-grid.rtl.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-reboot.rtl.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-utilities.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-utilities.rtl.css">
+
+    <script src="/static/jquery/jquery-3.6.1.min.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.esm.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.bundle.js"></script>
+
+</head>
+<body>
+    <!-- 헤더 -->
+    <header th:replace="common/fragments/header :: header"></header>
+
+    <!-- 실제컨텐츠 -->
+    <section class="layoutContainer d-flex justify-content-center align-items-center">
+        <div class="mt-5" layout:fragment="content"></div>
+    </section>
+
+    <!-- 푸터 -->
+<!--    <footer th:replace="common/fragments/footer :: footer"></footer>-->
+</body>
+</html>

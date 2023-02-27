@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll() //나머지 요청은 모두 허용
                 .and()
                 .formLogin() //로그인 설정
-                .loginPage("/api/view/user/login")        //로그인 페이지
+                .loginPage("/api/view/user/signIn")        //로그인 페이지
                 .usernameParameter("id")     // 아이디 파라미터명 설정
                 .passwordParameter("password")  // 패스워드 파라미터명 설정
                 .successHandler(new loginSuccess()) // 성공 시 수행될 로직
@@ -69,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
             System.out.println("exception : " + exception.getMessage());
-            response.sendRedirect("/api/view/user/login?fail"); // 인증이 실패하면 로그인 화면 유지
+            response.sendRedirect("/api/view/user/signIn?fail"); // 인증이 실패하면 로그인 화면 유지
         }
     }
 }
