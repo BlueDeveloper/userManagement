@@ -47,6 +47,9 @@ dependencies {
     implementation 'com.oracle.database.security:osdt_cert'
     implementation 'com.oracle.database.security:oraclepki'
     implementation 'com.oracle.database.security:osdt_core'
+
+    implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.2.2'      // Mybatis
+
 }
 
 tasks.named('test') {

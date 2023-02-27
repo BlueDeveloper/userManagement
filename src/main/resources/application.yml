@@ -51,6 +51,10 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+#MyBatis
+mybatis:
+  mapper-locations: classpath:mapper/**.xml   #xml파일 경로설정
 #############################################################################################################################################################
 
 #############################################################################################################################################################
@@ -61,7 +65,7 @@ spring:
       on-profile: dev2 #상민쿤
   #db 세팅
   datasource:
-    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=C:\\portfolio\\oracle-cloud\\database\\Wallet_PortfolioDB #상민쿤 여기 수정 이끄요잇!!
+    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=/LSM/db/Wallet_PortfolioDB/
     driver-class-name: oracle.jdbc.OracleDriver
     username: PortfolioDev1
     password: Portfolio1_777
@@ -101,6 +105,10 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+#MyBatis
+mybatis:
+  mapper-locations: classpath:mapper/**.xml   #xml파일 경로설정
 #############################################################################################################################################################
 
 #############################################################################################################################################################
@@ -134,6 +142,7 @@ spring:
   devtools: # 재기동 없이 resources 적용
     restart:
       enabled: false
+
 #로깅설정
 logging:
   level:
@@ -151,4 +160,8 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+#MyBatis
+mybatis:
+  mapper-locations: classpath:mapper/**.xml   #xml파일 경로설정
 #############################################################################################################################################################
