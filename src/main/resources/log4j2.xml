@@ -3,7 +3,8 @@
 
     <!-- 해당 설정파일에서 사용하는 프로퍼티-->
     <Properties>
-        <property name="LOGS_PATH">/home/portfolio/userManagement/project/log/</property>
+        <property name="LOGS_PATH">C:\\portfolio\\userManagement\\project\\log\\</property>
+        <property name="LOG_FILE_NAME">log</property>
     </Properties>
 
     <Appenders>
@@ -14,8 +15,8 @@
 
         <!-- 파일 -->
         <RollingFile name="RollingFile">
-            <FileName>${LOGS_PATH}/log4j2.log</FileName>
-            <FilePattern>${LOGS_PATH}/log4j2.%d{yyyy-MM-dd}.%i.log.gz</FilePattern>
+            <FileName>${LOGS_PATH}/${LOG_FILE_NAME}.log</FileName>
+            <FilePattern>${LOGS_PATH}/${date:yyyy}/${date:MM}/${LOG_FILE_NAME}_%d{yyyy-mm-dd}.log</FilePattern>
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %5p [%c] %m%n</Pattern>
             </PatternLayout>
@@ -23,7 +24,14 @@
                 <SizeBasedTriggeringPolicy size="100MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
+            <DefaultRolloverStrategy max="7" fileIndex="max">
+                <Delete basePath="${LOGS_PATH}" maxDepth="1">
+                    <!-- 7일이 경과한 로그파일은 자동 삭제 -->
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
+        -
     </Appenders>
 
     <Loggers>

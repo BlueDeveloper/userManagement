@@ -11,7 +11,7 @@ spring:
       on-profile: dev
   #db 세팅
   datasource:
-    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=/home/portfolio/oracle-cloud/database/Wallet_PortfolioDB/
+    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=C:\\portfolio\\oracle-cloud\\database\\Wallet_PortfolioDB
     driver-class-name: oracle.jdbc.OracleDriver
     username: PortfolioDev1
     password: Portfolio1_777
@@ -43,6 +43,7 @@ logging:
         type:
           descriptor:
             sql: trace
+  config: src/main/resources/log4j2.xml
 
 #서버
 server:
