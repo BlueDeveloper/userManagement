@@ -11,7 +11,7 @@ spring:
       on-profile: dev
   #db 세팅
   datasource:
-    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=/home/portfolio/oracle-cloud/database/Wallet_PortfolioDB/
+    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=/LSM/db/Wallet_PortfolioDB/
     driver-class-name: oracle.jdbc.OracleDriver
     username: PortfolioDev1
     password: Portfolio1_777
@@ -35,7 +35,6 @@ spring:
     restart:
       enabled: false
 
-
 #로깅설정
 logging:
   level:
@@ -54,3 +53,7 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+#MyBatis
+mybatis:
+  mapper-locations: classpath:mapper/**.xml   #xml파일 경로설정
