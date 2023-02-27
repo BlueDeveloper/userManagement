@@ -8,12 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/* 로그인 시 ajax 요청 관리 */
+/* 미인증 요청일 시 핸들링 */
 public class AjaxAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
     public AjaxAuthenticationEntryPoint(String loginFormUrl) {
         super(loginFormUrl);
     }
 
+    // 미인증 사용자가 인증 필요 url 접속시 핸들링
+    // ajax 요청일 시 ajaxResponse
+    // 일반 url 요청일 시 WebMvcConfig.java 의 /api/view/access-denied 주소로 redirect
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String ajaxHeader = request.getHeader("X-Requested-With");

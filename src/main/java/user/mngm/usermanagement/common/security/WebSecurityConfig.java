@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin() //로그인 설정
                 .loginPage("/api/view/user/login")        //로그인 페이지
-                .usernameParameter("email")     // 아이디 파라미터명 설정
+                .usernameParameter("id")     // 아이디 파라미터명 설정
                 .passwordParameter("password")  // 패스워드 파라미터명 설정
                 .successHandler(new loginSuccess()) // 성공 시 수행될 로직
                 .failureHandler(new loginFailure()) //실패 시 수행될 로직
@@ -46,7 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/") // 로그아웃 시 이동할 페이지
                 .invalidateHttpSession(true) // 로그아웃시 세션소멸
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new AjaxAuthenticationEntryPoint("/api/view/access-denied"));
+                .exceptionHandling().authenticationEntryPoint(new AjaxAuthenticationEntryPoint("/api/view/access-denied"));// 미인증 사용자가 인증 필요 url 접속시 핸들링
+
     }
 
     @Override
