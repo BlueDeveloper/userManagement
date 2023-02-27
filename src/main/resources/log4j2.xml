@@ -16,8 +16,8 @@
 
         <!-- 파일 -->
         <RollingFile name="RollingFile">
-            <FileName>${LOGS_PATH}/${LOG_FILE_NAME}.log</FileName>
-            <FilePattern>${LOGS_PATH}/${date:yyyy}/${date:MM}/${LOG_FILE_NAME}_%d{yyyy-mm-dd}.log</FilePattern>
+            <FileName>${LOGS_PATH}/${date:yyyy}/${date:MM}/${LOG_FILE_NAME}.log</FileName>
+            <FilePattern>${LOGS_PATH}/${date:yyyy}/${date:MM}/${LOG_FILE_NAME}_%d{yyyyMMdd}.log</FilePattern>
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %5p [%c] %m%n</Pattern>
             </PatternLayout>
