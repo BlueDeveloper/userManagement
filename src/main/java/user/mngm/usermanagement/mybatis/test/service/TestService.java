@@ -1,4 +1,4 @@
-package user.mngm.usermanagement.test.service;
+package user.mngm.usermanagement.mybatis.test.service;
 
 public interface TestService {
 

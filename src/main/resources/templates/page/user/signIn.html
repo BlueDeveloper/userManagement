@@ -3,6 +3,11 @@
 <body>
     <section layout:fragment="content">
         <h1>로그인</h1>
+        <form action="/api/view/user/signIn" method="post">
+            아이디<input type="text" id="memberId" name="memberId">
+            패스워드<input type="password" id="pwd" name="pwd">
+            <button>로그인</button>
+        </form>
     </section>
 </body>
 </html>

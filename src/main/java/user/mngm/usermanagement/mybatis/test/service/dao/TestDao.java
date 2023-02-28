@@ -1,4 +1,4 @@
-package user.mngm.usermanagement.test.service.dao;
+package user.mngm.usermanagement.mybatis.test.service.dao;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;

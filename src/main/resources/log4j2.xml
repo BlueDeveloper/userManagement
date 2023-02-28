@@ -3,7 +3,7 @@
 
     <!-- 해당 설정파일에서 사용하는 프로퍼티-->
     <Properties>
-        <property name="LOGS_PATH">/home/portfolio/userManagement/project/log/</property>
+        <property name="LOGS_PATH">C:\Portfolio\proejcts\userMngm\log</property>
         <property name="LOG_FILE_NAME">log</property>
     </Properties>
 

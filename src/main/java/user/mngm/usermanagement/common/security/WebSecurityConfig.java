@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import user.mngm.usermanagement.common.exception.AjaxAuthenticationEntryPoint;
-import user.mngm.usermanagement.user.service.UserService;
+import user.mngm.usermanagement.jpa.user.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,8 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin() //로그인 설정
                 .loginPage("/api/view/user/signIn")        //로그인 페이지
-                .usernameParameter("id")     // 아이디 파라미터명 설정
-                .passwordParameter("password")  // 패스워드 파라미터명 설정
+                .usernameParameter("memberId")     // 아이디 파라미터명 설정
+                .passwordParameter("pwd")  // 패스워드 파라미터명 설정
                 .successHandler(new loginSuccess()) // 성공 시 수행될 로직
                 .failureHandler(new loginFailure()) //실패 시 수행될 로직
                 .and()
@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private class loginFailure implements AuthenticationFailureHandler {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-            System.out.println("exception : " + exception.getMessage());
+            System.out.println("exception : " + exception.toString());
             response.sendRedirect("/api/view/user/signIn?fail"); // 인증이 실패하면 로그인 화면 유지
         }
     }
