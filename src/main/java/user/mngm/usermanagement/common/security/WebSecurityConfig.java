@@ -30,13 +30,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/view/*", "/api/view/*/*", "/api/send/*", "/api/send/*/*").permitAll() // 해당 url 무조건 허용
-                .antMatchers("/api/admin/*", "/api/admin/*/*").hasRole("ADMIN") // 해당 url ADMIN 권한 필요
-                .antMatchers("/api/user/*", "/api/user/*/*").authenticated() // 해당 url 인증 필요
+                .antMatchers("/api/view/*", "/api/view/*/*", "/api/send/*", "/api/send/*/*", 
+                            "/front/view/*", "/front/view/*/*", "/front/send/*", "/front/send/*/*").permitAll() // 해당 url 무조건 허용
+                .antMatchers("/api/admin/*", "/api/admin/*/*", "/front/admin/*", "/front/admin/*/*").hasRole("ADMIN") // 해당 url ADMIN 권한 필요
+                .antMatchers("/api/user/*", "/api/user/*/*", "/front/user/*", "/front/user/*/*").authenticated() // 해당 url 인증 필요
                 .anyRequest().permitAll() //나머지 요청은 모두 허용
                 .and()
                 .formLogin() //로그인 설정
-                .loginPage("/api/view/user/signIn")        //로그인 페이지
+                .loginPage("/front/view/user/signIn")        //로그인 페이지
                 .usernameParameter("memberId")     // 아이디 파라미터명 설정
                 .passwordParameter("pwd")  // 패스워드 파라미터명 설정
                 .successHandler(new loginSuccess()) // 성공 시 수행될 로직
@@ -46,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/") // 로그아웃 시 이동할 페이지
                 .invalidateHttpSession(true) // 로그아웃시 세션소멸
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new AjaxAuthenticationEntryPoint("/api/view/access-denied"));// 미인증 사용자가 인증 필요 url 접속시 핸들링
+                .exceptionHandling().authenticationEntryPoint(new AjaxAuthenticationEntryPoint("/front/view/access-denied"));// 미인증 사용자가 인증 필요 url 접속시 핸들링
 
     }
 
@@ -69,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
             System.out.println("exception : " + exception.toString());
-            response.sendRedirect("/api/view/user/signIn?fail"); // 인증이 실패하면 로그인 화면 유지
+            response.sendRedirect("/front/view/user/signIn?fail"); // 인증이 실패하면 로그인 화면 유지
         }
     }
 }

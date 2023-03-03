@@ -15,11 +15,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 
     /**
-     * <p>주소의 1번째 자리는 api 로 통일</p><br>
+     * <p>주소의 1번째 자리는 Service : api / Front : front 로 분류</p><br>
      * 주소의 2번째 자리는 user, view, admin 세가지로 분류<br>
-     * (기본) api/user/* --> 로그인이 필요함<br>
-     * (기본) api/view/* --> 자유롭게 이용 가능<br>
-     * (중요) api/admin/* --> 로그인한 아이디의 auth == ROLE_ADMIN 이어야 함(db에서 따로 설정 회원가입 시 DEFAULT = USER)
+     * (기본) {?}/user/* --> 로그인이 필요함<br>
+     * (기본) {?}/view/* --> 자유롭게 이용 가능<br>
+     * (중요) {?}/admin/* --> 로그인한 아이디의 auth == ROLE_ADMIN 이어야 함(db에서 따로 설정 회원가입 시 DEFAULT = USER)
      * <p><br>
      * 3,4 번째 자리는 대분류 소분류로 나눠서 작성
      * 소분류 필요없을 시 대분류만 작성
@@ -34,15 +34,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE); // 우선순위 제일 높게 설정
 
         //{권한없는 페이지 접근}
-        registry.addViewController("/api/view/access-denied").setViewName("common/access/denied");//{유저_로그인}
+        registry.addViewController("/front/view/access-denied").setViewName("common/access/denied");//{유저_로그인}
 
         //{유저}
-        registry.addViewController("/api/view/user/signIn").setViewName("page/user/signIn");//{유저_로그인}
-        registry.addViewController("/api/view/user/signUp").setViewName("page/user/signUp");//{유저_회원가입}
-        registry.addViewController("/api/user/myPage").setViewName("page/user/myPage");//{유저_마이페이지}
+        registry.addViewController("/front/view/user/signIn").setViewName("page/user/signIn");//{유저_로그인}
+        registry.addViewController("/front/view/user/signUp").setViewName("page/user/signUp");//{유저_회원가입}
+        registry.addViewController("/front/user/myPage").setViewName("page/user/myPage");//{유저_마이페이지}
 
         //{관리자}
-        registry.addViewController("/api/admin/myPage").setViewName("page/admin/adminPage");//{관리자_페이지}
+        registry.addViewController("/front/admin/myPage").setViewName("page/admin/adminPage");//{관리자_페이지}
 
 //        //{공지사항}
 //        registry.addViewController("/api/view/notice/list").setViewName("/page/notice/notice_list");//{공지사항_리스트}

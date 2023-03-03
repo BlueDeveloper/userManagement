@@ -1,7 +1,9 @@
 package user.mngm.usermanagement.mybatis.test.service;
 
+import user.mngm.usermanagement.mybatis.test.service.vo.UserVo;
+
 public interface TestService {
 
-    String SelectTest();
+    int userSignUp (UserVo vo);
 
 }

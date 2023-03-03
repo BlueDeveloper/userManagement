@@ -1,8 +1,87 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
+<head>
+    <script>
+        $(document).ready(function(){
+
+            $("#domain").change(function(){     // 이메일주소 직접입력 처리
+                if($(this).val() == ""){
+                    $("#domain2").attr("disabled", false);
+                } else {
+                    $("#domain2").attr("disabled", true);
+                    $("#domain2").val("");
+                }
+            });
+
+            $("#send").click(function() {
+                var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;     // 이메일 형식체크
+
+                var member_id = $("#member_id").val();
+                var pwd = $("#pwd").val();
+                var name = $("#name").val();
+
+                if($("#domain").val() == "") {      // 이메일 + 도메인주소
+                    var email = $("#email").val() + "@" + $("#domain2").val();
+                } else {
+                    var email = $("#email").val() + "@" + $("#domain").val();
+                }
+
+                if(member_id == "") {       // 아이디 체크
+                    alert("아이디를 입력해주세요.");
+                    return;
+                }
+                if(pwd == "") {     // 패스워드 체크
+                    alert("패스워드를 입력해주세요.");
+                    return;
+                }
+                if(email == "" || ($("#domain").val() == "" && $("#domain2").val() == "")) {       // 이메일 체크
+                    alert("이메일을 입력해주세요.");
+                    return;
+                } else {
+                    if(reg_email.test(email) == false) {        // 이메일 형식인지 체크
+                        alert("이메일 형식이 아닙니다.");
+                        return;
+                    }
+                }
+                if(name == "") {        // 이름 체크
+                    alert("이름을 입력해주세요.");
+                    return;
+                }
+
+                var param = {
+                    member_id : member_id,
+                    pwd : pwd,
+                    name : name,
+                    email : email
+                };
+
+                ajaxCall("POST", "/api/view/user/signUp", param, null, setResult, null);
+            });
+
+        });
+
+        function setResult(data) {
+            alert("회원가입");
+        };
+    </script>
+</head>
 <body>
     <section layout:fragment="content">
         <h1>회원가입</h1>
+        <form id="signUpForm" action="/api/view/user/signUp" method="post">
+            아이디 : <input type="text" id="member_id" name="member_id" /> </br></br>
+            패스워드 : <input type="password" id="pwd" name="pwd" /> </br></br>
+            이메일 : <input type="text" id="email" name="email" /> 
+            @<select id="domain" name="domain">
+                <option value="naver.com" selected>naver.com</option>
+                <option value="daum.net">daum.net</option>
+                <option value="google.co.kr">google.co.kr</option>
+                <option value="">직접입력</option>
+            </select>
+            <input type="text" id="domain2" name="domain2" disabled/></br></br>
+            이름 : <input type="text" id="name" name="name" /></br></br>
+            <input type="button" id="send" value="회원가입" />
+        </form>
     </section>
 </body>
 </html>

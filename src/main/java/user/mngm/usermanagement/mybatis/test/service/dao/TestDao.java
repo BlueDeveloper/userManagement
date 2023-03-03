@@ -1,18 +1,12 @@
 package user.mngm.usermanagement.mybatis.test.service.dao;
 
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
+import user.mngm.usermanagement.mybatis.test.service.vo.UserVo;
 
-@Repository("TestDao")
-public class TestDao {
+@Repository
+public interface TestDao {
 
-    @Resource
-    private SqlSessionTemplate sqlSession;
-
-    public String SelectTest() {
-        return sqlSession.selectOne("USER.selectTest");
-    }
+    int userSignUp(UserVo vo);
 
 }
