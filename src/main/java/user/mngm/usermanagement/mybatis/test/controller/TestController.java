@@ -1,7 +1,6 @@
 package user.mngm.usermanagement.mybatis.test.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,17 +27,18 @@ public class TestController {
 
     @PostMapping("/api/view/user/signUp")
     public ResponseVo userSignUp(UserVo vo, ResponseVo resVo) {
-        int result = testService.userSignUp(vo);
-        if(result > 0) {
-            resVo.setStatus(200);
-            resVo.setSuccess(true);
-            resVo.setMessage("회원가입에 성공하였습니다.");
-        } else {
-            resVo.setStatus(400);
-            resVo.setSuccess(false);
-            resVo.setMessage("회원가입에 실패하였습니다.");
-        }
-        return resVo;
+
+        ResponseVo result = testService.userSignUp(vo);
+
+        return result;
+    }
+    
+    @PostMapping("/api/view/user/login")
+    public ResponseVo userLogin(UserVo vo, ResponseVo resVo) {
+
+        ResponseVo result = testService.userLogin(vo);
+
+        return result;
     }
 
 }
