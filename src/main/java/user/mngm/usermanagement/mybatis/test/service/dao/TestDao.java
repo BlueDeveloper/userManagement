@@ -21,6 +21,4 @@ public class TestDao {
         return sqlSession.selectOne("TEST.userLogin", vo);
     }
 
-    
-
 }
