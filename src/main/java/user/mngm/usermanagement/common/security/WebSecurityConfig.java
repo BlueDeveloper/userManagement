@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin() //로그인 설정
                 .loginPage("/front/view/user/signIn")        //로그인 페이지
+                .loginProcessingUrl("/api/view/user/signIn")        // 로그인 액션??
                 .usernameParameter("memberId")     // 아이디 파라미터명 설정
                 .passwordParameter("pwd")  // 패스워드 파라미터명 설정
                 .successHandler(new loginSuccess()) // 성공 시 수행될 로직
