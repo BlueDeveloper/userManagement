@@ -1,6 +1,7 @@
 package user.mngm.usermanagement.jpa.user.entity;
 
 import lombok.Builder;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 @Entity //[JPA] --> DB 테이블과 1:1 매칭되는 클래스 선언
 @Table(name = "TB_USER") //[JPA] --> 테이블 명
+@Data
 public class UserEntity extends GenUuid implements UserDetails {
     // 로그인 ID
     @Column(name = "MEMBER_ID")

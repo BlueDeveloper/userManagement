@@ -1,3 +1,19 @@
+/* 기본폰트 */
+@font-face {
+    font-family: "Gothic A1-500";
+    src: url("/static/font/GothicA1/GothicA1-500.ttf") format("opentype");
+}
+
+*{
+    font-family: "Gothic A1-500";
+}
+
+body{
+    background: #f8f9fd!important;
+}
+
 .userNav a{
     margin-left: 5px;
 }
+
+

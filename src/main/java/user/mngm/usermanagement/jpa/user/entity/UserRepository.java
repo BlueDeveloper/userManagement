@@ -9,4 +9,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     //memberId를 기반으로 유저 조회 [SELECT * FROM TB_USER WHERE ID = memberId]
     Optional<UserEntity> findByMemberId(String memberId);
+
+    //email를 기반으로 유저 조회 [SELECT * FROM TB_USER WHERE ID = email]
+    UserEntity findByEmail(String email);
 }

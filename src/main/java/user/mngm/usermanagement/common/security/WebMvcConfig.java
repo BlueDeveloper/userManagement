@@ -40,15 +40,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE); // 우선순위 제일 높게 설정
 
         //{권한없는 페이지 접근}
-        registry.addViewController("/front/view/access-denied").setViewName("common/access/denied");//{유저_로그인}
+        registry.addViewController("/front/view/access-denied").setViewName("/common/access/denied");//{유저_로그인}
 
         //{유저}
-        registry.addViewController("/front/view/user/signIn").setViewName("page/user/signIn");//{유저_로그인}
-        registry.addViewController("/front/view/user/signUp").setViewName("page/user/signUp");//{유저_회원가입}
-        registry.addViewController("/front/user/myPage").setViewName("page/user/myPage");//{유저_마이페이지}
+        registry.addViewController("/front/view/user/signIn").setViewName("/page/user/signIn");//{유저_로그인}
+        registry.addViewController("/front/view/user/signUp").setViewName("/page/user/signUp");//{유저_회원가입}
+        registry.addViewController("/front/user/myPage").setViewName("/page/user/myPage");//{유저_마이페이지}
 
         //{관리자}
-        registry.addViewController("/front/admin/myPage").setViewName("page/admin/adminPage");//{관리자_페이지}
+        registry.addViewController("/front/admin/myPage").setViewName("/page/admin/adminPage");//{관리자_페이지}
 
 //        //{공지사항}
 //        registry.addViewController("/api/view/notice/list").setViewName("/page/notice/notice_list");//{공지사항_리스트}

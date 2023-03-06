@@ -3,7 +3,6 @@
 <head>
     <script>
         $(document).ready(function(){
-
             $("#domain").change(function(){     // 이메일주소 직접입력 처리
                 if($(this).val() == ""){
                     $("#domain2").attr("disabled", false);
@@ -14,38 +13,37 @@
             });
 
             $("#send").click(function() {
-                var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;     // 이메일 형식체크
 
                 var member_id = $("#member_id").val();
                 var pwd = $("#pwd").val();
                 var name = $("#name").val();
 
-                if($("#domain").val() == "") {      // 이메일 + 도메인주소
+                if($("#domain").val() === "") {      // 이메일 + 도메인주소
                     var email = $("#email").val() + "@" + $("#domain2").val();
                 } else {
                     var email = $("#email").val() + "@" + $("#domain").val();
                 }
 
-                if(member_id == "") {       // 아이디 체크
+                if(member_id === "") {       // 아이디 체크
                     alert("아이디를 입력해주세요.");
                     return;
                 }
-                if(pwd == "") {     // 패스워드 체크
+                if(pwd === "") {     // 패스워드 체크
                     alert("패스워드를 입력해주세요.");
                     return;
                 }
-                if(email == "" || ($("#domain").val() == "" && $("#domain2").val() == "")) {       // 이메일 체크
+                if(email === "" || ($("#domain").val() === "" && $("#domain2").val() === "")) {       // 이메일 체크
                     alert("이메일을 입력해주세요.");
                     return;
                 } else {
-                    if(reg_email.test(email) == false) {        // 이메일 형식인지 체크
+                    if(!reg_email.test(email)) {        // 이메일 형식인지 체크
                         alert("이메일 형식이 아닙니다.");
-                        return;
+                        return false;
                     }
                 }
-                if(name == "") {        // 이름 체크
+                if(name === "") {        // 이름 체크
                     alert("이름을 입력해주세요.");
-                    return;
+                    return false;
                 }
 
                 var param = {
@@ -77,7 +75,7 @@
         <form id="signUpForm" action="/api/view/user/signUp" method="post">
             아이디 : <input type="text" id="member_id" name="member_id" /> </br></br>
             패스워드 : <input type="password" id="pwd" name="pwd" /> </br></br>
-            이메일 : <input type="text" id="email" name="email" /> 
+            이메일 : <input type="text" id="email" name="email" />
             @<select id="domain" name="domain">
                 <option value="naver.com" selected>naver.com</option>
                 <option value="daum.net">daum.net</option>
