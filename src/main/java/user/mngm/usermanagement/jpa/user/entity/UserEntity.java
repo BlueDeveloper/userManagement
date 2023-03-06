@@ -13,8 +13,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "TB_USER")
+@Entity //[JPA] --> DB 테이블과 1:1 매칭되는 클래스 선언
+@Table(name = "TB_USER") //[JPA] --> 테이블 명
 public class UserEntity extends GenUuid implements UserDetails {
     // 로그인 ID
     @Column(name = "MEMBER_ID")
@@ -85,6 +85,7 @@ public class UserEntity extends GenUuid implements UserDetails {
     }
 
 
+    // [Security]
     // 사용자의 권한을 콜렉션 형태로 반환
     // 단, 클래스 자료형은 GrantedAuthority를 구현해야함
     @Override
@@ -96,46 +97,52 @@ public class UserEntity extends GenUuid implements UserDetails {
         return roles;
     }
 
+    // [Security]
     // 사용자의 id를 반환 (unique한 값)
     @Override
     public String getUsername() {
         return memberId;
     }
 
+    // [Security]
     // 사용자의 password를 반환
     @Override
     public String getPassword() {
         return pwd;
     }
 
+    // [Security]
     // 계정 만료 여부 반환
     @Override
     public boolean isAccountNonExpired() {
-        // 만료되었는지 확인하는 로직
+        // 만료 확인 로직
         // true -> 만료되지 않았음
         return true;
     }
 
+    // [Security]
     // 계정 잠금 여부 반환
     @Override
     public boolean isAccountNonLocked() {
-        // 계정 잠금되었는지 확인하는 로직
+        // 계정잠금 확인 로직
         // true -> 잠금되지 않았음
         return true;
     }
 
+    // [Security]
     // 패스워드의 만료 여부 반환
     @Override
     public boolean isCredentialsNonExpired() {
-        // 패스워드가 만료되었는지 확인하는 로직
+        // 패스워드 만료확인 로직
         // true -> 만료되지 않았음
         return true;
     }
 
+    // [Security]
     // 계정 사용 가능 여부 반환
     @Override
     public boolean isEnabled() {
-        // 계정이 사용 가능한지 확인하는 로직
+        // 계정 사용가능 확인 로직
         // true -> 사용 가능
         return true;
     }

@@ -4,7 +4,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import user.mngm.usermanagement.mybatis.test.service.TestService;
 import user.mngm.usermanagement.mybatis.test.service.dao.TestDao;
 import user.mngm.usermanagement.mybatis.test.service.vo.ResponseVo;
@@ -21,10 +20,10 @@ public class TestServiceImpl implements TestService {
      */
     @Override
     public ResponseVo userSignUp(UserVo vo) {
-        
+
         ResponseVo resVo = new ResponseVo();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        
+
         try {
             if(vo.getMember_id() == null) {
                 resVo.setStatus(400);
@@ -49,7 +48,7 @@ public class TestServiceImpl implements TestService {
             vo.setPwd(encoder.encode(vo.getPwd()));
 
             testDao.userSignUp(vo);
-            
+
         } catch (Exception e) {
             resVo.setStatus(400);
             resVo.setSuccess(false);
@@ -75,7 +74,7 @@ public class TestServiceImpl implements TestService {
             }
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             vo.setPwd(encoder.encode(vo.getPwd()));
-            
+
             testDao.userLogin(vo);
 
         } catch (Exception e) {
@@ -86,5 +85,5 @@ public class TestServiceImpl implements TestService {
         }
         return resVo;
     }
-    
+
 }

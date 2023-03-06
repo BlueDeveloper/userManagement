@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/* 미인증 요청일 시 핸들링 */
+/* 미인증 요청일 시 핸들링 WebSecurityConfig에서 설정 */
 public class AjaxAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
     public AjaxAuthenticationEntryPoint(String loginFormUrl) {
         super(loginFormUrl);
