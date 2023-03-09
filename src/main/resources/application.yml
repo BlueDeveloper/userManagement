@@ -3,7 +3,7 @@
 #프로파일 설정
 spring:
   profiles:
-    active: dev1 #프로파일 선택
+    active: prod #프로파일 선택
 
 #############################################################################################################################################################
 
@@ -14,7 +14,7 @@ spring:
       on-profile: dev1 #동제쿤
   #db 세팅
   datasource:
-    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=C:\\portfolio\\oracle-cloud\\database\\Wallet_PortfolioDB
+    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=D:\\portfolio\\oracle_cloud\\database\\Wallet_PortfolioDB
     driver-class-name: oracle.jdbc.OracleDriver
     username: PortfolioDev1
     password: Portfolio1_777
@@ -133,7 +133,7 @@ spring:
       password: 1234
   #frontTemplateEngine
   thymeleaf:
-    prefix: classpath:/templates/ #view prefix
+    prefix: classpath:/templates #view prefix
     suffix: .html
     cache: false
   #DB ORM
