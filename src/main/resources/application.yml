@@ -3,7 +3,7 @@
 #프로파일 설정
 spring:
   profiles:
-    active: prod #프로파일 선택
+    active: dev2 #프로파일 선택
 
 #############################################################################################################################################################
 
@@ -37,6 +37,17 @@ spring:
   devtools: # 재기동 없이 resources 적용
     restart:
       enabled: false
+  #Redis
+  redis:
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 2
+    port: 6379    #설정 필요
+    host: 127.0.0.1   #설정 필요
+    password: 'abcde'  #설정 필요
+
 #로깅설정
 logging:
   level:
@@ -58,6 +69,7 @@ server:
 #MyBatis
 mybatis:
   mapper-locations: classpath:mapper/**.xml   #xml파일 경로설정
+
 #############################################################################################################################################################
 
 #############################################################################################################################################################
@@ -90,7 +102,17 @@ spring:
         format_sql: true #jpa sql 예쁘게 format
   devtools: # 재기동 없이 resources 적용
     restart:
-      enabled: false
+      enabled: true
+  #Redis
+  redis:
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 2
+    port: 6379    #설정 필요
+    host: 211.114.177.104   #설정 필요
+    #password: 'abcde'  #설정 필요
 #로깅설정
 logging:
   level:
@@ -145,6 +167,16 @@ spring:
   devtools: # 재기동 없이 resources 적용
     restart:
       enabled: false
+  #Redis
+  redis:
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 2
+    port: 6379    #설정 필요
+    host: 127.0.0.1   #설정 필요
+    password: 'abcde'  #설정 필요
 
 #로깅설정
 logging:
