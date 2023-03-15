@@ -85,8 +85,7 @@ public class SendMail {
 		try {
 			mailSender.send(message);
 		} catch (MailException es) {
-			es.printStackTrace();
-			throw new IllegalArgumentException();
+			return "";
 		}
 
 		return authCode; // 메일로 보냈던 인증 코드를 서버로 반환
