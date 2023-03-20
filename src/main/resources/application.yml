@@ -3,7 +3,7 @@
 #프로파일 설정
 spring:
   profiles:
-    active: dev2 #프로파일 선택
+    active: prod #프로파일 선택
 
 #############################################################################################################################################################
 
@@ -144,7 +144,7 @@ spring:
       on-profile: prod #운영서버쿤
   #db 세팅
   datasource:
-    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=/home/portfolio/oracle-cloud/database/Wallet_PortfolioDB/
+    url: jdbc:oracle:thin:@portfoliodb_high?TNS_ADMIN=/home/portfolio/oracle_cloud/database/Wallet_PortfolioDB/
     driver-class-name: oracle.jdbc.OracleDriver
     username: PortfolioDev1
     password: Portfolio1_777
@@ -188,7 +188,7 @@ logging:
             sql: trace
 #서버
 server:
-  port: 8080
+  port: 3321
   servlet:
     context-path: /
     encoding:
