@@ -3,13 +3,73 @@
 <head>
     <script>
         $(document).ready(function(){
+            let time = 180;      // 최초 설정 시간(기본 : 초)
+            let min = "";
+            let sec = "";
+            
             $("#domain").change(function(){     // 이메일주소 직접입력 처리
-                if($(this).val() == ""){
+                if($(this).val(s) == ""){
                     $("#domain2").attr("disabled", false);
                 } else {
                     $("#domain2").attr("disabled", true);
                     $("#domain2").val("");
                 }
+            });
+            
+
+            $("#sendAuthMail").click(function(e) {       // 인증번호 전송을 누르면
+                let topParentNode = $(e.target).parent().parent() // 버튼이 속해있는 최상위 노드
+
+                if($(".timeOut").hasClass("d-flex") === true) {     // 타이머가 끝나기전에 재전송 불가
+                    alert(time + "초 뒤 재전송 가능합니다.");
+                    return;
+                }
+
+                if($("#domain").val() === "") {      // 이메일 + 도메인주소
+                    var email = $("#email").val() + "@" + $("#domain2").val();
+                } else {
+                    var email = $("#email").val() + "@" + $("#domain").val();
+                }
+                if(email === "" || ($("#domain").val() === "" && $("#domain2").val() === "")) {       // 이메일 체크
+                    alert("이메일을 입력해주세요.");
+                    return;
+                } else {
+                    if(!reg_email.test(email)) {        // 이메일 형식인지 체크
+                        alert("이메일 형식이 아닙니다.");
+                        return false;
+                    }
+                }
+
+                var param = {
+                    email : email
+                };
+
+                ajaxCall("POST", "/api/view/user/sendAuth", param, null,
+                    (data) => {
+                                if (data.code === "200") {
+                                    alert("입력하신 메일로 인증번호 전송이 완료되었습니다.");
+                                } else {
+                                    alert("인증번호 전송에 실패하였습니다 메일주소를 확인해주세요.");
+                                    return;
+                                }
+                    }, null)
+
+                let timeOutMsg = $(topParentNode).find(".timeOut") // 타이머 영역 node
+                
+                setInterval(() => {
+                    min = parseInt(time / 60)
+                    sec = time % 60;
+                    $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
+                    time--;
+                    if (time < 60) {
+                        clearInterval(timeout);
+                        $(timeOutMsg).html(`시간초과`);
+                    }
+                }, 1000)
+
+                setTimeout(() => {
+                    $(topParentNode).find(".inputInfo, .inputAuth").toggleClass("d-none");
+                }, 1000)
             });
 
             $("#send").click(function() {
@@ -24,7 +84,7 @@
                     var email = $("#email").val() + "@" + $("#domain").val();
                 }
 
-                if(member_id === "") {       // 아이디 체크
+                if(memberId === "") {       // 아이디 체크
                     alert("아이디를 입력해주세요.");
                     return;
                 }
@@ -47,7 +107,7 @@
                 }
 
                 var param = {
-                    member_id : member_id,
+                    memberId : memberId,
                     pwd : pwd,
                     name : name,
                     email : email
@@ -72,8 +132,8 @@
 <body>
     <section layout:fragment="content">
         <h1>회원가입</h1>
-        <form id="signUpForm" action="/api/view/user/signUp" method="post">
-            아이디 : <input type="text" id="member_id" name="member_id" /> </br></br>
+        <div class="sign-up-form">
+            아이디 : <input type="text" id="memberId" name="memberId" /> </br></br>
             패스워드 : <input type="password" id="pwd" name="pwd" /> </br></br>
             이메일 : <input type="text" id="email" name="email" />
             @<select id="domain" name="domain">
@@ -82,10 +142,13 @@
                 <option value="google.co.kr">google.co.kr</option>
                 <option value="">직접입력</option>
             </select>
-            <input type="text" id="domain2" name="domain2" disabled/></br></br>
+            <input type="text" id="domain2" name="domain2" disabled/> <input type="button" id="sendAuthMail" value="인증번호 발송" /></br></br>
+            <input type="text" id="authNum" name="authNum" />
+            <span class="timeOut"> </span>
+            <input type="button" id="checkAuthNum" value="인증하기" /></br></br>
             이름 : <input type="text" id="name" name="name" /></br></br>
             <input type="button" id="send" value="회원가입" />
-        </form>
+        </div>
     </section>
 </body>
 </html>
