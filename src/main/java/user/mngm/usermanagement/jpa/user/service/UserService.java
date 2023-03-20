@@ -66,27 +66,22 @@ public class UserService implements UserDetailsService {
         ApiResponseEntity response = new ApiResponseEntity("", "200", "");
         try {
             String userEmail = Utils.toStr(authDto.getEmail());
-            String auth = sendMail.sendSimpleMessage(userEmail);    //메일전송후 전송된 인증번호 값 가져와 담음
-
-            if(StringUtils.isEmpty(userEmail)) {        // 이메일 필수값 체크
-                response = new ApiResponseEntity(null, "400", "필수값 누락");
-                return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
+            // 이메일 필수값 체크
+            if (StringUtils.isEmpty(userEmail)) {
+                return ApiResponseEntity.setResponse(null, "400", "이메일을 입력해주세요", HttpStatus.BAD_REQUEST);
             }
 
-            if(StringUtils.isEmpty(auth)) {     //메일전송 실패시 return
-                response = new ApiResponseEntity(null, "400", "메일전송 실패");
-                return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
+            String authNum = sendMail.sendSimpleMessage(userEmail); //메일전송
+            // 메일전송 실패시 return
+            if (StringUtils.isEmpty(authNum)) {
+                return ApiResponseEntity.setResponse(null, "400", "인증번호 전송 실패\r\n관리자에게 문의바랍니다.(010-2480-7840)", HttpStatus.BAD_REQUEST);
             }
 
-            redisUtil.set(auth, userEmail, RedisPathEnum.WEB_EMAIL_CERT);     // Redis에 (KEY:전송된 인증번호, Value:메일주소) 등록
-        } catch(Exception e) {
-            response = new ApiResponseEntity(null, "400", "API예외처리 발생");
-            return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
+            redisUtil.set(authNum, userEmail, RedisPathEnum.WEB_EMAIL_CERT); // Redis에 (KEY:전송된 인증번호, Value:메일주소) 등록
+            return ApiResponseEntity.setResponse(null, "200", "인증번호가 전송되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            return ApiResponseEntity.setResponse(null, "404", "인증번호 전송 실패\r\n관리자에게 문의바랍니다.(010-2480-7840)", HttpStatus.NOT_FOUND, e);
         }
-
-        response = new ApiResponseEntity(null, "200", "인증번호 발송 성공");
-
-        return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
     }
 
     /**
@@ -101,7 +96,7 @@ public class UserService implements UserDetailsService {
         }
 
         // 유저정보 없을 시
-        if(user == null){
+        if (user == null) {
             ApiResponseEntity response = new ApiResponseEntity(null, "204", "일치하는 정보가 없습니다.");
             return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.NO_CONTENT);
         }
