@@ -1,22 +1,27 @@
 package user.mngm.usermanagement.jpa.user.entity;
 
-import lombok.Builder;
-import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import user.mngm.usermanagement.common.jpa.GenUuid;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import lombok.Builder;
+import lombok.Data;
+import user.mngm.usermanagement.common.jpa.GenUuid;
+
 @Entity //[JPA] --> DB 테이블과 1:1 매칭되는 클래스 선언
 @Table(name = "TB_USER") //[JPA] --> 테이블 명
 @Data
+@DynamicInsert
 public class UserEntity extends GenUuid implements UserDetails {
     // 로그인 ID
     @Column(name = "MEMBER_ID")
@@ -40,7 +45,7 @@ public class UserEntity extends GenUuid implements UserDetails {
 
     // 가입일자
     @Column(name = "CRT_DAT")
-    private String crtDat = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    private LocalDateTime crtDat = LocalDateTime.now();
 
     // 최종 로그인 시간
     @Column(name = "LOGIN_DAT")

@@ -3,32 +3,15 @@
     <head>
         <script>
             $(document).ready(function () {
-                let time = 180;      // 최초 설정 시간(기본 : 초)
-                let min = "";
-                let sec = "";
-
-                /*$("#domain").change(function () {     // 이메일주소 직접입력 처리
-                    if ($(this).val(s) == "") {
-                        $("#domain2").attr("disabled", false);
-                    } else {
-                        $("#domain2").attr("disabled", true);
-                        $("#domain2").val("");
-                    }
-                });*/
-
+                var mailAuthYn = 'false';
 
                 // 인증번호 전송을 누르면
                 $("#sendAuth").click(function (e) {
-
-                    // let topParentNode = $(e.target).parent().parent() // 버튼이 속해있는 최상위 노드
-                    // if ($(".timeOut").hasClass("d-flex") === true) {     // 타이머가 끝나기전에 재전송 불가
-                    //     alert(time + "초 뒤 재전송 가능합니다.");
-                    //     return;
-                    // }
+                    let topParentNode = $(e.target).parent().parent() // 버튼이 속해있는 최상위 노드
 
                     let email = $("#email")
                     if (!reg_email.test($(email).val())) {        // 이메일 형식인지 체크
-                        alert("잘못된 이메일주소 입니다. 다시입력해주세요");
+                        alert("이메일형식이 아닙니다.\r\n다시입력해주세요");
                         return $(email).focus();
                     }
 
@@ -37,36 +20,55 @@
                     };
 
                     ajaxCall("POST", "/api/view/user/sendAuth", param, null,
-                        (data) => {
+                    (data) => {
+                        if (data.code === "200") {
                             alert(data.msg);
+                            timeout(topParentNode);
                             $(".authModal").toggleClass("d-none");
-
-                            // 시간설정
-                            setInterval(() => {
-                                let timeDiv = $(".timeDiv")
-                                min = parseInt(time / 60)
-                                sec = time % 60;
-                                timeDiv.find("span").html(`유효시간 ${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
-                                time--;
-                                if (time < 60) {
-                                    clearInterval(timeout);
-                                    timeDiv.find("span").html(`시간초과`).css("color", "red");
-                                }
-                            }, 1000)
-                        }, (data) => {
-                            alert(data.responseJSON.msg)
-                        })
+                        }
+                        else {
+                            alert(data.msg)
+                        }
+                    }, null)
                 });
 
-                $("#send").click(function () {
-                    var member_id = $("#member_id").val();
+                // 인증번호 확인을 누르면
+                $(".btn-outline-checkAuth").click(function (e) {
+
+                    if ($(auth).val() === "") {       // 인증번호 체크
+                        alert("인증번호를 입력해주세요.");
+                        return $(auth).focus();
+                    }
+
+                    var param = {
+                        auth: $(auth).val(),
+                        email: $(email).val()
+                    };
+
+                    ajaxCall("POST", "/api/view/user/find", param, null,
+                    (data) => {
+                        if (data.code === "200") {  
+                            alert(`인증에 성공했습니다.`);
+                            $(".authModal").toggleClass("d-none");
+                            $("#sendAuth").attr("disabled", true);
+                            $("#email").attr("disabled", true);
+                            mailAuthYn = 'true';
+                        }
+                        else {
+                            alert(data.msg)
+                        }
+                    }, null)
+                });
+
+                $(".btn-outline-success").click(function () {
+                    var memberId = $("#memberId").val();
                     var pwd = $("#pwd").val();
                     var name = $("#name").val();
+                    var email = $("#email").val();
 
-                    if ($("#domain").val() === "") {      // 이메일 + 도메인주소
-                        var email = $("#email").val() + "@" + $("#domain2").val();
-                    } else {
-                        var email = $("#email").val() + "@" + $("#domain").val();
+                    if (mailAuthYn === "false") {       // 메일인증여부 체크
+                        alert("메일인증을 진행해주세요.");
+                        return;
                     }
 
                     if (memberId === "") {       // 아이디 체크
@@ -77,14 +79,9 @@
                         alert("패스워드를 입력해주세요.");
                         return;
                     }
-                    if (email === "" || ($("#domain").val() === "" && $("#domain2").val() === "")) {       // 이메일 체크
-                        alert("이메일을 입력해주세요.");
-                        return;
-                    } else {
-                        if (!reg_email.test(email)) {        // 이메일 형식인지 체크
-                            alert("이메일 형식이 아닙니다.");
-                            return false;
-                        }
+                    if (!reg_email.test(email)) {        // 이메일 형식인지 체크
+                        alert("이메일 형식이 아닙니다.");
+                        return false;
                     }
                     if (name === "") {        // 이름 체크
                         alert("이름을 입력해주세요.");
@@ -98,13 +95,18 @@
                         email: email
                     };
 
-                    ajaxCall("POST", "/api/view/user/signUp", param, null, setResult, null);
+                    ajaxCall("POST", "/api/view/user/sign-up", param, null, setResult, null);
                 });
+
+                // $(".btn-outline-checkCancel").click(function (e) {      // 인증팝업에서 취소를 누르면 팝업 종료
+                //     clearInterval(time);
+                //     $(".authModal").toggleClass("d-none");
+                // });
 
             });
 
             function setResult(data) {
-                if (data.status == 200) {
+                if (data.code == 200) {
                     alert("회원가입에 성공하였습니다.");
                     $(location).attr('href', '/front/view/user/signIn');
                 } else {
@@ -112,6 +114,30 @@
                     return;
                 }
             };
+
+            let time = 180;      // 최초 설정 시간(기본 : 초)
+            let min = "";
+            let sec = "";   
+
+            function timeout(topParentNode) {
+                let timeOutMsg = $(topParentNode).find(".timeOut") // 타이머 영역 node   
+                // 시간설정
+                setInterval(() => {
+                    min = parseInt(time / 60)
+                    sec = time % 60;
+                    $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
+                    time--;
+                    if (time < 60) {
+                        clearInterval(timeout);
+                        $(timeOutMsg).html(`시간초과`);
+                    }
+                }, 1000)
+
+                setTimeout(() => {
+                    $(topParentNode).find(".inputInfo, .inputAuth").toggleClass("d-none");
+                }, 1000)
+            }
+
         </script>
     </head>
     <body>
@@ -127,7 +153,7 @@
                 <!--회원가입-->
                 <div class="sign-up-form" style="margin-top: 15%;width: 100%;height: 100%;">
                     <div class="form-floating w-75 m-auto mb-3">
-                        <input type="password" class="form-control" id="name" name="name" style="background: #dcdcdc;">
+                        <input type="text" class="form-control" id="name" name="name" style="background: #dcdcdc;">
                         <label for="name" style="right: unset">이름</label>
                     </div>
 
@@ -149,7 +175,9 @@
 
                     <div class="w-75 m-auto mt-5 d-flex justify-content-evenly">
                         <button type="button" class="btn btn-outline-success align-self-end">회원가입</button>
-                        <button type="button" class="btn btn-outline-danger align-self-end">가입! 안행!</button>
+                        <a href="/">
+                            <button type="button" class="btn btn-outline-danger align-self-end">취소</button>
+                        </a>
                     </div>
 
                     <div class="w-20 h-15 top-50 start-50 transform-50-50 d-none d-flex flex-column bg-body position-absolute p-4 authModal" style="border: 1px solid black;">
@@ -157,12 +185,12 @@
                             <label for="auth">인증번호</label>
                             <input type="text" class="form-control w-75" id="auth" name="auth" style="background: #dcdcdc;">
                         </div>
-                        <div class="timeDiv d-flex mt-3 ms-auto">
+                        <div class="timeOut d-flex mt-3 ms-auto">
                             <span></span>
                         </div>
                         <div class="w-75 d-flex justify-content-evenly align-self-center mt-4">
-                            <button type="button" class="btn btn-outline-secondary align-self-end mt-1">인증확인</button>
-                            <button type="button" class="btn btn-outline-secondary align-self-end mt-1">취소</button>
+                            <button type="button" class="btn btn-outline-checkAuth align-self-end mt-1">인증확인</button>
+                            <button type="button" class="btn btn-outline-checkCancel align-self-end mt-1">취소</button>
                         </div>
                     </div>
                 </div>

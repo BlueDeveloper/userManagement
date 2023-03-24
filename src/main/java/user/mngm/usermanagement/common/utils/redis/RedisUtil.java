@@ -24,7 +24,6 @@ public class RedisUtil {
     public boolean set(String key, String value, RedisPathEnum path) {
         boolean result = false;
         try {
-            System.out.println("key : " + key + " value : " + value);
             ValueOperations<String, String> redis = redisTemplate.opsForValue();
             String pathKey = path.name + key;
             redis.set(pathKey, value);

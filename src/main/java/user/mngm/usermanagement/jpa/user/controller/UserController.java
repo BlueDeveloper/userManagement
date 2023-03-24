@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import user.mngm.usermanagement.common.response.ApiResponseEntity;
 import user.mngm.usermanagement.jpa.user.dto.AuthDto;
+import user.mngm.usermanagement.jpa.user.dto.UserDto;
 import user.mngm.usermanagement.jpa.user.service.UserService;
 
 @RestController
@@ -25,9 +26,23 @@ public class UserController {
         return userService.sendAuth(authDto);
     }
 
-    // 인증번호 검증 및 아이디 response
-    // @PostMapping("/view/user/find")
-    // public ResponseEntity<ApiResponseEntity> find(AuthDto authDto) {
-    //     return userService.find(authDto, "");
-    // }
+    // 인증번호 검증 후 Redis에 Sucess으로 값 변경
+    @PostMapping("/view/user/find")
+    public ResponseEntity<ApiResponseEntity> findAuth(AuthDto authDto) {
+        return userService.findAuth(authDto);
+    }
+
+    // 회원가입
+    @PostMapping("/view/user/sign-up")
+    public ResponseEntity<ApiResponseEntity> signUp(UserDto userDto) {
+        System.out.println(userDto);
+        return userService.signUp(userDto);
+    }
+
+    // JPA TEST
+    @PostMapping("/view/user/jpa-test")
+    public ResponseEntity<ApiResponseEntity> jpa_test(String name) {
+        return userService.jpa_test(name);
+    }
+
 }
