@@ -79,14 +79,14 @@ public class UserService implements UserDetailsService {
 
             // 인증정보가 없으면
             if (StringUtils.isEmpty(result) && result.equals(authDto.getAuth())) {
-                ApiResponseEntity response = new ApiResponseEntity(null, "204", "일치하는 정보가 없습니다.");
+                ApiResponseEntity response = new ApiResponseEntity(null, "204", "잘못된 인증번호 입니다.");
                 return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.NO_CONTENT);
             }
 
             redisUtil.set(authDto.getEmail(), "SUCCESS", RedisPathEnum.WEB_EMAIL_CERT); // 인증번호가 일치하면 value="SUCCESS"로 변경
 
             // 보안을 위해 성공여부만 전송
-            ApiResponseEntity response = new ApiResponseEntity(null, "200", "인증성공!");
+            ApiResponseEntity response = new ApiResponseEntity(null, "200", "인증되었습니다.");
             return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
         } catch (Exception e) {
             return ApiResponseEntity.setResponse(null, "404", "인증번호 인증 실패\r\n관리자에게 문의바랍니다.(010-2480-7840)", HttpStatus.NOT_FOUND, e);

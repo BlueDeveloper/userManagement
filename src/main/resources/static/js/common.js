@@ -2,14 +2,14 @@ var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; 
 
 /**********************************************
  * 공통으로 사용하는 AJAX 함수
- * @param type 			 - ajax 호출 type  ex) GET, POST, PUT, DELETE
+ * @param {string} type 			 - ajax 호출 type  ex) GET, POST, PUT, DELETE
  * @param url 			 - ajax 호출 url
  * @param data 			 - ajax param
  * @param beforeSendFunc - ajax beforeSend 수행 함수
- * @param successFunc 	 - ajax success 수행 함수
+ * @param {function} successFunc 	 - ajax success 수행 함수
  * @param errorFunc 	 - ajax error 수행 함수
+ * @todo 파일업로드 기능 추가바람
  *********************************************/
-
 function ajaxCall(type, url, data, beforeSend, success, error){
 	/*if(tradition == true) {
 		$.ajaxSettings.traditional = true;
@@ -26,6 +26,8 @@ function ajaxCall(type, url, data, beforeSend, success, error){
         error: error
 	});
 }
+
+ajaxCall()
 
 /**********************************************
  * data가 배열일 경우 사용하는 AJAX 함수

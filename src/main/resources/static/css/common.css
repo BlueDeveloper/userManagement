@@ -17,3 +17,8 @@ body{
 }
 
 
+/* Utils성 클래스 */
+.hover:hover{
+    cursor: pointer;
+}
+
