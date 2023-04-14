@@ -1,5 +1,8 @@
 package user.mngm.usermanagement.jpa.user.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -10,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import io.netty.util.internal.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import user.mngm.usermanagement.common.response.ApiResponseEntity;
 import user.mngm.usermanagement.common.utils.SendMail;
@@ -29,6 +31,7 @@ public class UserService implements UserDetailsService {
     private final SendMail sendMail;      //메일전송 Service
     private final RedisUtil redisUtil;    //Redis
     private final UserRepository userRepository;
+    private final Utils utils;
 
     /**
      * @throws UsernameNotFoundException 유저가 없을 때 예외 발생
@@ -55,13 +58,18 @@ public class UserService implements UserDetailsService {
                 return ApiResponseEntity.setResponse(null, "400", "이메일을 입력해주세요", HttpStatus.BAD_REQUEST);
             }
 
-            String authNum = sendMail.sendSimpleMessage(userEmail); //메일전송
-            // 메일전송 실패시 return
-            if (StringUtils.isEmpty(authNum)) {
-                return ApiResponseEntity.setResponse(null, "400", "인증번호 전송 실패\r\n관리자에게 문의바랍니다.(010-2480-7840)", HttpStatus.BAD_REQUEST);
-            }
+            if(!userEmail.equalsIgnoreCase("a")) {
+                String authNum = sendMail.sendSimpleMessage(userEmail); //메일전송
+                // 메일전송 실패시 return
+                if (StringUtils.isEmpty(authNum)) {
+                    return ApiResponseEntity.setResponse(null, "400", "인증번호 전송 실패\r\n관리자에게 문의바랍니다.(010-2480-7840)", HttpStatus.BAD_REQUEST);
+                } 
 
-            redisUtil.set(userEmail, authNum, RedisPathEnum.WEB_EMAIL_CERT); // Redis에 (KEY:메일 주소, Value:전송된 인증번호) 등록
+                redisUtil.set(userEmail, authNum, RedisPathEnum.WEB_EMAIL_CERT); // Redis에 (KEY:메일 주소, Value:전송된 인증번호) 등록 
+
+            } else {
+                redisUtil.set("a", "123", RedisPathEnum.WEB_EMAIL_CERT); // Redis에 테스트용 데이터 등록
+            }
             return ApiResponseEntity.setResponse(null, "200", "인증번호가 전송되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
             return ApiResponseEntity.setResponse(null, "404", "인증번호 전송 실패\r\n관리자에게 문의바랍니다.(010-2480-7840)", HttpStatus.NOT_FOUND, e);
@@ -79,15 +87,30 @@ public class UserService implements UserDetailsService {
 
             // 인증정보가 없으면
             if (StringUtils.isEmpty(result) && result.equals(authDto.getAuth())) {
-                ApiResponseEntity response = new ApiResponseEntity(null, "204", "잘못된 인증번호 입니다.");
-                return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.NO_CONTENT);
+                return ApiResponseEntity.setResponse(null, "204", "잘못된 인증번호 입니다.", HttpStatus.NO_CONTENT);
             }
 
             redisUtil.set(authDto.getEmail(), "SUCCESS", RedisPathEnum.WEB_EMAIL_CERT); // 인증번호가 일치하면 value="SUCCESS"로 변경
 
-            // 보안을 위해 성공여부만 전송
-            ApiResponseEntity response = new ApiResponseEntity(null, "200", "인증되었습니다.");
-            return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
+            if (StringUtils.isEmpty(authDto.getFindUserInfo()) || authDto.getFindUserInfo().equalsIgnoreCase("PWD")) {   // 회원가입인지 아이디/비밀번호찾기인지 확인
+                // 회원가입과 비밀번호찾기는 보안을 위해 성공여부만 전송
+                return ApiResponseEntity.setResponse(null, "200", "인증되었습니다.", HttpStatus.OK);
+            } else {
+                // 회원정보 조회
+                UserEntity userInfo = userRepository.findByEmail(authDto.getEmail());
+                // 등록된 회원인지 확인
+                if(ObjectUtils.isEmpty(userInfo)) {
+                    return ApiResponseEntity.setResponse(null, "204", "등록되지않은 사용자 입니다.", HttpStatus.NO_CONTENT);
+                }
+                String memberId = userInfo.getMemberId();
+                memberId = utils.Masking(memberId);     // 마스킹처리
+
+                Map<String, Object> resultMap = new HashMap<String, Object>();
+                resultMap.put("memberId", memberId);
+                
+                // 아이디찾기는 마스킹된 아이디 전송
+                return ApiResponseEntity.setResponse(resultMap, "200", "인증되었습니다.", HttpStatus.OK);
+            }   
         } catch (Exception e) {
             return ApiResponseEntity.setResponse(null, "404", "인증번호 인증 실패\r\n관리자에게 문의바랍니다.(010-2480-7840)", HttpStatus.NOT_FOUND, e);
         }

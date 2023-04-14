@@ -7,4 +7,5 @@ public class AuthDto {
     private String email;
     private String id;
     private String auth;
+    private String findUserInfo;
 }

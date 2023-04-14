@@ -16,7 +16,6 @@ import user.mngm.usermanagement.jpa.user.service.UserService;
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
-    
 
     // 로그인은 스프링 시큐리티가 처리했으니 안심하라구!(WebSecurityConfig.java)
 
@@ -35,7 +34,6 @@ public class UserController {
     // 회원가입
     @PostMapping("/view/user/sign-up")
     public ResponseEntity<ApiResponseEntity> signUp(UserDto userDto) {
-        System.out.println(userDto);
         return userService.signUp(userDto);
     }
 

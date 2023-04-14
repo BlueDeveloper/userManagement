@@ -9,11 +9,11 @@
                 $("#sendAuth").click(function (e) {
                     let topParentNode = $(e.target).parent().parent() // 버튼이 속해있는 최상위 노드
 
-                    let email = $("#email")
-                    if (!reg_email.test($(email).val())) {        // 이메일 형식인지 체크
-                        alert("이메일형식이 아닙니다.\r\n다시입력해주세요");
-                        return $(email).focus();
-                    }
+                    // let email = $("#email")
+                    // if (!reg_email.test($(email).val())) {        // 이메일 형식인지 체크
+                    //     alert("이메일형식이 아닙니다.\r\n다시입력해주세요");
+                    //     return $(email).focus();
+                    // }
 
                     var param = {
                         email: $(email).val()
@@ -79,12 +79,16 @@
                         alert("패스워드를 입력해주세요.");
                         return;
                     }
-                    if (!reg_email.test(email)) {        // 이메일 형식인지 체크
-                        alert("이메일 형식이 아닙니다.");
-                        return false;
-                    }
+                    // if (!reg_email.test(email)) {        // 이메일 형식인지 체크
+                    //     alert("이메일 형식이 아닙니다.");
+                    //     return false;
+                    // }
                     if (name === "") {        // 이름 체크
                         alert("이름을 입력해주세요.");
+                        return false;
+                    }
+                    if (name.length > 10) {
+                        alert("이름은 최대 10자까지 입력가능 합니다.");
                         return false;
                     }
 

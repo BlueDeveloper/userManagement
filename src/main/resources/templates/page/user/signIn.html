@@ -27,6 +27,7 @@
                     let topParentNode = $(e.target).parent().parent() // 버튼이 속해있는 최상위 노드
                     let email = $(topParentNode).find(".fEmail").val() // 이메일
                     let id = ""; // ID
+                    let findUserInfo = "";  // 아이디찾기 : ID, 비밀번호찾기 : PWD
 
                     if (email === "" || email === undefined) {       // 이메일 체크
                         alert("이메일을 입력해주세요.");
@@ -41,10 +42,14 @@
                     // 비밀번호 찾기 시 ID추가 전송
                     if (sendAuthNumBtn.dataset.type === "1") {
                         id = $(topParentNode).find(".fId").val()
+                        findUserInfo = "PWD"
+                    } else {
+                        findUserInfo = "ID"
                     }
 
                     // 데이터
-                    let param = {email: email,id: id}
+                    let param = {email: email,id: id,findUserInfo: findUserInfo}
+                    alert(param.findUserInfo);
 
                     // 인증번호 전송
                     if (sendAuthNumBtn.dataset.type !== "2") {
@@ -67,7 +72,8 @@
                         ajaxCall("POST", "/api/view/user/find", param, null,
                             (data) => {
                                 if (data.code === "200") {
-                                    alert(`아이디 : ${data.data}`)
+                                    alert(`아이디 : ${data.data.memberId}`)
+                                    $(location).attr('href', '/front/view/user/signIn')
                                 }
                                 if (data.code === "204") {
                                     alert(data.msg)
@@ -84,7 +90,7 @@
             })
 
             function timeout(topParentNode) {
-                let time = 10;      // 최초 설정 시간(기본 : 초)
+                let time = 300;      // 최초 설정 시간(기본 : 초)
                 let min = "";
                 let sec = "";
                 let timeOutMsg = $(topParentNode).find(".timeOut") // 타이머 영역 node
