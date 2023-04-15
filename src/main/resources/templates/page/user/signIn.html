@@ -24,6 +24,7 @@
 
                 $(".sendAuthNumberBtn").on("click", (e) => {
                     let sendAuthNumBtn = e.target // 버튼 node
+                    console.log(sendAuthNumBtn);
                     let topParentNode = $(e.target).parent().parent() // 버튼이 속해있는 최상위 노드
                     let email = $(topParentNode).find(".fEmail").val() // 이메일
                     let id = ""; // ID
@@ -42,17 +43,16 @@
                     // 비밀번호 찾기 시 ID추가 전송
                     if (sendAuthNumBtn.dataset.type === "1") {
                         id = $(topParentNode).find(".fId").val()
-                        findUserInfo = "PWD"
-                    } else {
-                        findUserInfo = "ID"
                     }
 
                     // 데이터
                     let param = {email: email,id: id,findUserInfo: findUserInfo}
-                    alert(param.findUserInfo);
 
                     // 인증번호 전송
                     if (sendAuthNumBtn.dataset.type !== "2") {
+                        if(! !param.id && ! !param.email) {
+                            findUserInfo = "PWD"
+                        }
                         ajaxCall("POST", "/api/view/user/sendAuth", param, null,
                             (data) => {
                                 if (data.code === "200") {
@@ -72,7 +72,7 @@
                         ajaxCall("POST", "/api/view/user/find", param, null,
                             (data) => {
                                 if (data.code === "200") {
-                                    alert(`아이디 : ${data.data.memberId}`)
+                                    alert(`아이디 : ${data.data.memberId} 입니다.`)
                                     $(location).attr('href', '/front/view/user/signIn')
                                 }
                                 if (data.code === "204") {

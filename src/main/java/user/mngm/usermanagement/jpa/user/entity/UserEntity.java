@@ -153,4 +153,9 @@ public class UserEntity extends GenUuid implements UserDetails {
         // true -> 사용 가능
         return true;
     }
+    
+    public void pwdUpdate(String pwd) {
+        this.pwd = pwd;
+    } 
+
 }

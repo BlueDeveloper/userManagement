@@ -37,6 +37,12 @@ public class UserController {
         return userService.signUp(userDto);
     }
 
+    // 비밀번호 변경
+    @PostMapping("/view/user/password-change")
+    public ResponseEntity<ApiResponseEntity> password_change(UserDto userDto) {
+        return userService.password_change(userDto);
+    }
+
     // JPA TEST
     @PostMapping("/view/user/jpa-test")
     public ResponseEntity<ApiResponseEntity> jpa_test(String name) {

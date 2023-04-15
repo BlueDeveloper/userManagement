@@ -2,6 +2,7 @@ package user.mngm.usermanagement.jpa.user.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import user.mngm.usermanagement.common.response.ApiResponseEntity;
@@ -166,9 +168,19 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
+    public ResponseEntity<ApiResponseEntity> password_change(UserDto userDto) {
+        UserEntity userInfo = userRepository.findByEmail(userDto.getEmail()); 
+        userInfo.pwdUpdate(userDto.getPwd());
+        
+        ApiResponseEntity response = new ApiResponseEntity(null, "200", "ok");
+        return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
+    }
+
     public ResponseEntity<ApiResponseEntity> jpa_test(String name) {
         UserEntity user = new UserEntity();
         ApiResponseEntity response = new ApiResponseEntity(user, "200", "ok");
         return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
     }
+
 }
