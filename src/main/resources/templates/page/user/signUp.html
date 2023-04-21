@@ -2,69 +2,66 @@
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
     <head>
         <script>
+            const gbl = {timer: ""}
             $(document).ready(function () {
-                var mailAuthYn = 'false';
+                let mailAuthYn = 'false';
 
                 // 인증번호 전송을 누르면
                 $("#sendAuth").click(function (e) {
                     let topParentNode = $(e.target).parent().parent() // 버튼이 속해있는 최상위 노드
 
+                    // TODO 이메일 유효성 체크 임시 해제
                     // let email = $("#email")
                     // if (!reg_email.test($(email).val())) {        // 이메일 형식인지 체크
                     //     alert("이메일형식이 아닙니다.\r\n다시입력해주세요");
                     //     return $(email).focus();
                     // }
 
-                    var param = {
+                    let param = {
                         email: $(email).val()
                     };
 
                     ajaxCall("POST", "/api/view/user/sendAuth", param, null,
-                    (data) => {
-                        if (data.code === "200") {
-                            alert(data.msg);
-                            timeout(topParentNode);
-                            $(".authModal").toggleClass("d-none");
-                        }
-                        else {
-                            alert(data.msg)
-                        }
-                    }, null)
+                        (data) => {
+                            if (data.code === "200") {
+                                debugger
+                                // alert(data.msg);
+                                timeout(topParentNode);
+                                setTimeout(() => {
+                                    $(".authModal").toggleClass("d-none");
+                                    lockBackGround(true);
+                                }, 1000);
+                            }
+                        }, (data) => alert(data.msg))
                 });
 
                 // 인증번호 확인을 누르면
-                $(".btn-outline-checkAuth").click(function (e) {
-
+                $(".checkAuth").click(function (e) {
                     if ($(auth).val() === "") {       // 인증번호 체크
                         alert("인증번호를 입력해주세요.");
                         return $(auth).focus();
                     }
-
-                    var param = {
+                    let param = {
                         auth: $(auth).val(),
                         email: $(email).val()
                     };
-
                     ajaxCall("POST", "/api/view/user/find", param, null,
-                    (data) => {
-                        if (data.code === "200") {  
-                            alert(`인증에 성공했습니다.`);
-                            $(".authModal").toggleClass("d-none");
-                            $("#sendAuth").attr("disabled", true);
-                            $("#email").attr("disabled", true);
-                            mailAuthYn = 'true';
-                        }
-                        else {
-                            alert(data.msg)
-                        }
-                    }, null)
+                        (data) => {
+                            if (data.code === "200") {
+                                alert(`인증에 성공했습니다.`);
+                                $(".authModal").toggleClass("d-none");
+                                $("#sendAuth").attr("disabled", true);
+                                $("#email").attr("disabled", true);
+                                mailAuthYn = 'true';
+                            }
+                        }, (data) => alert(data.msg))
                 });
 
                 $(".btn-outline-success").click(function () {
-                    var memberId = $("#memberId").val();
-                    var pwd = $("#pwd").val();
-                    var name = $("#name").val();
-                    var email = $("#email").val();
+                    let memberId = $("#memberId").val();
+                    let pwd = $("#pwd").val();
+                    let name = $("#name").val();
+                    let email = $("#email").val();
 
                     if (mailAuthYn === "false") {       // 메일인증여부 체크
                         alert("메일인증을 진행해주세요.");
@@ -79,20 +76,24 @@
                         alert("패스워드를 입력해주세요.");
                         return;
                     }
+
+                    // TODO 이메일 유효성 체크 임시 해제
                     // if (!reg_email.test(email)) {        // 이메일 형식인지 체크
                     //     alert("이메일 형식이 아닙니다.");
                     //     return false;
                     // }
+
                     if (name === "") {        // 이름 체크
                         alert("이름을 입력해주세요.");
                         return false;
                     }
+
                     if (name.length > 10) {
                         alert("이름은 최대 10자까지 입력가능 합니다.");
                         return false;
                     }
 
-                    var param = {
+                    let param = {
                         memberId: memberId,
                         pwd: pwd,
                         name: name,
@@ -102,10 +103,13 @@
                     ajaxCall("POST", "/api/view/user/sign-up", param, null, setResult, null);
                 });
 
-                // $(".btn-outline-checkCancel").click(function (e) {      // 인증팝업에서 취소를 누르면 팝업 종료
-                //     clearInterval(time);
-                //     $(".authModal").toggleClass("d-none");
-                // });
+                // 인증팝업 닫기
+                $(".checkCancel").click(function (e) {
+                    clearInterval(gbl.timer);
+                    $(".authModal").toggleClass("d-none");
+                    $("#auth").val("")
+                    lockBackGround(false);
+                });
 
             });
 
@@ -119,14 +123,14 @@
                 }
             };
 
-            let time = 180;      // 최초 설정 시간(기본 : 초)
-            let min = "";
-            let sec = "";   
-
             function timeout(topParentNode) {
-                let timeOutMsg = $(topParentNode).find(".timeOut") // 타이머 영역 node   
+                let time = 180;      // 최초 설정 시간(기본 : 초)
+                let min = "";
+                let sec = "";
+
+                let timeOutMsg = $(topParentNode).find(".timeOut") // 타이머 영역 node
                 // 시간설정
-                setInterval(() => {
+                gbl.timer = setInterval(() => {
                     min = parseInt(time / 60)
                     sec = time % 60;
                     $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
@@ -146,7 +150,7 @@
     </head>
     <body>
         <section layout:fragment="content">
-            <div class="login d-flex flex-column" style="width: 500px; height: 1000px; box-shadow: 0px 10px 34px -15px rgb(0 0 0 / 24%); background: white">
+            <div class="login d-flex flex-column" style="width: 500px; height: 700px; box-shadow: 0 0 14px 8px rgb(0 0 0 / 24%); background: white">
                 <div style="width: 100%;display: flex;justify-content: center;">
                     <div class="loginTitle" style="width: 120px;height: 120px; background: #8d448d; font-size: 30px;border-radius: 50%;margin-top: 10%; text-align: center">
                         <img src="/static/img/login/loginIcon.png" alt="로그인 유저 아이콘" class="w-100">
@@ -177,24 +181,22 @@
                         <button type="button" class="btn btn-outline-secondary align-self-end mt-1" id="sendAuth">인증하기</button>
                     </div>
 
-                    <div class="w-75 m-auto mt-5 d-flex justify-content-evenly">
-                        <button type="button" class="btn btn-outline-success align-self-end">회원가입</button>
-                        <a href="/">
-                            <button type="button" class="btn btn-outline-danger align-self-end">취소</button>
-                        </a>
+                    <div class="w-75 m-auto mt-5 d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-success align-self-end" style="width: 48%;">회원가입</button>
+                        <button type="button" class="btn btn-outline-danger align-self-end" style="width: 48%;">취소</button>
                     </div>
 
-                    <div class="w-20 h-15 top-50 start-50 transform-50-50 d-none d-flex flex-column bg-body position-absolute p-4 authModal" style="border: 1px solid black;">
-                        <div class="w-100 d-flex justify-content-between align-items-center">
-                            <label for="auth">인증번호</label>
-                            <input type="text" class="form-control w-75" id="auth" name="auth" style="background: #dcdcdc;">
+                    <div class="singUp-auth-modal authModal w-20 h-15 top-50 start-50 transform-50-50 d-none d-flex flex-column bg-body position-absolute p-5" style="z-index: 1001;border-radius: 15px;border: 1px solid black;">
+                        <div class="w-100 d-flex justify-content-between align-items-center form-floating">
+                            <input type="text" class="form-control w-100" id="auth" name="auth" style="background: #dcdcdc;">
+                            <label for="auth" style="right: unset;">인증번호</label>
                         </div>
-                        <div class="timeOut d-flex mt-3 ms-auto">
+                        <div class="timeOut d-flex justify-content-end fs-7 mt-1">
                             <span></span>
                         </div>
-                        <div class="w-75 d-flex justify-content-evenly align-self-center mt-4">
-                            <button type="button" class="btn btn-outline-checkAuth align-self-end mt-1">인증확인</button>
-                            <button type="button" class="btn btn-outline-checkCancel align-self-end mt-1">취소</button>
+                        <div class="w-100 d-flex justify-content-between align-self-center mt-4">
+                            <button type="button" class="btn btn-outline-success checkAuth align-self-end mt-1" style="width: 48%;">인증확인</button>
+                            <button type="button" class="btn btn-outline-danger checkCancel align-self-end mt-1" style="width: 48%;">취소</button>
                         </div>
                     </div>
                 </div>

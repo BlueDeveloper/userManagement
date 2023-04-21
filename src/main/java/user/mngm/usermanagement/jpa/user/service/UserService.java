@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
             String userEmail = Utils.toStr(authDto.getEmail());
             // 이메일 필수값 체크
             if (StringUtils.isEmpty(userEmail)) {
-                return ApiResponseEntity.setResponse(null, "400", "이메일을 입력해주세요", HttpStatus.BAD_REQUEST);
+                return ApiResponseEntity.setResponse(null, "400", "이메일을 입력해주세요.", HttpStatus.BAD_REQUEST);
             }
 
             if(!userEmail.equalsIgnoreCase("a")) {

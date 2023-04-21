@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
     <head>
         <script>
-            const gbl = {}
+            const gbl = {timer: ""}
             $(function () {
                 // 아이디/비밀번호 찾기 버튼 클릭
                 $(".findIdBtn, .findPwBtn").on("click", (e) => {
@@ -12,29 +12,30 @@
                 })
 
                 // 뒤로가기 버튼 클릭
-                // TODO 인증진행상황 초기화구현
                 $(".backArrow").on("click", (e) => {
-                    $(".inputInfo, .inputAuth").toggleClass("d-none");
-                    $(`.loginTitle`).html(`로그인`).css("font-size", "1.75rem")
-                    $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).show();
-                    $(`.findIdDiv, .findPwDiv, .backArrow`).addClass("d-none") //아이디/비밀번호 찾기 div + 뒤로가기 화살표 숨김
-                    $("#authNumId, #authNumPw").val("");
+                    $(".inputInfo, .inputAuth").toggleClass("d-none");                                      //이메일 입력 창, 인증버호 창 Toggle
+                    $(`.loginTitle`).html(`로그인`).css("font-size", "1.75rem")                              //Title 변경
+                    $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).show();                                      //로그인 화면 SHOW
+                    $(`.findIdDiv, .findPwDiv, .backArrow`).addClass("d-none")                              //아이디/비밀번호 찾기 div + 뒤로가기 화살표 숨김
+                    $("#authNumId, #authNumPw, #fIdEmail, #fPwEmail, #fPwId, .timeOut").val("").html("");   //인증번호, 이메일, 타임아웃 값 초기화
+                    $.each($(".sendAuthNumberBtn"), (idx, data) => data.dataset.type = "1");                //버튼타입 1로 변경
+                    clearInterval(gbl.timer)                                                                //타임아웃 Interval 초기화
                 })
 
 
                 $(".sendAuthNumberBtn").on("click", (e) => {
-                    let sendAuthNumBtn = e.target // 버튼 node
-                    console.log(sendAuthNumBtn);
-                    let topParentNode = $(e.target).parent().parent() // 버튼이 속해있는 최상위 노드
-                    let email = $(topParentNode).find(".fEmail").val() // 이메일
-                    let id = ""; // ID
-                    let findUserInfo = "";  // 아이디찾기 : ID, 비밀번호찾기 : PWD
+                    let sendAuthNumBtn = e.target                       //버튼 node
+                    let topParentNode = $(e.target).parent().parent()   //버튼이 속해있는 최상위 노드
+                    let timeOutMsg = $(topParentNode).find(".timeOut")  //타이머 표시 영역 node
+                    let email = $(topParentNode).find(".fEmail").val()  //이메일 값
+                    let id = ""
+                    let findUserInfo = "";                              //아이디찾기 : ID, 비밀번호찾기 : PWD
 
-                    if (email === "" || email === undefined) {       // 이메일 체크
+                    if (email === "" || email === undefined) {          //이메일 체크
                         alert("이메일을 입력해주세요.");
                         return;
                     } else {
-                        if (!reg_email.test(email)) {        // 이메일 형식인지 체크
+                        if (!reg_email.test(email)) {                   // 이메일 형식인지 체크
                             alert("이메일 형식이 아닙니다.");
                             return;
                         }
@@ -46,19 +47,20 @@
                     }
 
                     // 데이터
-                    let param = {email: email,id: id,findUserInfo: findUserInfo}
+                    let param = {email: email, id: id, findUserInfo: findUserInfo}
 
                     // 인증번호 전송
-                    if (sendAuthNumBtn.dataset.type !== "2") {
-                        if(! !param.id && ! !param.email) {
+                    if (sendAuthNumBtn.dataset.type === "1") {
+                        if (!!param.id && !!param.email) {
                             findUserInfo = "PWD"
                         }
                         ajaxCall("POST", "/api/view/user/sendAuth", param, null,
                             (data) => {
                                 if (data.code === "200") {
                                     sendAuthNumBtn.dataset.type = "2" // 같은 버튼 재활용
-                                    timeout(topParentNode);
-                                    setTimeout(()=>$(sendAuthNumBtn).html(`인증번호 확인`),1000);
+                                    timeout(timeOutMsg, 180);
+                                    setTimeout(() => $(sendAuthNumBtn).html(`인증번호 확인`), 1000);
+                                    setTimeout(() => $(topParentNode).find(".inputInfo, .inputAuth").toggleClass("d-none"), 1000);
                                     gbl.AuthNumBtn = sendAuthNumBtn
                                 }
                             }, null)
@@ -89,12 +91,10 @@
                 })
             })
 
-            function timeout(topParentNode) {
-                let time = 300;      // 최초 설정 시간(기본 : 초)
+            function timeout(timeOutMsg, time) {
                 let min = "";
                 let sec = "";
-                let timeOutMsg = $(topParentNode).find(".timeOut") // 타이머 영역 node
-                setInterval(() => {
+                gbl.timer = setInterval(() => {
                     min = parseInt(time / 60)
                     sec = time % 60;
                     $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
@@ -105,10 +105,6 @@
                         gbl.timer = "timeover" // 시간초과
                         $(gbl.AuthNumBtn).addClass("d-none");
                     }
-                }, 1000)
-
-                setTimeout(() => {
-                    $(topParentNode).find(".inputInfo, .inputAuth").toggleClass("d-none");
                 }, 1000)
             }
         </script>
@@ -153,7 +149,7 @@
                         </div>
 
                         <span class="timeOut d-none justify-content-end mt-1" style="font-size: 0.8rem;"></span>
-                        <span class="sendAuthNumberBtn AuthId d-flex justify-content-end mt-3" style="font-size: 0.8rem; cursor: pointer" data-type="0">인증번호 받기</span>
+                        <span class="sendAuthNumberBtn AuthId d-flex justify-content-end mt-3" style="font-size: 0.8rem; cursor: pointer" data-type="1">인증번호 받기</span>
                     </div>
                 </div>
 
