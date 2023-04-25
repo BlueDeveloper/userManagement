@@ -16,6 +16,8 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+application.yml
+log4j2.xml
 
 ### IntelliJ IDEA ###
 .idea
