@@ -8,6 +8,10 @@
 
 body{background: #f8f9fd!important;}
 
+/* root */
+.root{display: flex;flex-direction: column;height: 100%;width: 100%;"
+}
+
 /* header */
 .header.container{display: flex;margin-top: 40px;}
 .title-c{display: flex;align-self: end;width: 70%;}
