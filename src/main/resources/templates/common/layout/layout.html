@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-                xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-                xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
     <meta charset="UTF-8">
@@ -28,17 +28,17 @@
 </head>
 <body>
     <div class="root">
-    <div class="d-none" id="backGroundMaks" style="background: black;position: absolute;z-index: 1000;opacity: 0.6;"></div>
-    <!-- 헤더 -->
-    <header th:replace="/common/fragments/header :: header"></header>
+        <div class="d-none" id="backGroundMaks"></div>
+        <!-- 헤더 -->
+        <header th:replace="/common/fragments/header :: header"></header>
 
-    <!-- 실제컨텐츠 -->
-    <section class="layoutContainer">
-        <div layout:fragment="content"></div>
-    </section>
+        <!-- 실제컨텐츠 -->
+        <section class="layout container" style="">
+            <div layout:fragment="content"></div>
+        </section>
 
-    <!-- 푸터 -->
-<!--    <footer th:replace="common/fragments/footer :: footer"></footer>-->
+        <!-- 푸터 -->
+        <!--    <footer th:replace="common/fragments/footer :: footer"></footer>-->
     </div>
 </body>
 </html>
