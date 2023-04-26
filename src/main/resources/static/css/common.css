@@ -6,7 +6,11 @@
 
 *{font-family: "Gothic A1-500";}
 
+/* 공통 */
 body{background: #f8f9fd!important;}
+a{color: black!important;text-decoration: none!important;}
+
+
 
 /* root */
 .root{width: 100%;display: flex;flex-direction: column;}
