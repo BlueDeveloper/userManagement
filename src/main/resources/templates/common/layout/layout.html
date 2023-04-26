@@ -26,12 +26,14 @@
     <script src="/static/bootstrap/js/bootstrap.bundle.js"></script>
     <script>
         $(function(){
-            $(".root").css("height",window.innerHeight-10)
+            const root = $(".root")
+            $(root).css("height",window.innerHeight-10)
+            setTimeout(() => $(root).removeClass("d-none"),500);
         })
     </script>
 </head>
 <body>
-    <div class="root container">
+    <div class="root container d-none">
         <div class="d-none" id="backGroundMaks"></div>
         <!-- 헤더 -->
         <header th:replace="/common/fragments/header :: header"></header>
