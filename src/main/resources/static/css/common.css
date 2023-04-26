@@ -4,21 +4,18 @@
     src: url("/static/font/GothicA1/GothicA1-500.ttf") format("opentype");
 }
 
-*{
-    font-family: "Gothic A1-500";
-}
+*{font-family: "Gothic A1-500";}
 
-body{
-    background: #f8f9fd!important;
-}
+body{background: #f8f9fd!important;}
 
-.userNav a{
-    margin-left: 5px;
-}
+/* header */
+.header.container{display: flex;margin-top: 40px;}
+.title-c{display: flex;align-self: end;width: 70%;}
+.title-c a{font-size: 2rem;}
+.menu-nav{display: flex;align-items: end;width: 30%;margin-left: 5px;}
+.menu-nav a{margin-left: 5px;}
 
 
 /* Utils성 클래스 */
-.hover:hover{
-    cursor: pointer;
-}
+.hover:hover{cursor: pointer;}
 

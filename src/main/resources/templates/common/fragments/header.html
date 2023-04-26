@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<header th:fragment="header" class="headerContainer container d-flex justify-content-center align-items-center">
-    <div class="menuNav mt-4 d-flex align-self-start position-absolute">
-        <a class="fs-2" href="/">Home</a>
+<header th:fragment="header" class="header container">
+    <div class="title-c">
+        <a href="/">Home</a>
     </div>
-    <div class="userNav mt-5 d-flex me-auto ms-0">
+    <div class="menu-nav">
         <a href="/front/view/user/signIn">로그인</a>
         <a href="/front/view/user/signUp">회원가입</a>
         <a href="/front/user/logout">로그아웃</a>
