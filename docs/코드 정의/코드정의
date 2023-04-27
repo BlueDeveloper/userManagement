@@ -1,0 +1,4 @@
+ApiResponseEntity.setResponse(); 함수에 들어가는 2번째 인자값 code에 대한 정의서
+
+
+200 = "정상응답"

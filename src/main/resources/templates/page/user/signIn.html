@@ -1,180 +1,207 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
-    <head>
-        <script>
-            const gbl = {timer: ""}
-            $(function () {
-                // 아이디/비밀번호 찾기 버튼 클릭
-                $(".findIdBtn, .findPwBtn").on("click", (e) => {
-                    $(`.loginTitle`).html(e.target.textContent).css("font-size", "1.4rem")
-                    $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).hide();
-                    $(`.backArrow, .${e.target.className.substring(0, 6)}Div`).removeClass("d-none") //아이디/비밀번호 찾기 div + 뒤로가기 화살표 활성화
-                })
+<head>
+    <script>
+        const gbl = {timer: ""}
 
-                // 뒤로가기 버튼 클릭
-                $(".backArrow").on("click", (e) => {
-                    $(".inputInfo, .inputAuth").toggleClass("d-none");                                      //이메일 입력 창, 인증버호 창 Toggle
-                    $(`.loginTitle`).html(`로그인`).css("font-size", "1.75rem")                              //Title 변경
-                    $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).show();                                      //로그인 화면 SHOW
-                    $(`.findIdDiv, .findPwDiv, .backArrow`).addClass("d-none")                              //아이디/비밀번호 찾기 div + 뒤로가기 화살표 숨김
-                    $("#authNumId, #authNumPw, #fIdEmail, #fPwEmail, #fPwId, .timeOut").val("").html("");   //인증번호, 이메일, 타임아웃 값 초기화
-                    $.each($(".sendAuthNumberBtn"), (idx, data) => data.dataset.type = "1");                //버튼타입 1로 변경
-                    clearInterval(gbl.timer)                                                                //타임아웃 Interval 초기화
-                })
+        $(function () {
+            // 로그인
+            $(".loginBtn").on("click", login)
+            $(".findIdBtn, .findPwBtn").on("click", showFindIdPw)   // 아이디/비밀번호 찾기 버튼 클릭
+            $(".sendAuthNumberBtn.id").on("click", findId);         // 아이디 찾기의 인증번호 찾기
+            $(".sendAuthNumberBtn.pw").on("click", findPw);         // 아이디 찾기의 인증번호 찾기
 
+            $(".checkAuthNumberBtn").on("click", checkAuthNum);      // 인증번호 확인 버튼
+            $(".backArrow").on("click", backArrow);                 // 뒤로가기 버튼 클릭
 
-                $(".sendAuthNumberBtn").on("click", (e) => {
-                    let sendAuthNumBtn = e.target                       //버튼 node
-                    let topParentNode = $(e.target).parent().parent()   //버튼이 속해있는 최상위 노드
-                    let timeOutMsg = $(topParentNode).find(".timeOut")  //타이머 표시 영역 node
-                    let email = $(topParentNode).find(".fEmail").val()  //이메일 값
-                    let id = ""
-                    let findUserInfo = e.target.dataset.findtype        //아이디찾기 : ID, 비밀번호찾기 : PWD
+        })
 
-                    if (email === "" || email === undefined) {          //이메일 체크
-                        alert("이메일을 입력해주세요.");
-                        return;
-                    } else {
-                        if (!reg_email.test(email)) {                   // 이메일 형식인지 체크
-                            alert("이메일 형식이 아닙니다.");
-                            return;
-                        }
-                    }
+        function login() {
+            $(".loginFrm").submit()
+        }
 
-                    // 비밀번호 찾기 시 ID추가 전송
-                    if (sendAuthNumBtn.dataset.type === "2") {
-                        let idNode = $(topParentNode).find(".fId")
-                        if (idNode.value === "") {
-                            alert("아이디를 입력해주세요");
-                        } else {
-                        }
-                        id = $(topParentNode).find(".fId").val()
-                    }
+        function showFindIdPw(e) {
+            $(`.loginTitle`).html(e.target.textContent).css("font-size", "1.4rem")
+            $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).addClass("d-none");
+            $(`.backArrow, .${e.target.className.substring(0, 6)}Div`).removeClass("d-none") //아이디/비밀번호 찾기 div + 뒤로가기 화살표 활성화
+        }
 
-                    // 데이터
-                    let param = {email: email, id: id, findUserInfo: findUserInfo}
-
-                    // 인증번호 전송
-                    if (sendAuthNumBtn.dataset.type === "1" || sendAuthNumBtn.dataset.type === "2") {
-                        ajaxCall("POST", "/api/view/user/sendAuth", param, false, null,
-                            (data) => {
-                                sendAuthNumBtn.dataset.type = "3" // 같은 버튼 재활용
-                                timeout(timeOutMsg, 180);
-                                setTimeout(() => $(sendAuthNumBtn).html(`인증번호 확인`), 1000);
-                                setTimeout(() => $(topParentNode).find(".inputInfo, .inputAuth").toggleClass("d-none"), 1000);
-                                gbl.AuthNumBtn = sendAuthNumBtn
-                            }, null)
-                        return;
-                    }
-
-                    // 인증번호 확인
-                    if (sendAuthNumBtn.dataset.type === "3") {
-                        // 인증번호 서버 전송 -> 전송된 인증번호가 맞는지 검증 -> 맞을 시 해당 이메일의 아이디 response
-                        // 암호화 정책 여부 정할것 ex) abc***7779 OR abcdef7779
-                        param.auth = $(topParentNode).find(".authNum").val()
-                        ajaxCall("POST", "/api/view/user/find", param, false, null,
-                            (data) => {
-                                alert(`아이디 : ${data.data.memberId} 입니다.`)
-                                $(location).attr('href', '/front/view/user/signIn')
-                            }, (data) => {
-                                alert(data.msg);
-                                clearInterval(gbl.timer);
-                            })
-                    }
-                })
-
-
-                // 로그인 버튼
-                $(".loginBtn").on("click", function (e) {
-                    $(".loginFrm").submit()
-                })
-            })
-
-            function timeout(timeOutMsg, time) {
-                let min = "";
-                let sec = "";
-                gbl.timer = setInterval(() => {
-                    min = parseInt(time / 60)
-                    sec = time % 60;
-                    $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
-                    time--;
-                    if (time < 0) {
-                        clearInterval(gbl.timer);
-                        $(timeOutMsg).html(`시간초과`);
-                        $(gbl.AuthNumBtn).addClass("d-none");
-                    }
-                }, 1000)
+        function findId(e) {
+            let obj = {
+                node: {
+                    timeOutMsg: $(".timeOut.id"),  // 인증번호 유효시간 표기 텍스트 노드
+                    authBtn: $(".authBtn.id"),     // 인증번호 전송 & 인증번호 확인 버튼 노드
+                    authInput: $(".inputInfo.id")  // 이메일 입력 & 인증번호 입력 인풋 노드
+                },
+                data: {
+                    email: $(".fEmail.id").val(),    // 이메일 값
+                    authType : e.target.dataset.authtype // 인증타입 구분
+                }
+            };
+            if (obj.data.email === "" || obj.data.email === undefined || !reg_email.test(obj.data.email)) {
+                alert("이메일 형식을 확인해주세요.");
+                return false;
             }
-        </script>
-    </head>
-    <body>
-        <div layout:fragment="content" class="login" style="width: 500px;height: 100%;display:flex;flex-direction:column;align-items: center;box-shadow: 0px 0px 9px 4px rgb(0 0 0 / 24%);background: white">
-            <div class="titleDiv" style="width: 100%;height: 30%;display: flex;justify-content: center;flex-direction: column;align-items: center;">
-                <div class="backArrowDiv" style="width: 100%;height: 25%;">
-                    <img class="backArrow hover" src="/img/login/backArrow.png" alt="뒤로가기 아이콘" style="object-fit: contain;width: 100%;height: 100%;">
-                </div>
-                <div class="loginTitleIcon" style="width: 100px;height: 100px;display: flex;justify-content: center;align-content: center">
-                    <img src="/static/img/login/loginIcon3.png" alt="로그인 유저 아이콘" style="width: 100%;">
-                </div>
-                <span class="loginTitle" style="width: 100%;height: 30%;display: flex;justify-content: center;align-items: center;margin-top: 10px;font-size: 1.5rem;font-weight: bold;">로그인</span>
+            sendAuthNum(obj);
+        }
+
+        function findPw(e) {
+            let obj = {
+                node: {
+                    timeOutMsg: $(".timeOut.pw"),  // 인증번호 유효시간 표기 텍스트 노드
+                    authBtn: $(".authBtn.pw"),     // 인증번호 전송 & 인증번호 확인 버튼 노드
+                    authInput: $(".inputInfo.pw")  // 이메일 입력 & 인증번호 입력 인풋 노드
+                },
+                data: {
+                    email: $(".fEmail.pw").val(),    // 이메일 값
+                    id: $(".fId.pw").val(),          // 아이디 값
+                    authType : e.target.dataset.authtype // 인증타입 구분
+                }
+            };
+            if (obj.data.email === "" || !reg_email.test(obj.data.email)) {
+                alert("이메일 형식을 확인해주세요.");
+                return false;
+            }
+            if (obj.data.id === "") {
+                alert("아이디를 입력해주세요");
+                return false;
+            }
+            sendAuthNum(obj);
+        }
+
+        function backArrow() {
+            $(`.loginTitle`).html(`로그인`).css("font-size", "1.75rem")       //Title 변경
+            $(`.findIdDiv, .findPwDiv, .backArrow`).addClass("d-none")        //아이디/비밀번호 찾기 div + 뒤로가기 화살표 숨김
+            $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).removeClass("d-none"); //로그인 화면 SHOW
+            $(".inputInfo, .sendAuthNumberBtn").removeClass("d-none")         //아이디/비밀번호 찾기 이메일, 아이디 입력 폼
+            $(".inputAuth, .checkAuthNumberBtn").addClass("d-none")            //아이디/비밀번호 찾기 인증번호 입력 폼
+            $(".timeOut, .fEmail, .fId, .authNum").val("").html("");          //인증 유효시간, 이메일, 아이디, 인증번호
+            clearInterval(gbl.timer)                                          //타임아웃 Interval 초기화
+        }
+
+        // 인증번호 보내기
+        function sendAuthNum(obj) {
+            ajaxCall("POST", "/api/view/user/sendAuth", obj.data, false, null,
+                (data) => {
+                    timeout(obj.node.timeOutMsg, 180);
+                    setTimeout(() => {
+                        $(obj.node.authBtn).toggleClass("d-none")
+                        $(obj.node.authInput).toggleClass("d-none")
+                    }, 1000);
+                }, null)
+        }
+
+        // 인증번호 확인
+        function checkAuthNum(e) {
+            const type = e.target.dataset.authtype;
+            let obj = {email: "", id: "", auth: "", authType: ""}
+            if (type === "I") {
+                obj.email = $(".fEmail.id").val() // 이메일 값
+                obj.auth = $(".authNum.id").val() // 인증번호 값
+                obj.authType = "I"                // 인증타입 구분
+            } else if (type === "P") {
+
+            }
+
+            ajaxCall("POST", "/api/view/user/find", obj, false, null,
+                (data) => {
+                    alert("인증성공");
+                    // alert(`아이디 : ${data.data.memberId} 입니다.`)
+                    // $(location).attr('href', '/front/view/user/signIn')
+                }, (data) => {
+                    alert(data.msg); // 인증실패 메세지
+                    if (data.code === "400") { // 명백한 오류 일 시 화면 return
+                        clearInterval(gbl.timer);
+                        $(".backArrow").click();
+                    }
+                })
+        }
+
+        // 인증번호 유효시간
+        function timeout(timeOutMsg, time) {
+            let min = "";
+            let sec = "";
+            gbl.timer = setInterval(() => {
+                min = parseInt(time / 60)
+                sec = time % 60;
+                $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
+                time--;
+                if (time < 0) {
+                    clearInterval(gbl.timer);
+                    $(timeOutMsg).html(`시간초과`);
+                    $(gbl.AuthNumBtn).addClass("d-none");
+                }
+            }, 1000)
+        }
+    </script>
+</head>
+<body>
+    <div layout:fragment="content" class="login container" style="width: 500px;height: 500px;display:flex;flex-direction:column;align-items: center;box-shadow: 0px 0px 9px 4px rgb(0 0 0 / 24%);background: white">
+        <div class="titleDiv " style="width: 100%;height: 40%;display: flex;justify-content: center;flex-direction: column;align-items: center;">
+            <div class="backArrowDiv" style="width: 100%;height: 50px;">
+                <img class="backArrow hover d-none" src="/img/login/backArrow.png" alt="뒤로가기 아이콘" style="object-fit: contain;width: 6%;height: 100%;">
             </div>
-
-            <form class="loginFrm" action="/api/view/user/signIn" method="post" style="width: 65%;height: 25%;display: flex;flex-direction: column;justify-content: start;align-items: center;margin-top: 5%;">
-                <div class="form-floating" style="width: 100%;">
-                    <input type="text" class="form-control" id="memberId" name="memberId" style="background: #dcdcdc;">
-                    <label for="memberId" style="right: unset">아이디</label>
-                </div>
-                <div class="form-floating" style="width: 100%;margin-top: 5%;">
-                    <input type="password" class="form-control" id="pwd" name="pwd" style="background: #dcdcdc;">
-                    <label for="pwd" style="right: unset">패스워드</label>
-                </div>
-            </form>
-
-            <div class="findIdDiv d-none" style="width: 65%;height: 25%;display: flex;flex-direction: column;justify-content: start;align-items: center;margin-top: 5%;">
-                <div class="inputInfo form-floating" style="width: 100%;">
-                    <input type="text" class="fEmail form-control" id="fIdEmail" style="background: #dcdcdc;">
-                    <label for="fIdEmail" style="right: unset">이메일</label>
-                </div>
-
-                <div class="inputInfo d-none form-floating" style="width: 100%;">
-                    <input type="text" class="authNum form-control" id="authNumId" style="background: #dcdcdc;">
-                    <label for="authNumId" style="right: unset">인증번호</label>
-                </div>
-
-                <span class="timeOut " style="width: 100%;height: 20%;display: flex;justify-content: end;align-items: center;font-size: 12px;font-weight: bold;letter-spacing: 1px;"></span>
-                <span class="sendAuthNumberBtn hover" style="width: 40%;height: 25%;display: flex;justify-content: center;align-items: center;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;margin-top: 5%;" data-type="1" data-findType="ID">인증번호 받기</span>
+            <div class="loginTitleIcon" style="width: 100px;height: 100px;display: flex;justify-content: center;align-content: center">
+                <img src="/static/img/login/loginIcon3.png" alt="로그인 유저 아이콘" style="width: 100%;">
             </div>
-
-            <div class="findPwDiv d-none" style="margin-top: 15%;">
-                <div class="">
-                    <div class="inputInfo form-floating">
-                        <input type="text" class="fEmail form-control" id="fPwEmail" style="background: #dcdcdc;">
-                        <label for="fPwEmail" style="right: unset">회원가입 시 입력한 이메일을 입력하세요</label>
-                    </div>
-
-                    <div class="inputInfo form-floating">
-                        <input type="text" class="fId form-control" id="fPwId" style="background: #dcdcdc;">
-                        <label for="fPwId" style="right: unset">회원가입 시 입력한 아이디를 입력하세요</label>
-                    </div>
-
-                    <div class="inputAuth form-floating d-none">
-                        <input type="text" class="authNum form-control" id="authNumPw" style="background: #dcdcdc;">
-                        <label for="authNumPw" style="right: unset">인증번호입력</label>
-                    </div>
-
-                    <span class="timeOut d-none " style="font-size: 0.8rem;"></span>
-                    <span class="sendAuthNumberBtn AuthPw" style="font-size: 0.8rem; cursor: pointer" data-type="2" data-findType="PWD">인증번호 받기</span>
-                </div>
-            </div>
-
-            <div class="findIdPwDiv" style="width: 65%;height: 10%;display: flex;flex-direction: column;justify-content: center;align-items: end;margin-top: 5%;">
-                <span class="findIdBtn hover">아이디 찾기</span>
-                <span class="findPwBtn hover">비밀번호 찾기</span>
-            </div>
-
-            <div class="loginBtnDiv" style="width: 65%;height: 10%;display: flex;flex-direction: column;justify-content: center;align-items: end;margin-top: 5%;">
-                <button class="loginBtn" style="width: 100%;height: 100%;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;">로그인</button>
-            </div>
+            <span class="loginTitle" style="width: 100%;height: 30%;display: flex;justify-content: center;align-items: center;margin-top: 10px;font-size: 1.5rem;font-weight: bold;">로그인</span>
         </div>
-    </body>
+
+        <form class="loginFrm" action="/api/view/user/signIn" method="post" style="width: 65%;height: 25%;display: flex;flex-direction: column;justify-content: start;align-items: center;margin-top: 5%;">
+            <div class="form-floating" style="width: 100%;">
+                <input type="text" class="form-control" id="memberId" name="memberId" style="background: #dcdcdc;">
+                <label for="memberId" style="right: unset">아이디</label>
+            </div>
+            <div class="form-floating" style="width: 100%;margin-top: 5%;">
+                <input type="password" class="form-control" id="pwd" name="pwd" style="background: #dcdcdc;">
+                <label for="pwd" style="right: unset">패스워드</label>
+            </div>
+        </form>
+
+        <div class="findIdDiv d-none" style="width: 65%;height: 30%;display: flex;flex-direction: column;justify-content: start;align-items: center;margin-top: 5%;">
+            <div class="inputInfo id form-floating" style="width: 100%;">
+                <input type="text" class="fEmail id form-control" id="fIdEmail" style="background: #dcdcdc;">
+                <label for="fIdEmail" style="right: unset">이메일</label>
+            </div>
+            <div class="inputInfo id inputAuth d-none form-floating" style="width: 100%;">
+                <input type="text" class="authNum id form-control" id="authNumId" style="background: #dcdcdc;">
+                <label for="authNumId" style="right: unset">인증번호</label>
+            </div>
+            <span class="timeOut id" style="width: 100%;height: 20%;display: flex;justify-content: end;align-items: center;font-size: 12px;font-weight: bold;letter-spacing: 1px;"></span>
+            <span class="authBtn sendAuthNumberBtn id hover" data-authType="I" style="width: 50%;height: 50px;display: flex;justify-content: center;align-items: center;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;margin-top: 5%;">인증번호 받기</span>
+            <span class="authBtn checkAuthNumberBtn id hover d-none" data-authType="I" style="width: 50%;height: 50px;display: flex;justify-content: center;align-items: center;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;margin-top: 5%;">인증번호 확인</span>
+        </div>
+
+        <div class="findPwDiv d-none" style="width: 65%;height: 45%;display: flex;flex-direction: column;justify-content: start;align-items: center;margin-top: 5%;">
+            <div class="inputInfo pw form-floating" style="width: 100%;">
+                <input type="text" class="fEmail pw form-control" id="fPwEmail" style="background: #dcdcdc;">
+                <label for="fPwEmail" style="right: unset">이메일</label>
+            </div>
+
+            <div class="inputInfo pw form-floating" style="width: 100%;margin-top: 5%">
+                <input type="text" class="fId pw form-control" id="fPwId" style="background: #dcdcdc;">
+                <label for="fPwId" style="right: unset">아이디</label>
+            </div>
+
+            <div class="inputInfo pw inputAuth d-none form-floating" style="width: 100%;">
+                <input type="text" class="authNum form-control" id="authNumPw" style="background: #dcdcdc;">
+                <label for="authNumPw" style="right: unset">인증번호</label>
+            </div>
+
+            <span class="timeOut pw" style="width: 100%;height: 20%;display: flex;justify-content: end;align-items: center;font-size: 12px;font-weight: bold;letter-spacing: 1px;"></span>
+            <span class="authBtn sendAuthNumberBtn pw hover" data-authType="P" style="width: 50%;height: 50px;display: flex;justify-content: center;align-items: center;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;margin-top: 5%;">인증번호 받기</span>
+            <span class="authBtn checkAuthNumberBtn pw hover d-none" data-authType="P" style="width: 50%;height: 50px;display: flex;justify-content: center;align-items: center;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;margin-top: 5%;">인증번호 확인</span>
+        </div>
+
+
+        <div class="findIdPwDiv" style="width: 65%;height: 10%;display: flex;flex-direction: column;justify-content: center;align-items: end;margin-top: 5%;">
+            <span class="findIdBtn hover">아이디 찾기</span>
+            <span class="findPwBtn hover">비밀번호 찾기</span>
+        </div>
+
+        <div class="loginBtnDiv" style="width: 65%;height: 10%;display: flex;flex-direction: column;justify-content: center;align-items: end;margin-top: 5%;">
+            <button class="loginBtn" style="width: 100%;height: 100%;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;">로그인</button>
+        </div>
+    </div>
+</body>
 </html>
