@@ -27,7 +27,7 @@ a{color: black!important;text-decoration: none!important;}
 
 
 /* layout */
-.layout.container{height:90%;display: flex;justify-content: center;align-items: center;padding: 5%}
+.layout.container{height:80%;display: flex;justify-content: center;align-items: center;padding: 5%}
 
 /* Utils 클래스 */
 .hover:hover{cursor: pointer;}

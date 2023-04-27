@@ -100,10 +100,12 @@ public class UserService implements UserDetailsService {
             } else {
                 // 회원정보 조회
                 UserEntity userInfo = userRepository.findByEmail(authDto.getEmail());
+
                 // 등록된 회원인지 확인
                 if(ObjectUtils.isEmpty(userInfo)) {
-                    return ApiResponseEntity.setResponse(null, "204", "등록되지않은 사용자 입니다.", HttpStatus.NO_CONTENT);
+                    return ApiResponseEntity.setResponse(null, "400", "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
                 }
+
                 String memberId = userInfo.getMemberId();
                 memberId = utils.Masking(memberId);     // 마스킹처리
 

@@ -5,12 +5,13 @@ var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; 
  * @param {string} type     - ajax 호출 type  ex) GET, POST, PUT, DELETE
  * @param url               - ajax 호출 url
  * @param data              - ajax param
+ * @param asyncType         - true : 비동기 / false : 동기
  * @param beforeSend        - ajax beforeSend 수행 함수
  * @param success           - ajax success 수행 함수
  * @param error             - ajax error 수행 함수
 
  *********************************************/
-function ajaxCall(type, url, data, beforeSend, success, error) {
+function ajaxCall(type, url, data, asyncType, beforeSend, success, error) {
     /*if(tradition == true) {
         $.ajaxSettings.traditional = true;
         tradition=false;
@@ -20,13 +21,23 @@ function ajaxCall(type, url, data, beforeSend, success, error) {
         type: type,
         url: url,
         data: data,
-        dataType: "json",
+        async : asyncType,
         beforeSend: beforeSend,
+        dataType: "json",
         success: (res) => {
             success(res)
         },
         error: (res) => {
-            error(res.responseJSON)
+            const data = res.responseJSON
+            if(typeof error  === "function"){
+                error(data) // error 함수 설정 시
+            }else{
+                if(data !== undefined){
+                    alert(data.msg) // error 함수 미설정 시 && 내려받은 데이터 있을 시
+                }else{
+                    alert("오류가 발생했습니다."); // error 함수 미설정 시 && 내려받은 데이터 없을 시
+                }
+            }
         }
     });
 }

@@ -21,7 +21,7 @@
                         email: $(email).val()
                     };
 
-                    ajaxCall("POST", "/api/view/user/sendAuth", param, null,
+                    ajaxCall("POST", "/api/view/user/sendAuth", param, true,null,
                         (data) => {
                             if (data.code === "200") {
                                 debugger
@@ -45,7 +45,7 @@
                         auth: $(auth).val(),
                         email: $(email).val()
                     };
-                    ajaxCall("POST", "/api/view/user/find", param, null,
+                    ajaxCall("POST", "/api/view/user/find", param, true, null,
                         (data) => {
                             if (data.code === "200") {
                                 alert(`인증에 성공했습니다.`);
@@ -100,7 +100,7 @@
                         email: email
                     };
 
-                    ajaxCall("POST", "/api/view/user/sign-up", param, null, setResult, null);
+                    ajaxCall("POST", "/api/view/user/sign-up", param, true, null, setResult, null);
                 });
 
                 // 인증팝업 닫기
