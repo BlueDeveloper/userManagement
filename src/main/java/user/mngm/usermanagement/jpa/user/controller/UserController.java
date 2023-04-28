@@ -43,10 +43,10 @@ public class UserController {
         return userService.password_change(userDto);
     }
 
-    // JPA TEST
+    /*// JPA TEST
     @PostMapping("/view/user/jpa-test")
     public ResponseEntity<ApiResponseEntity> jpa_test(String name) {
         return userService.jpa_test(name);
-    }
+    }*/
 
 }
