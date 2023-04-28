@@ -82,7 +82,7 @@
             // 인증번호 보내기
             function sendAuthNum(obj) {
                 ajaxCall("POST", "/api/view/user/sendAuth", obj.data, false, null,
-                    (data) => {
+                    () => {
                         timeout(obj.node.timeOutMsg, 180);
                         setTimeout(() => {
                             $(obj.node.authBtn).toggleClass("d-none")
@@ -136,7 +136,7 @@
                     if (time < 0) {
                         clearInterval(gbl.timer);
                         $(timeOutMsg).html(`시간초과`);
-                        $(gbl.AuthNumBtn).addClass("d-none");
+                        $(".checkAuthNumberBtn").addClass("d-none");
                     }
                 }, 1000)
             }
