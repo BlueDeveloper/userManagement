@@ -1,0 +1,24 @@
+.login.container{width: 500px;height: 500px;display:flex;flex-direction:column;align-items: center;box-shadow: 0px 0px 9px 4px rgb(0 0 0 / 24%);background: white}
+
+
+.titleDiv{width: 100%;height: 40%;display: flex;justify-content: center;flex-direction: column;align-items: center;}
+.backArrowDiv{width: 100%;height: 50px;}
+.backArrow{object-fit: contain;width: 6%;height: 100%;}
+.loginTitleIcon{width: 100px;height: 100px;display: flex;justify-content: center;align-content: center}
+.loginTitleIcon > img{width: 100%;}
+.loginTitle{width: 100%;height: 30%;display: flex;justify-content: center;align-items: center;margin-top: 10px;font-size: 1.5rem;font-weight: bold;}
+
+.box{width: 65%;display: flex;flex-direction: column;margin-top: 5%;}
+.loginFrm{height: 25%;justify-content: start;align-items: center;}
+.findIdDiv{height: 30%;justify-content: start;align-items: center;}
+.findPwDiv{height: 45%;justify-content: start;align-items: center;}
+.findIdPwDiv{height: 10%;justify-content: center;align-items: end;}
+.loginBtnDiv{height: 10%;justify-content: center;align-items: end;}
+.loginBtnDiv > .loginBtn{width: 100%;height: 100%;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;s}
+
+/* 공통 */
+.form-floating{width:100%}
+.form-floating > input{background: #dcdcdc;}
+.form-floating > label{right: unset;}
+.timeOut{width: 100%;height: 20%;display: flex;justify-content: end;align-items: center;font-size: 12px;font-weight: bold;letter-spacing: 1px;}
+.authBtn{width: 50%;height: 50px;display: flex;justify-content: center;align-items: center;background: black;color: #fff !important;border-radius: 0.25rem;font-weight: bold;margin-top: 5%;}
