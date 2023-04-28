@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/view/*", "/api/view/*/*", "/api/send/*", "/api/send/*/*","/front/view/*", "/front/view/*/*").permitAll()     // 해당 url 무조건 허용
+                .antMatchers("/api/view/*", "/api/view/*/*", "/api/send/*", "/api/send/*/*", "/front/view/*", "/front/view/*/*").permitAll()     // 해당 url 무조건 허용
                 .antMatchers("/api/admin/*", "/api/admin/*/*", "/front/admin/*", "/front/admin/*/*").hasRole("ADMIN")                           // 해당 url ADMIN 권한 필요
                 .antMatchers("/api/user/*", "/api/user/*/*", "/front/user/*", "/front/user/*/*").authenticated()                                // 해당 url 인증 필요
                 .anyRequest().permitAll()                                                                                                                          // 나머지 요청은 모두 허용
@@ -46,8 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(new loginFailure())                     // 실패 시 수행될 로직
                 .and()                                                  // --------------------------------------------------------------------------------------------------------------------------------------------
                 .logout()                                               // 로그아웃 설정
+                .logoutUrl("/api/user/signOut")                         // 로그아웃 페이지
                 .logoutSuccessUrl("/")                                  // 로그아웃 시 이동할 페이지
                 .invalidateHttpSession(true)                            // 로그아웃시 세션소멸
+//              .deleteCookies("JSESSIONID", "remember-me")             // 로그아웃 후 쿠키 삭제
                 .and()                                                  // --------------------------------------------------------------------------------------------------------------------------------------------
                 .exceptionHandling().authenticationEntryPoint(new AjaxAuthenticationEntryPoint("/front/view/access-denied"));// 미인증 사용자가 인증 필요 url 접속시 핸들링
 

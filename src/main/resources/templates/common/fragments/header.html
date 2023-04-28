@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<header th:fragment="header" class="header container">
-    <div class="title-c">
-        <a href="/">Home</a>
-    </div>
-    <div class="menu-nav">
-        <a href="/front/view/user/signIn">로그인</a>
-        <a href="/front/view/user/signUp">회원가입</a>
-        <a href="/front/user/logout">로그아웃</a>
-        <a href="/front/user/myPage">마이페이지</a>
-        <a href="/front/admin/myPage">관리자</a>
-    </div>
-</header>
+    <header th:fragment="header" class="header container">
+        <div class="title-c">
+            <a href="/">Home</a>
+        </div>
+        <div class="menu-nav">
+            <a sec:authorize="hasRole('ANONYMOUS')" href="/front/view/user/signIn">로그인</a>
+            <a sec:authorize="hasRole('ANONYMOUS')" href="/front/view/user/signUp">회원가입</a>
+            <a sec:authorize="hasRole('USER')" href="/front/user/myPage">마이페이지</a>
+            <a sec:authorize="hasRole('ADMIN')" href="/front/admin/myPage">관리자</a>
+            <a sec:authorize="hasAnyRole('USER','ADMIN')" href="/api/user/signOut">로그아웃</a>
+        </div>
+    </header>
 </html>
