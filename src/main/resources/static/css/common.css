@@ -26,7 +26,7 @@ a{color: black!important;text-decoration: none!important;}
     .menu-nav a{margin-left: 5px;}
 
     /* layout */
-    .layout.container{height:80%;display: flex;justify-content: center;align-items: center;}
+    .layout.container{height:80%;display: flex;justify-content: center;align-items: end;margin-top: 100px;}
 }
 
 
