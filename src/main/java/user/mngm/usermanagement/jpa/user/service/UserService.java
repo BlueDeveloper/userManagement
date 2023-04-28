@@ -68,8 +68,8 @@ public class UserService implements UserDetailsService {
 
             // 비밀번호 찾기 일 경우 ID로 사용자 조회
             if(authDto.getAuthType().equalsIgnoreCase("P")){
-                Optional<UserEntity> u = userRepository.findByMemberId(authDto.getId());
-                if(!u.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+                Optional<UserEntity> userEntity = userRepository.findByMemberId(authDto.getId());
+                if(!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
             }
 
             String authNum = sendMail.sendSimpleMessage(userEmail); //메일전송
@@ -105,7 +105,7 @@ public class UserService implements UserDetailsService {
         try {
             String result = redisUtil.get(authDto.getEmail(), RedisPathEnum.WEB_EMAIL_CERT); // Redis에 저장된 인증번호 조회
 
-            // Redis에 인증정보가 없을 시
+            // Redis에 저장된 인증정보가 없을 시
             if (StringUtils.isEmpty(result)) {
                 return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "인증정보가 없습니다.", HttpStatus.BAD_REQUEST);
             }
@@ -117,25 +117,31 @@ public class UserService implements UserDetailsService {
 
             redisUtil.set(authDto.getEmail(), "SUCCESS", RedisPathEnum.WEB_EMAIL_CERT); // 인증번호가 일치하면 value="SUCCESS"로 변경
 
-            // 회원가입, 비밀번호찾기
-            if (authDto.getAuthType().equalsIgnoreCase("JOIN") || authDto.getAuthType().equalsIgnoreCase("P")) {
+            // 회원가입
+            if (authDto.getAuthType().equalsIgnoreCase("JOIN")) {
                 return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "인증되었습니다.", HttpStatus.OK); // 보안을 위해 성공여부만 전송
             }
 
             // 아이디찾기
             if (authDto.getAuthType().equalsIgnoreCase("I")) {
-                UserEntity userInfo = userRepository.findByEmail(authDto.getEmail()); // 정보조회
+                Optional<UserEntity> userEntity = userRepository.findByEmail(authDto.getEmail()); // 정보조회
 
                 // 등록된 회원인지 확인
-                if (ObjectUtils.isEmpty(userInfo)) {
+                if (ObjectUtils.isEmpty(userEntity)) {
                     return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
                 }
-                String memberId = utils.Masking(userInfo.getMemberId()); // 아이디찾기는 마스킹된 아이디 전송
 
-                Map<String, Object> resultMap = new HashMap<String, Object>();
-                resultMap.put("memberId", memberId);
-                return ApiResponseEntity.setResponse(resultMap, CodeEnum.SUCCESS, "인증되었습니다.", HttpStatus.OK);
+                String memberId = utils.Masking(userEntity.get().getMemberId()); // 아이디찾기는 마스킹된 아이디 전송
+                return ApiResponseEntity.setResponse(memberId, CodeEnum.SUCCESS, "인증되었습니다.", HttpStatus.OK);
             }
+
+            // 비밀번호 찾기
+            if(authDto.getAuthType().equalsIgnoreCase("P")){
+                Optional<UserEntity> userEntity = userRepository.findByMemberId(authDto.getId());
+                if(!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+                return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "인증되었습니다.", HttpStatus.OK); // 보안을 위해 성공여부만 전송
+            }
+
 
             // 인증 구분값 미전송 시
             return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "비정상적인 접근입니다.", HttpStatus.BAD_REQUEST);
@@ -196,17 +202,16 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public ResponseEntity<ApiResponseEntity> password_change(UserDto userDto) {
-        UserEntity userInfo = userRepository.findByEmail(userDto.getEmail());
-        userInfo.pwdUpdate(userDto.getPwd());
+        Optional<UserEntity> userEntity = userRepository.findByEmail(userDto.getEmail());
+        userEntity.get().pwdUpdate(userDto.getPwd());
 
         ApiResponseEntity response = new ApiResponseEntity(null, CodeEnum.SUCCESS, "ok");
         return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<ApiResponseEntity> jpa_test(String name) {
-        UserEntity user = new UserEntity();
-        ApiResponseEntity response = new ApiResponseEntity(user, CodeEnum.SUCCESS, "ok");
+    /*public ResponseEntity<ApiResponseEntity> jpa_test(String name) {
+        UserEntity userEntity = new UserEntity();
+        ApiResponseEntity response = new ApiResponseEntity(userEntity, CodeEnum.SUCCESS, "ok");
         return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
-    }
-
+    }*/
 }
