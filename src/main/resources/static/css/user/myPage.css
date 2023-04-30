@@ -1,0 +1,25 @@
+.myPage.container{width: 1000px;height: 70%;display: flex;flex-direction: column;align-items: center;box-shadow: 0px 0px 9px 4px rgb(0 0 0 / 24%);background: white;}
+
+
+.titleDiv{width: 95%;height: 15%;display: flex;flex-direction: column;justify-content: end;align-items: start;}
+.myPageTitle{width: 100%;height: 30%;display: flex;justify-content: start;align-items: center;margin-top: 10px;font-size: 1.5rem;font-weight: bold;}
+
+.myInfo{width: 95%;height: 100%;margin-top: 2%;display: flex;flex-direction: column;}
+.box{display: flex;width: 100%;align-items: center;justify-content: start;}
+.box > .boxName{width: 20%;height: 70px;display: flex;justify-content: center;align-items: center;border-right: 2px solid #ddd;;background: #eef1f8}
+.box > .boxInfo{width: 75%;height: 70px;display: flex;justify-content: start;align-items: center;margin-left: 5%;}
+.box > .boxInfo > input{width: 50%;border: unset;background: #ffffff!important;}
+
+
+
+
+/* 공통 */
+.form-floating{width:100%}
+.form-floating > input{background: #dcdcdc;}
+.form-floating > label{right: unset;}
+.timeOut{width: 70%;height: 30px;display: flex;justify-content: end;align-items: center;font-size: 13px;font-weight: bold;}
+
+/* 유틸 */
+.bt-2{border-top:2px solid black}
+.bb-1{border-bottom:2px solid #ddd}
+.bb-2{border-bottom:2px solid black}
