@@ -1,0 +1,26 @@
+.signUp.container{width: 500px;height: 700px;display: flex;flex-direction: column;align-items: center;box-shadow: 0px 0px 9px 4px rgb(0 0 0 / 24%);background: white;}
+
+
+.titleDiv{width: 100%;height: 40%;display: flex;justify-content: center;flex-direction: column;align-items: center;}
+.backArrowDiv{width: 100%;height: 50px;}
+.backArrow{object-fit: contain;width: 6%;height: 100%;}
+.signUpTitleIcon{width: 100px;height: 100px;display: flex;justify-content: center;align-content: center;}
+.signUpTitleIcon > img{width: 100%;}
+.signUpTitle{width: 100%;height: 30%;display: flex;justify-content: center;align-items: center;margin-top: 10px;font-size: 1.5rem;font-weight: bold;}
+
+.sign-up-form{width: 65%;height: 100%;margin-top: 5%;}
+.emailDiv.form-floating{display: flex;flex-direction: column;}
+.emailDiv.form-floating > #sendAuth{margin-top: 1%;width: 40%;align-self: end;}
+.joinCancleDiv{margin-top: 10%;display: flex;justify-content: space-between;}
+.joinCancleDiv > button{width: 48%;}
+.singUp-auth-modal{width: 20%;height: 25%;top: 50%;left: 50%;right: 50%;background:#fff;z-index: 1001;border: 1px solid black;border-radius: 15px;position: absolute;display: flex;flex-direction: column;justify-content: center;align-items: center;}
+.authNumDiv{width: 70%;}
+.authBtnDiv{width: 70%;margin-top: 3%;}
+.authBtnDiv > button{width: 48%;}
+
+
+/* 공통 */
+.form-floating{width:100%}
+.form-floating > input{background: #dcdcdc;}
+.form-floating > label{right: unset;}
+.timeOut{width: 70%;height: 30px;display: flex;justify-content: end;align-items: center;font-size: 13px;font-weight: bold;}

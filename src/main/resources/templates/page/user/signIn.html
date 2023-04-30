@@ -8,11 +8,11 @@
             $(function () {
                 // 로그인
                 $(".loginBtn").on("click", login)
-                $(".findIdBtn, .findPwBtn").on("click", showFindIdPw)   // 아이디/비밀번호 찾기 버튼 클릭
-                $(".sendAuthNumberBtn.id").on("click", findId);         // 아이디 찾기의 인증번호 찾기
-                $(".sendAuthNumberBtn.pw").on("click", findPw);         // 아이디 찾기의 인증번호 찾기
-                $(".checkAuthNumberBtn").on("click", checkAuthNum);      // 인증번호 확인 버튼
-                $(".backArrow").on("click", backArrow);                 // 뒤로가기 버튼 클릭
+                $(".findIdBtn, .findPwBtn").on("click", showFindIdPw)           // 아이디/비밀번호 찾기 버튼 클릭
+                $(".sendAuthNumberBtn.id").on("click", findId);                 // 아이디 찾기의 인증번호 찾기
+                $(".sendAuthNumberBtn.pw").on("click", findPw);                 // 아이디 찾기의 인증번호 찾기
+                $(".checkAuthNumberBtn").on("click", beforeCheckAuthNum);       // 인증번호 확인 버튼
+                $(".backArrow").on("click", backArrow);                         // 뒤로가기 버튼 클릭
 
             })
 
@@ -28,11 +28,7 @@
 
             function findId(e) {
                 let obj = {
-                    node: {
-                        timeOutMsg: $(".timeOut.id"),  // 인증번호 유효시간 표기 텍스트 노드
-                        authBtn: $(".authBtn.id"),     // 인증번호 전송 & 인증번호 확인 버튼 노드
-                        authInput: $(".inputInfo.id")  // 이메일 입력 & 인증번호 입력 인풋 노드
-                    },
+                    node: {timeOutMsg: $(".timeOut.id")},  // 인증번호 유효시간 표기 텍스트 노드
                     data: {
                         email: $(".fEmail.id").val(),  // 이메일 값
                         authType: "I"                 // 인증타입 구분
@@ -42,16 +38,18 @@
                     alert("이메일 형식을 확인해주세요.");
                     return false;
                 }
-                sendAuthNum(obj);
+
+                sendAuthNum(obj, () => {
+                    $(".authBtn.id").toggleClass("d-none")
+                    $(".inputInfo.id").toggleClass("d-none")
+                });
             }
 
             function findPw(e) {
                 let obj = {
                     node: {
-                        timeOutMsg: $(".timeOut.pw"),  // 인증번호 유효시간 표기 텍스트 노드
-                        authBtn: $(".authBtn.pw"),     // 인증번호 전송 & 인증번호 확인 버튼 노드
-                        authInput: $(".inputInfo.pw")  // 이메일 입력 & 인증번호 입력 인풋 노드
-                    },
+                        timeOutMsg: $(".timeOut.pw")
+                    },  // 인증번호 유효시간 표기 텍스트 노드
                     data: {
                         email: $(".fEmail.pw").val(),  // 이메일 값
                         id: $(".fId.pw").val(),        // 아이디 값
@@ -66,62 +64,29 @@
                     alert("아이디를 입력해주세요");
                     return false;
                 }
-                sendAuthNum(obj);
+                sendAuthNum(obj, () => {
+                    $(".authBtn.pw").toggleClass("d-none")
+                    $(".inputInfo.pw").toggleClass("d-none")
+                });
             }
 
-            function backArrow() {
-                $(`.loginTitle`).html(`로그인`).css("font-size", "1.5rem")                      //Title 변경
-                $(`.findIdDiv, .findPwDiv, .backArrow`).addClass("d-none")                      //아이디/비밀번호 찾기 div + 뒤로가기 화살표 숨김
-                $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).removeClass("d-none");               //로그인 화면 SHOW
-                $(".inputInfo, .sendAuthNumberBtn").removeClass("d-none")                       //아이디/비밀번호에서 보여질 폼
-                $(".inputAuth, .checkAuthNumberBtn, .success").addClass("d-none")               //아이디/비밀번호에서 숨겨질 품
-                $(".timeOut, .fEmail, .fId, .authNum, .successId").val("").html("");            //인증 유효시간, 이메일, 아이디, 인증번호
-                clearInterval(gbl.timer)                                                        //타임아웃 Interval 초기화
-            }
-
-            // 인증번호 보내기
-            function sendAuthNum(obj) {
-                ajaxCall("POST", "/api/view/user/sendAuth", obj.data, false, null,
-                    () => {
-                        timeout(obj.node.timeOutMsg, 180);
-                        setTimeout(() => {
-                            $(obj.node.authBtn).toggleClass("d-none")
-                            $(obj.node.authInput).toggleClass("d-none")
-                        }, 1000);
-                    }, null)
-            }
 
             // 인증번호 확인
-            function checkAuthNum(e) {
+            function beforeCheckAuthNum(e) {
                 const authType = e.target.dataset.authtype;
-                let obj = {email: "", id: "", auth: "", authType: ""}
                 if (authType === "I") {
-                    obj.email = $(".fEmail.id").val() // 이메일 값
-                    obj.auth = $(".authNum.id").val() // 인증번호 값
-                    obj.authType = authType               // 인증타입 구분
-                } else if (authType === "P") {
-                    obj.email = $(".fEmail.pw").val() // 이메일 값
-                    obj.id = $(".fId.pw").val() // 이메일 값
-                    obj.auth = $(".authNum.pw").val() // 인증번호 값
-                    obj.authType = authType               // 인증타입 구분
-                }
-
-                ajaxCall("POST", "/api/view/user/find", obj, false, null,
-                    (data) => {
-                        if (authType === "I") {
+                    checkAuthNum(authType, {email: $(".fEmail.id").val(), auth: $(".authNum.id").val(), authType: authType},
+                        (data) => {
                             $(".inputInfo.id").addClass("d-none")
                             $(".success.id, .successId").removeClass("d-none").val(data.data);
                             clearInterval(gbl.timer);
-                        } else if (authType === "P") {
+                        })
+                } else if (authType === "P") {
+                    checkAuthNum(authType, {email: $(".fEmail.pw").val(), id: $(".fId.pw").val(), auth: $(".authNum.pw").val(), authType: authType},
+                        (data) => {
                             // 비밀번호 변경 프로세스 추가
-                        }
-                    }, (data) => {
-                        alert(data.msg); // 인증실패 메세지
-                        if (data.code === "400") { // 명백한 오류 일 시 화면 return
-                            clearInterval(gbl.timer);
-                            $(".backArrow").click();
-                        }
-                    })
+                        })
+                }
             }
 
             // 인증번호 유효시간
@@ -139,6 +104,16 @@
                         $(".checkAuthNumberBtn").addClass("d-none");
                     }
                 }, 1000)
+            }
+
+            function backArrow() {
+                $(`.loginTitle`).html(`로그인`).css("font-size", "1.5rem")                      //Title 변경
+                $(`.findIdDiv, .findPwDiv, .backArrow`).addClass("d-none")                      //아이디/비밀번호 찾기 div + 뒤로가기 화살표 숨김
+                $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).removeClass("d-none");               //로그인 화면 SHOW
+                $(".inputInfo, .sendAuthNumberBtn").removeClass("d-none")                       //아이디/비밀번호에서 보여질 폼
+                $(".inputAuth, .checkAuthNumberBtn, .success").addClass("d-none")               //아이디/비밀번호에서 숨겨질 품
+                $(".timeOut, .fEmail, .fId, .authNum, .successId").val("").html("");            //인증 유효시간, 이메일, 아이디, 인증번호
+                clearInterval(gbl.timer)                                                        //타임아웃 Interval 초기화
             }
         </script>
     </head>

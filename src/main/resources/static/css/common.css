@@ -9,6 +9,7 @@
 /* 공통 */
 body{background: #f8f9fd!important;}
 a{color: black!important;text-decoration: none!important;}
+input:-webkit-autofill {-webkit-box-shadow: 0 0 0 1000px #dcdcdc inset;} /* 자동완성 시 input 뒷배경 설정 */
 
 /* 15인치 모니터 */
 @media (min-width: 1400px) {
