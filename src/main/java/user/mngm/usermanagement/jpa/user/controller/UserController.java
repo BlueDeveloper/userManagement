@@ -30,7 +30,7 @@ public class UserController {
     public ResponseEntity<ApiResponseEntity> findAuth(AuthDto authDto) { return userService.findAuth(authDto); }
 
     // 회원가입
-    @PostMapping("/view/user/signUp")
+    @PostMapping("/view/signUp")
     public ResponseEntity<ApiResponseEntity> signUp(UserDto userDto) {
         return userService.signUp(userDto);
     }
@@ -41,8 +41,8 @@ public class UserController {
         return userService.password_change(userDto);
     }
 
-    // 마이페이지 정보
-//    @PostMapping("/view")
+//     마이페이지 정보
+//    @PostMapping("/")
 
     /*// JPA TEST
     @PostMapping("/view/user/jpa-test")
