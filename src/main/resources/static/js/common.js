@@ -89,13 +89,30 @@ function ajaxFormData(url, data, beforeSend, success, error) {
  * 이메일 인증번호 전송에 사용
  * @param obj - obj.node 시간초 표기에 사용될 노드
  * @param callBack - 인증번호 전송 완료 후 실행할 함수
+ * @param time - 인증 유효시간
  *********************************************/
-function sendAuthNum(obj, callBack) {
+function sendAuthNum(obj, callBack, time) {
     ajaxCall("POST", "/api/view/sendAuth", obj.data, true, null,
         () => {
-            timeout(obj.node.timeOutMsg, 180);
+            timeout(obj.node.timeOutMsg, time);
             setTimeout(() => callBack(), 1000);
         }, null)
+}
+
+function timeout(timeOutMsg, time) {
+    let min = "";
+    let sec = "";
+    gbl.timer = setInterval(() => {
+        min = parseInt(time / 60)
+        sec = time % 60;
+        $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
+        time--;
+        if (time < 0) {
+            clearInterval(gbl.timer);
+            $(timeOutMsg).html(`시간초과`);
+            $(".checkAuthNumberBtn").addClass("d-none");
+        }
+    }, 1000)
 }
 
 

@@ -23,7 +23,7 @@
                 sendAuthNum(obj, () => {
                     $(".authModal").removeClass("d-none");
                     lockBackGround(true);
-                });
+                }, 180);
             }
 
             function beforeCheckAuthNum() {
@@ -48,22 +48,6 @@
                 $(".authModal").toggleClass("d-none");
                 $("#auth").val("")
                 lockBackGround(false);
-            }
-
-            function timeout(timeOutMsg, time) {
-                let min = "";
-                let sec = "";
-                gbl.timer = setInterval(() => {
-                    min = parseInt(time / 60)
-                    sec = time % 60;
-                    $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
-                    time--;
-                    if (time < 0) {
-                        clearInterval(gbl.timer);
-                        $(timeOutMsg).html(`시간초과`);
-                        $(".checkAuthNumberBtn").addClass("d-none");
-                    }
-                }, 1000)
             }
 
             function join() {

@@ -46,7 +46,7 @@
                 sendAuthNum(obj, () => {
                     $(".authBtn.id").toggleClass("d-none")
                     $(".inputInfo.id").toggleClass("d-none")
-                });
+                },180);
             }
 
             function findPw(e) {
@@ -71,7 +71,7 @@
                 sendAuthNum(obj, () => {
                     $(".authBtn.pw").toggleClass("d-none")
                     $(".inputInfo.pw").toggleClass("d-none")
-                });
+                }, 180);
             }
 
 
@@ -91,23 +91,6 @@
                             // 비밀번호 변경 프로세스 추가
                         })
                 }
-            }
-
-            // 인증번호 유효시간
-            function timeout(timeOutMsg, time) {
-                let min = "";
-                let sec = "";
-                gbl.timer = setInterval(() => {
-                    min = parseInt(time / 60)
-                    sec = time % 60;
-                    $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
-                    time--;
-                    if (time < 0) {
-                        clearInterval(gbl.timer);
-                        $(timeOutMsg).html(`시간초과`);
-                        $(".checkAuthNumberBtn").addClass("d-none");
-                    }
-                }, 1000)
             }
 
             function backArrow() {
