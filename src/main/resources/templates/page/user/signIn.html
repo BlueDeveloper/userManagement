@@ -6,15 +6,19 @@
             const gbl = {timer: ""}
 
             $(function () {
-                // 로그인
-                $(".loginBtn").on("click", login)
+                init()                                                          // 초기화 함수
+                $(".loginBtn").on("click", login)                               // 로그인
                 $(".findIdBtn, .findPwBtn").on("click", showFindIdPw)           // 아이디/비밀번호 찾기 버튼 클릭
                 $(".sendAuthNumberBtn.id").on("click", findId);                 // 아이디 찾기의 인증번호 찾기
                 $(".sendAuthNumberBtn.pw").on("click", findPw);                 // 아이디 찾기의 인증번호 찾기
                 $(".checkAuthNumberBtn").on("click", beforeCheckAuthNum);       // 인증번호 확인 버튼
                 $(".backArrow").on("click", backArrow);                         // 뒤로가기 버튼 클릭
-
+                $("#pwd").on("keydown", enterLogin);                            // 비밀번호 엔터 로그인
             })
+
+            function init(){
+                $("#memberId").focus()
+            }
 
             function login() {
                 $(".loginFrm").submit()
@@ -114,6 +118,10 @@
                 $(".inputAuth, .checkAuthNumberBtn, .success").addClass("d-none")               //아이디/비밀번호에서 숨겨질 품
                 $(".timeOut, .fEmail, .fId, .authNum, .successId").val("").html("");            //인증 유효시간, 이메일, 아이디, 인증번호
                 clearInterval(gbl.timer)                                                        //타임아웃 Interval 초기화
+            }
+
+            function enterLogin(e) {
+                if (e.keyCode === 13) login()
             }
         </script>
     </head>
