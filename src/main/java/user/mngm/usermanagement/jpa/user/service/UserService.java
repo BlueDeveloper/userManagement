@@ -8,6 +8,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -208,14 +211,52 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public ResponseEntity<ApiResponseEntity> myPageInfo(UserEntity principal){
+        UserDto userDto = new UserDto(principal);
+        return ApiResponseEntity.setResponse(userDto, CodeEnum.SUCCESS, "", HttpStatus.CREATED);
+    }
+
     @Transactional
-    public ResponseEntity<ApiResponseEntity> password_change(UserDto userDto) {
+    public ResponseEntity<ApiResponseEntity> passwordChange(UserDto userDto) {
         Optional<UserEntity> userEntity = userRepository.findByEmail(userDto.getEmail());
         userEntity.get().pwdUpdate(userDto.getPwd());
 
         ApiResponseEntity response = new ApiResponseEntity(null, CodeEnum.SUCCESS, "ok");
         return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
     }
+
+    @Transactional
+    public ResponseEntity<ApiResponseEntity> emailUpdate(UserDto userDto) {
+        Optional<UserEntity> userEntity = userRepository.findByMemberId(userDto.getMemberId());
+        if(!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+
+        // 업데이트
+        userEntity.get().setEmail(userDto.getEmail());
+        userRepository.save(userEntity.get());
+
+        // 업데이트된 정보를  Spring Security로 인증해서 HttpSession에 반영
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,userDto.getMemberId()));
+
+        return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "", HttpStatus.CREATED);
+    }
+
+    /**
+     * @description 새로운 인증 생성
+     * @param currentAuth 현재 auth 정보
+     * @param memberId	현재 사용자 Id
+     * @return Authentication
+     * @author Armton
+     */
+    protected Authentication createNewAuthentication(Authentication currentAuth, String memberId) {
+        UserDetails newPrincipal = userRepository.findByMemberId(memberId).orElseThrow(() -> new UsernameNotFoundException((memberId))); //memberId를 기반으로 유저 조회
+        UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, currentAuth.getCredentials(), newPrincipal.getAuthorities());
+        newAuth.setDetails(currentAuth.getDetails());
+        return newAuth;
+    }
+
+
+
 
     /*public ResponseEntity<ApiResponseEntity> jpa_test(String name) {
         UserEntity userEntity = new UserEntity();

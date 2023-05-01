@@ -3,13 +3,45 @@
     <head>
         <link rel="stylesheet" href="/static/css/user/myPage.css">
         <script>
-            const gbl = {timer: "", mailAuthYn: false}
+            const gbl = {timer: "", ori: ""}
             $(function () {
-                $("#sendAuth").on("click", authEmail)                           // 인증하기 버튼
+                init()                                                          // 초기화
+                $(".changeEmail").on("click", changeEmail)                      // 이메일 변경
+                $(".cancleChange").on("click", cancleChange)                    // 이메일 변경 취소
+                $("#email").on("keyup", emailKeyDown)                           // 이메일 값 변경 체크
+                $(".authEmail").on("click", authEmail)                          // 인증번호 전송
                 $(".checkAuthNumberBtn").on("click", beforeCheckAuthNum);       // 인증번호 확인 버튼
-                $(".checkCancel").on("click", checkCancel)                      // 인증창 닫기
-                $(".joinBtn").on("click", join)                                 // 회원가입
             })
+
+            function init() {
+                ajaxCall("POST", "/api/user/myPageInfo", null, true, null,
+                    (data) => {
+                        gbl.ori = data.data
+                        let infoText = $(".infoText")
+                        $.each(infoText, (idx, target) => $(target).val(gbl.ori[target.id]))
+                    }, null)
+            }
+
+            function changeEmail(e) {
+                $(".emailBtn").toggleClass("d-none")
+                $("#email").removeAttr("disabled", false).css({border: "1px solid black"});
+            }
+
+            function cancleChange() {
+                $(".emailBtn").toggleClass("d-none")
+                $(".authEmail").addClass("d-none");
+                $("#email").attr("disabled", true).css({border: "unset"}).val(gbl.ori.email);
+            }
+
+            function emailKeyDown(e) {
+                const oriEmail = gbl.ori.email;
+                const curEmail = e.target.value;
+                if (oriEmail !== curEmail) {
+                    $(".authEmail").removeClass("d-none");
+                } else {
+                    $(".authEmail").addClass("d-none");
+                }
+            }
 
             function authEmail() {
                 let obj = {
@@ -23,7 +55,7 @@
                 sendAuthNum(obj, () => {
                     $(".authModal").removeClass("d-none");
                     lockBackGround(true);
-                });
+                }, 180);
             }
 
             function beforeCheckAuthNum() {
@@ -37,77 +69,16 @@
                     (data) => {
                         alert(data.msg);
                         $(".authModal, #sendAuth").addClass("d-none");
-                        $("#email").attr("disabled", true);
-                        gbl.mailAuthYn = true;
-                        lockBackGround(false);
+                        // TODO 업데이트 로딩 이미지 보여주면서 email 업데이트 비동기로 진행할 것
+                        emailUpdate()
                     })
             }
 
-            function checkCancel() {
-                clearInterval(gbl.timer);
-                $(".authModal").toggleClass("d-none");
-                $("#auth").val("")
-                lockBackGround(false);
-            }
-
-            function timeout(timeOutMsg, time) {
-                let min = "";
-                let sec = "";
-                gbl.timer = setInterval(() => {
-                    min = parseInt(time / 60)
-                    sec = time % 60;
-                    $(timeOutMsg).html(`${min}분 ${sec}초`).removeClass("d-none").addClass("d-flex");
-                    time--;
-                    if (time < 0) {
-                        clearInterval(gbl.timer);
-                        $(timeOutMsg).html(`시간초과`);
-                        $(".checkAuthNumberBtn").addClass("d-none");
-                    }
-                }, 1000)
-            }
-
-            function join() {
-                let memberId = $("#memberId").val();
-                let pwd = $("#pwd").val();
-                let name = $("#name").val();
-                let email = $("#email").val();
-
-                if (name === "") {        // 이름 체크
-                    alert("이름을 입력해주세요.");
-                    return false;
-                }
-
-                if (name.length > 10) {
-                    alert("이름은 최대 10자까지 입력가능 합니다.");
-                    return false;
-                }
-
-                if (memberId === "") {       // 아이디 체크
-                    alert("아이디를 입력해주세요.");
-                    return;
-                }
-                if (pwd === "") {     // 패스워드 체크
-                    alert("패스워드를 입력해주세요.");
-                    return;
-                }
-
-                if (!gbl.mailAuthYn) {       // 메일인증여부 체크
-                    alert("메일인증을 진행해주세요.");
-                    return;
-                }
-
-                if (!reg_email.test(email)) {        // 이메일 형식인지 체크
-                    alert("이메일 형식이 아닙니다.");
-                    return false;
-                }
-
-                let param = {memberId: memberId, pwd: pwd, name: name, email: email};
-
-                ajaxCall("POST", "/api/view/user/sign-up", param, true, null,
+            function emailUpdate() {
+                ajaxCall("POST", "/api/user/emailUpdate", {email: $("#email").val(), memberId: gbl.ori.memberId}, false, null,
                     (data) => {
-                        alert(data.msg)
-                        location.href = "/front/view/user/signIn";
-                    }, null);
+                        location.reload()
+                    }, null)
             }
         </script>
     </head>
@@ -122,20 +93,22 @@
                 <div class="box bt-2 bb-1">
                     <span class="boxName">이름</span>
                     <span class="boxInfo">
-                        <input type="text" class="form-control" value="유저1" disabled>
+                        <input type="text" class="infoText form-control" id="name" disabled>
                     </span>
                 </div>
                 <div class="box bb-1">
                     <span class="boxName">아이디</span>
                     <span class="boxInfo">
-                        <input type="text" class="form-control" value="user" disabled>
+                        <input type="text" class="infoText form-control" id="memberId" disabled>
                     </span>
                 </div>
                 <div class="box bb-1">
                     <span class="boxName">이메일</span>
                     <span class="boxInfo">
-                        <input type="text" class="form-control" value="user@google.com" disabled>
-                        <button type="button" class="btn btn-outline-dark">이메일변경</button>
+                        <input type="text" class="infoText form-control" id="email" disabled>
+                        <button type="button" class="emailBtn changeEmail btn btn-outline-dark">이메일변경</button>
+                        <button type="button" class="authEmail btn btn-outline-dark d-none">인증하기</button>
+                        <button type="button" class="emailBtn cancleChange btn btn-outline-dark d-none">이메일변경취소</button>
                     </span>
                 </div>
                 <div class="box bb-2">
@@ -144,44 +117,18 @@
                         <button type="button" class="btn btn-outline-dark">비밀번호변경</button>
                     </span>
                 </div>
-                <!--<div class="nameDiv form-floating">
-                    <input type="text" class="form-control" id="name" name="name" autocomplete="off">
-                    <label for="name">이름</label>
-                </div>
-
-                <div class="idDIv form-floating mt-u5">
-                    <input type="text" class="form-control" id="memberId" name="memberId" autocomplete="off">
-                    <label for="memberId">아이디</label>
-                </div>
-
-                <div class="pwdDiv form-floating mt-u5">
-                    <input type="password" class="form-control" id="pwd" name="pwd">
-                    <label for="pwd">패스워드</label>
-                </div>
-
-                <div class="emailDiv form-floating mt-u5">
-                    <input type="email" class="form-control" id="email" name="email" autocomplete="off">
-                    <label for="email">이메일</label>
-                    <button type="button" class="btn btn-outline-secondary" id="sendAuth">인증하기</button>
-                </div>
-
-                <div class="joinCancleDiv">
-                    <button type="button" class="joinBtn btn btn-outline-success">회원가입</button>
-                    <button type="button" class="cancleBtn btn btn-outline-danger">취소</button>
-                </div>
-
-                <div class="singUp-auth-modal authModal d-none transform-50-50">
+                <div class="mypageAuthModal authModal transform-50-50 d-none">
                     <div class="authNumDiv form-floating">
                         <input type="text" class="form-control" id="auth" name="auth" autocomplete="off">
                         <label for="auth">인증번호</label>
                     </div>
-                    <span class="timeOut" >
+                    <span class="timeOut" style="">
                     </span>
-                    <div class="authBtnDiv" >
+                    <div class="authBtnDiv" style="">
                         <button type="button" class="btn btn-outline-success checkAuthNumberBtn">인증확인</button>
                         <button type="button" class="btn btn-outline-danger checkCancel">취소</button>
                     </div>
-                </div>-->
+                </div>
             </div>
         </section>
     </body>

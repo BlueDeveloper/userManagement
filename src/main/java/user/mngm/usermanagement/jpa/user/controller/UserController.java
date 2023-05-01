@@ -1,14 +1,18 @@
 package user.mngm.usermanagement.jpa.user.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import user.mngm.usermanagement.common.response.ApiResponseEntity;
+import user.mngm.usermanagement.common.response.CodeEnum;
 import user.mngm.usermanagement.jpa.user.dto.AuthDto;
 import user.mngm.usermanagement.jpa.user.dto.UserDto;
+import user.mngm.usermanagement.jpa.user.entity.UserEntity;
 import user.mngm.usermanagement.jpa.user.service.UserService;
 
 @RestController
@@ -27,7 +31,9 @@ public class UserController {
 
     // 인증번호 검증 후 Redis에 Sucess으로 값 변경
     @PostMapping("/view/find")
-    public ResponseEntity<ApiResponseEntity> findAuth(AuthDto authDto) { return userService.findAuth(authDto); }
+    public ResponseEntity<ApiResponseEntity> findAuth(AuthDto authDto) {
+        return userService.findAuth(authDto);
+    }
 
     // 회원가입
     @PostMapping("/view/signUp")
@@ -35,15 +41,24 @@ public class UserController {
         return userService.signUp(userDto);
     }
 
-    // 비밀번호 변경
-    @PostMapping("/user/passwordChange")
-    public ResponseEntity<ApiResponseEntity> password_change(UserDto userDto) {
-        return userService.password_change(userDto);
+    @PostMapping("/user/myPageInfo")
+    public ResponseEntity<ApiResponseEntity> myPageInfo(@AuthenticationPrincipal UserEntity principal) {
+        return userService.myPageInfo(principal);
     }
 
-//     마이페이지 정보
-//    @PostMapping("/")
+    // 비밀번호 변경
+    @PostMapping("/user/passwordChange")
+    public ResponseEntity<ApiResponseEntity> passwordChange(UserDto userDto) {
+        return userService.passwordChange(userDto);
+    }
 
+    // 이메일 변경
+    @PostMapping("/user/emailUpdate")
+    public ResponseEntity<ApiResponseEntity> emailUpdate(UserDto userDto) {
+        return userService.emailUpdate(userDto);
+    }
+
+    // 마이페이지 정보
     /*// JPA TEST
     @PostMapping("/view/user/jpa-test")
     public ResponseEntity<ApiResponseEntity> jpa_test(String name) {
