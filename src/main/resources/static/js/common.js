@@ -91,7 +91,7 @@ function ajaxFormData(url, data, beforeSend, success, error) {
  * @param callBack - 인증번호 전송 완료 후 실행할 함수
  *********************************************/
 function sendAuthNum(obj, callBack) {
-    ajaxCall("POST", "/api/view/user/sendAuth", obj.data, true, null,
+    ajaxCall("POST", "/api/view/sendAuth", obj.data, true, null,
         () => {
             timeout(obj.node.timeOutMsg, 180);
             setTimeout(() => callBack(), 1000);
@@ -106,7 +106,7 @@ function sendAuthNum(obj, callBack) {
  * @param callBack - 인증번호 전송 완료 후 실행할 함수
  *********************************************/
 function checkAuthNum(authType, data, callBack) {
-    ajaxCall("POST", "/api/view/user/find", data, true, null,
+    ajaxCall("POST", "/api/view/find", data, true, null,
         (data) => {
             if (typeof callBack === "function") {
                 callBack(data);

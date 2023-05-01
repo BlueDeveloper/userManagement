@@ -20,28 +20,29 @@ public class UserController {
     // 로그인은 스프링 시큐리티가 처리했으니 안심하라구!(WebSecurityConfig.java)
 
     // 이메일 인증번호 전송
-    @PostMapping("/view/user/sendAuth")
+    @PostMapping("/view/sendAuth")
     public ResponseEntity<ApiResponseEntity> sendAuth(AuthDto authDto) {
         return userService.sendAuth(authDto);
     }
 
     // 인증번호 검증 후 Redis에 Sucess으로 값 변경
-    @PostMapping("/view/user/find")
-    public ResponseEntity<ApiResponseEntity> findAuth(AuthDto authDto) {
-        return userService.findAuth(authDto);
-    }
+    @PostMapping("/view/find")
+    public ResponseEntity<ApiResponseEntity> findAuth(AuthDto authDto) { return userService.findAuth(authDto); }
 
     // 회원가입
-    @PostMapping("/view/user/sign-up")
+    @PostMapping("/view/user/signUp")
     public ResponseEntity<ApiResponseEntity> signUp(UserDto userDto) {
         return userService.signUp(userDto);
     }
 
     // 비밀번호 변경
-    @PostMapping("/view/user/password-change")
+    @PostMapping("/user/passwordChange")
     public ResponseEntity<ApiResponseEntity> password_change(UserDto userDto) {
         return userService.password_change(userDto);
     }
+
+    // 마이페이지 정보
+//    @PostMapping("/view")
 
     /*// JPA TEST
     @PostMapping("/view/user/jpa-test")

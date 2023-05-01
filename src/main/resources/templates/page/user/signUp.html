@@ -103,10 +103,10 @@
 
                 let param = {memberId: memberId, pwd: pwd, name: name, email: email};
 
-                ajaxCall("POST", "/api/view/user/sign-up", param, true, null,
+                ajaxCall("POST", "/api/view/user/signUp", param, true, null,
                     (data) => {
                         alert(data.msg)
-                        location.href = "/front/view/user/signIn";
+                        location.href = "/front/view/signIn";
                     }, null);
             }
         </script>
