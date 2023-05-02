@@ -211,11 +211,19 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    /**
+     * @type : User Management
+     * @desc : 마이페이지 서비스
+     */
     public ResponseEntity<ApiResponseEntity> myPageInfo(UserEntity principal) {
         UserDto userDto = new UserDto(principal);
-        return ApiResponseEntity.setResponse(userDto, CodeEnum.SUCCESS, "", HttpStatus.CREATED);
+        return ApiResponseEntity.setResponse(userDto, CodeEnum.SUCCESS, "", HttpStatus.OK);
     }
 
+    /**
+     * @type : User Management
+     * @desc : 이메일 변경 서비스
+     */
     @Transactional
     public ResponseEntity<ApiResponseEntity> emailUpdate(UserDto userDto) {
         Optional<UserEntity> userEntity = userRepository.findByMemberId(userDto.getMemberId());
@@ -226,16 +234,22 @@ public class UserService implements UserDetailsService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication, userDto.getMemberId()));
 
-        return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "", HttpStatus.CREATED);
+        return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "", HttpStatus.OK);
     }
 
+    /**
+     * @type : User Management
+     * @desc : 비밀번호 변경 서비스
+     */
     @Transactional
-    public ResponseEntity<ApiResponseEntity> passwordChange(UserDto userDto) {
-        Optional<UserEntity> userEntity = userRepository.findByEmail(userDto.getEmail());
-        userEntity.get().pwdUpdate(userDto.getPwd());
-
-        ApiResponseEntity response = new ApiResponseEntity(null, CodeEnum.SUCCESS, "ok");
-        return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
+    public ResponseEntity<ApiResponseEntity> passwordUpdate(UserDto userDto) {
+        Optional<UserEntity> userEntity = userRepository.findByMemberId(userDto.getMemberId());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!encoder.matches(userDto.getPwd(), userEntity.get().getPwd())) {
+            return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "기존 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        userEntity.get().pwdUpdate(encoder.encode(userDto.getPwd2())); // 신규 비밀번호 암호화 후 JPA 변경감지(Dirty Checking)
+        return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "변경되었습니다.\r\n재로그인 해주시길 바랍니다.", HttpStatus.OK);
     }
 
     /**

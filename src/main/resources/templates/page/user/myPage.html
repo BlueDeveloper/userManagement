@@ -9,8 +9,12 @@
             $(".changeEmail").on("click", changeEmail)                      // 이메일 변경
             $(".cancleChange").on("click", cancleChange)                    // 이메일 변경 취소
             $("#email").on("keyup", emailKeyDown)                           // 이메일 값 변경 체크
-            $(".authEmail").on("click", authEmail)                          // 인증번호 전송
+            $(".authEmail").on("click", authEmail)                          // 인증번호 전송(모달창 show)
             $(".checkAuthNumberBtn").on("click", beforeCheckAuthNum);       // 인증번호 확인 버튼
+            $(".checkCancel").on("click", checkCancel);                     // 인증번호 취소 버튼
+            $(".beforeChgPw").on("click", beforeChgPw)                      // 비밀번호 변경 모달
+            $(".changePwBtn").on("click", changePwBtn)                      // 비밀번호 변경 모달
+            $(".chagnePwCancel").on("click", chagnePwCancel)                // 비밀번호 변경 취소
         })
 
         function init() {
@@ -53,8 +57,9 @@
                 return false;
             }
             sendAuthNum(obj, () => {
-                $(".authModal").removeClass("d-none");
-                lockBackGround(true,true);
+                const h = window.scrollY + 200;
+                $(".authModal").removeClass("d-none").css("top", h);
+                lockBackGround(true);
             }, 180);
         }
 
@@ -68,9 +73,18 @@
             checkAuthNum(authType, {auth: auth, email: $("#email").val(), authType: authType},
                 (data) => {
                     alert(data.msg);
-                    $(".authModal, #sendAuth").addClass("d-none");
+                    $(".authModal").addClass("d-none");                                     // 모달창 숨기기
+                    $("#loadingIcon").removeClass("d-none").css("top", window.scrollY + 200); // 로딩이미지
                     setTimeout(() => emailUpdate(), 1000) // 로딩아이콘을 보여주고싶은 개발자의 뒤틀린 욕망을 위한 코드
                 })
+        }
+
+        function checkCancel() {
+            clearInterval(gbl.timer);
+            $(".authModal").toggleClass("d-none");
+            $("#auth").val("")
+            lockBackGround(false);
+            cancleChange()
         }
 
         function emailUpdate() {
@@ -78,6 +92,39 @@
                 (data) => {
                     location.reload()
                 }, null)
+        }
+
+        function beforeChgPw() {
+            const h = window.scrollY;
+            $(".chgPwModal").removeClass("d-none").css("top", h)
+            lockBackGround(true);
+        }
+
+        function changePwBtn() {
+            const o = $("#op").val();
+            const n1 = $("#np1").val();
+            const n2 = $("#np2").val();
+            if (o === "" || o === undefined) {
+                alert("기존 비밀번호 항목을 입력해주세요");
+            } else if (n1 === "" || o === undefined) {
+                alert("신규 비밀번호 항목을 입력해주세요");
+            } else if (n2 === "" || o === undefined) {
+                alert("비밀번호 확인 항목을 입력해주세요");
+            } else if (n1 !== n2) {
+                alert("비밀번호가 일치하지 않습니다.")
+            } else {
+                ajaxCall("POST", "/api/user/passwordUpdate", {memberId: gbl.ori.memberId, pwd: o, pwd2: n1}, true, null,
+                    (data) => {
+                        alert(data.msg)
+                        location.href = "/api/user/signOut";
+                    }, null)
+            }
+        }
+
+        function chagnePwCancel() {
+            $(".chgPwModal").addClass("d-none")
+            lockBackGround(false);
+            $(".pwInp").val("");
         }
     </script>
 </head>
@@ -113,7 +160,7 @@
             <div class="box bb-2">
                 <span class="boxName">비밀번호</span>
                 <span class="boxInfo">
-                    <button type="button" class="btn btn-outline-dark">비밀번호변경</button>
+                    <button type="button" class="beforeChgPw btn btn-outline-dark">비밀번호변경</button>
                 </span>
             </div>
             <div class="mypageAuthModal authModal transform-50-50 d-none">
@@ -126,6 +173,18 @@
                 <div class="authBtnDiv" style="">
                     <button type="button" class="btn btn-outline-success checkAuthNumberBtn">인증확인</button>
                     <button type="button" class="btn btn-outline-danger checkCancel">취소</button>
+                </div>
+            </div>
+            <div class="chgPwModal transform-50-50 d-none">
+                <span class="pwChgTitle">비밀번호 변경</span>
+                <div class="pwDiv">
+                    <input type="password" class="pwInp" id="op" placeholder="기존 비밀번호">
+                    <input type="password" class="pwInp" id="np1" placeholder="신규 비밀번호">
+                    <input type="password" class="pwInp" id="np2" placeholder="비밀번호 확이">
+                </div>
+                <div class="pwBtnDiv">
+                    <button type="button" class="btn btn-outline-success changePwBtn">변경하기</button>
+                    <button type="button" class="btn btn-outline-danger chagnePwCancel">취소</button>
                 </div>
             </div>
         </div>

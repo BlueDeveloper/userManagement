@@ -8,6 +8,7 @@ public class UserDto {
     private String name;
     private String memberId;
     private String pwd;
+    private String pwd2;
     private String email;
 
     public UserDto(UserEntity user) {

@@ -47,9 +47,9 @@ public class UserController {
     }
 
     // 비밀번호 변경
-    @PostMapping("/user/passwordChange")
-    public ResponseEntity<ApiResponseEntity> passwordChange(UserDto userDto) {
-        return userService.passwordChange(userDto);
+    @PostMapping("/user/passwordUpdate")
+    public ResponseEntity<ApiResponseEntity> passwordUpdate(UserDto userDto) {
+        return userService.passwordUpdate(userDto);
     }
 
     // 이메일 변경
