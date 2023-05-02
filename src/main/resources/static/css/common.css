@@ -19,7 +19,7 @@ input:-webkit-autofill {-webkit-box-shadow: 0 0 0 1000px #dcdcdc inset;} /* 자�
     /* 뒷배경 흐리게 할 때 */
     #backGroundMaks{background: black;position: absolute;z-index: 1000;opacity: 0.6;}
     /* 로딩아이콘 */
-    #loadingIcon{position: absolute;transform: translate(-50%, -50%);top: 50%;left: 50%;z-index: 1001}
+    #loadingIcon{position: absolute;top: 50%;left: 50%;z-index: 1001}
 
     /* header */
     .header.container{height:100px;display: flex;}
