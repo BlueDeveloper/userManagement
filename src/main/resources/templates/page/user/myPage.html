@@ -1,135 +1,135 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
-    <head>
-        <link rel="stylesheet" href="/static/css/user/myPage.css">
-        <script>
-            const gbl = {timer: "", ori: ""}
-            $(function () {
-                init()                                                          // 초기화
-                $(".changeEmail").on("click", changeEmail)                      // 이메일 변경
-                $(".cancleChange").on("click", cancleChange)                    // 이메일 변경 취소
-                $("#email").on("keyup", emailKeyDown)                           // 이메일 값 변경 체크
-                $(".authEmail").on("click", authEmail)                          // 인증번호 전송
-                $(".checkAuthNumberBtn").on("click", beforeCheckAuthNum);       // 인증번호 확인 버튼
-            })
+<head>
+    <link rel="stylesheet" href="/static/css/user/myPage.css">
+    <script>
+        const gbl = {timer: "", ori: ""}
+        $(function () {
+            init()                                                          // 초기화
+            $(".changeEmail").on("click", changeEmail)                      // 이메일 변경
+            $(".cancleChange").on("click", cancleChange)                    // 이메일 변경 취소
+            $("#email").on("keyup", emailKeyDown)                           // 이메일 값 변경 체크
+            $(".authEmail").on("click", authEmail)                          // 인증번호 전송
+            $(".checkAuthNumberBtn").on("click", beforeCheckAuthNum);       // 인증번호 확인 버튼
+        })
 
-            function init() {
-                ajaxCall("POST", "/api/user/myPageInfo", null, true, null,
-                    (data) => {
-                        gbl.ori = data.data
-                        let infoText = $(".infoText")
-                        $.each(infoText, (idx, target) => $(target).val(gbl.ori[target.id]))
-                    }, null)
-            }
+        function init() {
+            ajaxCall("POST", "/api/user/myPageInfo", null, true, null,
+                (data) => {
+                    gbl.ori = data.data
+                    let infoText = $(".infoText")
+                    $.each(infoText, (idx, target) => $(target).val(gbl.ori[target.id]))
+                }, null)
+        }
 
-            function changeEmail(e) {
-                $(".emailBtn").toggleClass("d-none")
-                $("#email").removeAttr("disabled", false).css({border: "1px solid black"});
-            }
+        function changeEmail(e) {
+            $(".emailBtn").toggleClass("d-none")
+            $("#email").removeAttr("disabled", false).css({border: "1px solid black"});
+        }
 
-            function cancleChange() {
-                $(".emailBtn").toggleClass("d-none")
+        function cancleChange() {
+            $(".emailBtn").toggleClass("d-none")
+            $(".authEmail").addClass("d-none");
+            $("#email").attr("disabled", true).css({border: "unset"}).val(gbl.ori.email);
+        }
+
+        function emailKeyDown(e) {
+            const oriEmail = gbl.ori.email;
+            const curEmail = e.target.value;
+            if (oriEmail !== curEmail) {
+                $(".authEmail").removeClass("d-none");
+            } else {
                 $(".authEmail").addClass("d-none");
-                $("#email").attr("disabled", true).css({border: "unset"}).val(gbl.ori.email);
             }
+        }
 
-            function emailKeyDown(e) {
-                const oriEmail = gbl.ori.email;
-                const curEmail = e.target.value;
-                if (oriEmail !== curEmail) {
-                    $(".authEmail").removeClass("d-none");
-                } else {
-                    $(".authEmail").addClass("d-none");
-                }
+        function authEmail() {
+            let obj = {
+                node: {timeOutMsg: $(".timeOut")},  // 인증번호 유효시간 표기 텍스트 노드
+                data: {email: $("#email").val(), authType: "J"}
             }
+            if (obj.data.email === "" || !reg_email.test(obj.data.email)) {
+                alert("이메일 형식을 확인해주세요.");
+                return false;
+            }
+            sendAuthNum(obj, () => {
+                $(".authModal").removeClass("d-none");
+                lockBackGround(true);
+            }, 180);
+        }
 
-            function authEmail() {
-                let obj = {
-                    node: {timeOutMsg: $(".timeOut")},  // 인증번호 유효시간 표기 텍스트 노드
-                    data: {email: $("#email").val(), authType: "J"}
-                }
-                if (obj.data.email === "" || !reg_email.test(obj.data.email)) {
-                    alert("이메일 형식을 확인해주세요.");
-                    return false;
-                }
-                sendAuthNum(obj, () => {
-                    $(".authModal").removeClass("d-none");
-                    lockBackGround(true);
-                }, 180);
+        function beforeCheckAuthNum() {
+            const auth = $("#auth").val()
+            const authType = "J"
+            if (auth === "") {       // 인증번호 체크
+                alert("인증번호를 입력해주세요.");
+                return $(auth).focus();
             }
+            checkAuthNum(authType, {auth: auth, email: $("#email").val(), authType: authType},
+                (data) => {
+                    alert(data.msg);
+                    $(".authModal, #sendAuth").addClass("d-none");
+                    // TODO 업데이트 로딩 이미지 보여주면서 email 업데이트 비동기로 진행할 것
+                    emailUpdate()
+                })
+        }
 
-            function beforeCheckAuthNum() {
-                const auth = $("#auth").val()
-                const authType = "J"
-                if (auth === "") {       // 인증번호 체크
-                    alert("인증번호를 입력해주세요.");
-                    return $(auth).focus();
-                }
-                checkAuthNum(authType, {auth: auth, email: $("#email").val(), authType: authType},
-                    (data) => {
-                        alert(data.msg);
-                        $(".authModal, #sendAuth").addClass("d-none");
-                        // TODO 업데이트 로딩 이미지 보여주면서 email 업데이트 비동기로 진행할 것
-                        emailUpdate()
-                    })
-            }
+        function emailUpdate() {
+            ajaxCall("POST", "/api/user/emailUpdate", {email: $("#email").val(), memberId: gbl.ori.memberId}, false, null,
+                (data) => {
+                    location.reload()
+                }, null)
+        }
+    </script>
+</head>
+<body>
+    <section layout:fragment="content" class="myPage container">
+        <div class="titleDiv">
+            <span class="myPageTitle">마이페이지</span>
+        </div>
 
-            function emailUpdate() {
-                ajaxCall("POST", "/api/user/emailUpdate", {email: $("#email").val(), memberId: gbl.ori.memberId}, false, null,
-                    (data) => {
-                        location.reload()
-                    }, null)
-            }
-        </script>
-    </head>
-    <body>
-        <section layout:fragment="content" class="myPage container">
-            <div class="titleDiv">
-                <span class="myPageTitle">마이페이지</span>
+        <!--회원가입-->
+        <div class="myInfo">
+            <div class="box bt-2 bb-1">
+                <span class="boxName">이름</span>
+                <span class="boxInfo">
+                    <input type="text" class="infoText form-control" id="name" disabled>
+                </span>
             </div>
-
-            <!--회원가입-->
-            <div class="myInfo">
-                <div class="box bt-2 bb-1">
-                    <span class="boxName">이름</span>
-                    <span class="boxInfo">
-                        <input type="text" class="infoText form-control" id="name" disabled>
-                    </span>
+            <div class="box bb-1">
+                <span class="boxName">아이디</span>
+                <span class="boxInfo">
+                    <input type="text" class="infoText form-control" id="memberId" disabled>
+                </span>
+            </div>
+            <div class="box bb-1">
+                <span class="boxName">이메일</span>
+                <span class="boxInfo">
+                    <input type="text" class="infoText form-control" id="email" disabled>
+                    <button type="button" class="emailBtn changeEmail btn btn-outline-dark">이메일변경</button>
+                    <button type="button" class="authEmail btn btn-outline-dark d-none">인증하기</button>
+                    <button type="button" class="emailBtn cancleChange btn btn-outline-dark d-none">이메일변경취소</button>
+                </span>
+            </div>
+            <div class="box bb-2">
+                <span class="boxName">비밀번호</span>
+                <span class="boxInfo">
+                    <button type="button" class="btn btn-outline-dark">비밀번호변경</button>
+                </span>
+            </div>
+            <div class="mypageAuthModal authModal transform-50-50 d-none">
+                <div class="authNumDiv form-floating">
+                    <input type="text" class="form-control" id="auth" name="auth" autocomplete="off">
+                    <label for="auth">인증번호</label>
                 </div>
-                <div class="box bb-1">
-                    <span class="boxName">아이디</span>
-                    <span class="boxInfo">
-                        <input type="text" class="infoText form-control" id="memberId" disabled>
-                    </span>
-                </div>
-                <div class="box bb-1">
-                    <span class="boxName">이메일</span>
-                    <span class="boxInfo">
-                        <input type="text" class="infoText form-control" id="email" disabled>
-                        <button type="button" class="emailBtn changeEmail btn btn-outline-dark">이메일변경</button>
-                        <button type="button" class="authEmail btn btn-outline-dark d-none">인증하기</button>
-                        <button type="button" class="emailBtn cancleChange btn btn-outline-dark d-none">이메일변경취소</button>
-                    </span>
-                </div>
-                <div class="box bb-2">
-                    <span class="boxName">비밀번호</span>
-                    <span class="boxInfo">
-                        <button type="button" class="btn btn-outline-dark">비밀번호변경</button>
-                    </span>
-                </div>
-                <div class="mypageAuthModal authModal transform-50-50 d-none">
-                    <div class="authNumDiv form-floating">
-                        <input type="text" class="form-control" id="auth" name="auth" autocomplete="off">
-                        <label for="auth">인증번호</label>
-                    </div>
-                    <span class="timeOut" style="">
-                    </span>
-                    <div class="authBtnDiv" style="">
-                        <button type="button" class="btn btn-outline-success checkAuthNumberBtn">인증확인</button>
-                        <button type="button" class="btn btn-outline-danger checkCancel">취소</button>
-                    </div>
+                <span class="timeOut" style="">
+                </span>
+                <div class="authBtnDiv" style="">
+                    <button type="button" class="btn btn-outline-success checkAuthNumberBtn">인증확인</button>
+                    <button type="button" class="btn btn-outline-danger checkCancel">취소</button>
                 </div>
             </div>
-        </section>
-    </body>
+        </div>
+    </section>
+</body>
 </html>

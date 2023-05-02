@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<ApiResponseEntity> sendAuth(AuthDto authDto) {
         try {
             // 인증 구분값 미전송 시
-            if(authDto.getAuthType() == null){
+            if (authDto.getAuthType() == null) {
                 return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "비정상적인 접근입니다.", HttpStatus.BAD_REQUEST);
             }
 
@@ -70,15 +70,15 @@ public class UserService implements UserDetailsService {
             }
 
             // 회원가입 시
-            if(authDto.getAuthType().equalsIgnoreCase("J")){
+            if (authDto.getAuthType().equalsIgnoreCase("J")) {
                 Optional<UserEntity> userEntity = userRepository.findByEmail(authDto.getEmail());
-                if(userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "이미 등록된 이메일 입니다.", HttpStatus.BAD_REQUEST);
+                if (userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "이미 등록된 이메일 입니다.", HttpStatus.BAD_REQUEST);
             }
 
             // 비밀번호 찾기 일 경우 ID로 사용자 조회
-            if(authDto.getAuthType().equalsIgnoreCase("P")){
+            if (authDto.getAuthType().equalsIgnoreCase("P")) {
                 Optional<UserEntity> userEntity = userRepository.findByMemberId(authDto.getId());
-                if(!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+                if (!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
             }
 
             String authNum = sendMail.sendSimpleMessage(userEmail); //메일전송
@@ -113,22 +113,22 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<ApiResponseEntity> findAuth(AuthDto authDto) {
         try {
             /*
-            * 1. redis에 authDto.getEmail()과 일치하는 정보가 있는지 체크
-            * 2. redis에 저장된 인증번호와 authDto.getAuth()이 일치하는지 체크
-            * 3. 위 두가지 조건 통과 시 redis정보 SUCCESS로 업데이트
-            * 4. 회원가입 경우 - 인증되었습니다. 문구 응답
-            * 5. 아이디찾기 경우 - authDto.getEmail()의 값으로 사용자 조회 후 데이터 유무 에 따른 응답
-            * 6. 비밀번호찾기 경우 -authDto.getId()의 값으로 사용자 조회 후 데이터 유무에 따른 응답
-            * ps1. authDto.getAuthType()값이 없을 경우 최하단 return 실행
-            * ps2. J = 회원가입, I = 아이디찾기, P = 비밀번호찾기
-            * */
+             * 1. redis에 authDto.getEmail()과 일치하는 정보가 있는지 체크
+             * 2. redis에 저장된 인증번호와 authDto.getAuth()이 일치하는지 체크
+             * 3. 위 두가지 조건 통과 시 redis정보 SUCCESS로 업데이트
+             * 4. 회원가입 경우 - 인증되었습니다. 문구 응답
+             * 5. 아이디찾기 경우 - authDto.getEmail()의 값으로 사용자 조회 후 데이터 유무 에 따른 응답
+             * 6. 비밀번호찾기 경우 -authDto.getId()의 값으로 사용자 조회 후 데이터 유무에 따른 응답
+             * ps1. authDto.getAuthType()값이 없을 경우 최하단 return 실행
+             * ps2. J = 회원가입, I = 아이디찾기, P = 비밀번호찾기
+             * */
             String result = redisUtil.get(authDto.getEmail(), RedisPathEnum.WEB_EMAIL_CERT); // Redis에 저장된 인증번호 조회
 
             if (StringUtils.isEmpty(result)) { // Redis에 저장된 인증정보가 없을 시
                 return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "인증정보가 없습니다.", HttpStatus.BAD_REQUEST);
             }
 
-            if(!result.equals(authDto.getAuth())){ // 사용자가 입력한 정보와 다를시
+            if (!result.equals(authDto.getAuth())) { // 사용자가 입력한 정보와 다를시
                 return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "잘못된 인증번호 입니다.", HttpStatus.BAD_REQUEST);
             }
 
@@ -150,9 +150,9 @@ public class UserService implements UserDetailsService {
             }
 
 
-            if(authDto.getAuthType().equalsIgnoreCase("P")){ // 비밀번호 찾기
+            if (authDto.getAuthType().equalsIgnoreCase("P")) { // 비밀번호 찾기
                 Optional<UserEntity> userEntity = userRepository.findByMemberId(authDto.getId());
-                if(!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+                if (!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
                 return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "인증되었습니다.", HttpStatus.OK); // 보안을 위해 성공여부만 전송
             }
 
@@ -211,9 +211,22 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public ResponseEntity<ApiResponseEntity> myPageInfo(UserEntity principal){
+    public ResponseEntity<ApiResponseEntity> myPageInfo(UserEntity principal) {
         UserDto userDto = new UserDto(principal);
         return ApiResponseEntity.setResponse(userDto, CodeEnum.SUCCESS, "", HttpStatus.CREATED);
+    }
+
+    @Transactional
+    public ResponseEntity<ApiResponseEntity> emailUpdate(UserDto userDto) {
+        Optional<UserEntity> userEntity = userRepository.findByMemberId(userDto.getMemberId());
+        if (!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+        userEntity.get().setEmail(userDto.getEmail()); // JPA 변경감지(Dirty Checking)
+
+        // 업데이트된 정보를  Spring Security로 인증해서 HttpSession에 반영
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication, userDto.getMemberId()));
+
+        return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "", HttpStatus.CREATED);
     }
 
     @Transactional
@@ -225,27 +238,11 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
     }
 
-    @Transactional
-    public ResponseEntity<ApiResponseEntity> emailUpdate(UserDto userDto) {
-        Optional<UserEntity> userEntity = userRepository.findByMemberId(userDto.getMemberId());
-        if(!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
-
-        // 업데이트
-        userEntity.get().setEmail(userDto.getEmail());
-        userRepository.save(userEntity.get());
-
-        // 업데이트된 정보를  Spring Security로 인증해서 HttpSession에 반영
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,userDto.getMemberId()));
-
-        return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "", HttpStatus.CREATED);
-    }
-
     /**
-     * @description 새로운 인증 생성
      * @param currentAuth 현재 auth 정보
-     * @param memberId	현재 사용자 Id
+     * @param memberId    현재 사용자 Id
      * @return Authentication
+     * @description 새로운 인증 생성
      * @author Armton
      */
     protected Authentication createNewAuthentication(Authentication currentAuth, String memberId) {
