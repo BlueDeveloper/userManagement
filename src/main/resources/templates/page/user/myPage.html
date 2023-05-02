@@ -54,7 +54,7 @@
             }
             sendAuthNum(obj, () => {
                 $(".authModal").removeClass("d-none");
-                lockBackGround(true);
+                lockBackGround(true,true);
             }, 180);
         }
 
@@ -69,8 +69,7 @@
                 (data) => {
                     alert(data.msg);
                     $(".authModal, #sendAuth").addClass("d-none");
-                    // TODO 업데이트 로딩 이미지 보여주면서 email 업데이트 비동기로 진행할 것
-                    emailUpdate()
+                    setTimeout(() => emailUpdate(), 1000) // 로딩아이콘을 보여주고싶은 개발자의 뒤틀린 욕망을 위한 코드
                 })
         }
 
