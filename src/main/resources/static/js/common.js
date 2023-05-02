@@ -100,6 +100,11 @@ function sendAuthNum(obj, callBack, time) {
         }, null)
 }
 
+/**********************************************
+ * 이메일 인증번호 전송시 유효기간 세팅에 사용
+ * @param timeOutMsg - 유효기간을 보여줄 노드
+ * @param time - 인증 유효시간
+ *********************************************/
 function timeout(timeOutMsg, time) {
     let min = "";
     let sec = "";
@@ -115,7 +120,6 @@ function timeout(timeOutMsg, time) {
         }
     }, 1000)
 }
-
 
 /**********************************************
  * 이메일 인증번호 확인에 사용
