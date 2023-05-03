@@ -1,3 +1,80 @@
-<div class="userMngmDiv" th:fragment="userMngm">
-    <p>파라미터 자리 입니다.</p>
+<div class="userMngmDiv" th:fragment="userMngm" style="width: 100%;height: 100%;display: flex;flex-direction: column;justify-content: start;align-items: center;">
+    <div class="searchDiv" style="width: 90%;height: 15%;border: 1px solid;display: flex;justify-content: start;align-items: center;background: lightgrey">
+        <span class="form-text" style="width: 10%;font-size: 1.1rem;font-weight: bold;margin-left: 3%;">검색구분</span>
+        <select class="searchSct defaultSct form-select" style="width: 12%;height: 45%;">
+            <option value="memberId">아이디</option>
+            <option value="name">이름</option>
+            <option value="email">이메일</option>
+        </select>
+        <input type="text" class="searchInp form-control" style="width: 20%;height: 45%;margin-left: 1%;">
+        <span class="form-text" style="width: 10%;font-size: 1.1rem;font-weight: bold;margin-left: 5%;">회원상태</span>
+        <select class="searchSct statSct form-select" style="width: 12%;height: 45%;">
+            <option value="">전체</option>
+            <option value="01">가입중</option>
+            <option value="02">정지</option>
+            <option value="03">탛퇴</option>
+        </select>
+        <button class="btn btn-outline-dark" style="width: 19%;height: 45%;margin-left: 5%;text-align: center;">검색</button>
+    </div>
+    <div class="manageContent" style="width: 90%;height: 85%;border: 1px solid;display: flex;flex-direction: column;">
+        <div class="head" style="width: 100%;height: 15%;display: flex;justify-content: space-around;align-items: center;">
+            <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">이름</span>
+            <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">아이디</span>
+            <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">이메일</span>
+            <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">인증상태</span>
+            <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">회원상태</span>
+        </div>
+        <div class="body" style="width: 100%;height: 75%;display: flex;flex-direction: column;align-items: start;justify-content: center;border-bottom: 1px solid black;">
+            <div class="num1" style="width: 100%;height: 20%;display: flex;justify-content: space-around;align-items: start;">
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">유저</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user@user.com</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">미인증</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">가입중</span>
+            </div>
+            <div class="num1" style="width: 100%;height: 20%;display: flex;justify-content: space-around;align-items: start;">
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">유저</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user@user.com</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">미인증</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">가입중</span>
+            </div>
+            <div class="num1" style="width: 100%;height: 20%;display: flex;justify-content: space-around;align-items: start;">
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">유저</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user@user.com</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">미인증</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">가입중</span>
+            </div>
+            <div class="num1" style="width: 100%;height: 20%;display: flex;justify-content: space-around;align-items: start;">
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">유저</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user@user.com</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">미인증</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">가입중</span>
+            </div>
+            <div class="num1" style="width: 100%;height: 20%;display: flex;justify-content: space-around;align-items: start;">
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">유저</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">user@user.com</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">미인증</span>
+                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">가입중</span>
+            </div>
+        </div>
+        <div class="footer" style="width: 30%;height: 10%;display: flex;align-items: center;align-self: center;justify-content: space-evenly;">
+            <span class="prev hover" style="display: flex;align-items: center;justify-content: center;width: 15%;height: 100%;">
+                <img src="/static/img/common/prevIcon.png" style="object-fit: fill;width: 100%;height: 100%;" alt="이전">
+            </span>
+            <div class="nums" style="display: flex;width: 35%;align-items: center;justify-content: space-evenly;">
+                <span class="hover" style="width: 20px;text-align: center;">1</span>
+                <span class="hover" style="width: 20px;text-align: center;">2</span>
+                <span class="hover" style="width: 20px;text-align: center;">3</span>
+                <span class="hover" style="width: 20px;text-align: center;">4</span>
+                <span class="hover" style="width: 20px;text-align: center;">5</span>
+            </div>
+            <span class="prev hover" style="display: flex;align-items: center;justify-content: center;width: 15%;height: 100%;">
+                <img src="/static/img/common/prevIcon.png" style="object-fit: fill;width: 100%;height: 100%;transform: rotate(180deg);" alt="다음">
+            </span>
+        </div>
+    </div>
 </div>
