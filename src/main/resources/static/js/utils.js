@@ -19,4 +19,4 @@ function lockBackGround(flag1) {
  *********************************************/
 function searchParam(key) {
     return new URLSearchParams(location.search).get(key);
-};
+}

@@ -36,7 +36,6 @@ function ajaxCall(type, url, data, asyncType, beforeSend, success, error) {
                     alert(data.msg) // error 함수 미설정 시 && 서버 응답 메시지 있을 시
                 } else {
                     alert("오류가 발생했습니다."); // error 함수 미설정 시 && 서버 응답 메시지 없을 시
-                    location.reload();
                 }
             }
         }
