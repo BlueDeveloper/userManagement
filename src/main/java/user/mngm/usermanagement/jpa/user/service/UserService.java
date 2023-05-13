@@ -1,9 +1,7 @@
 package user.mngm.usermanagement.jpa.user.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -17,8 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
 import user.mngm.usermanagement.common.response.ApiResponseEntity;
 import user.mngm.usermanagement.common.response.CodeEnum;
 import user.mngm.usermanagement.common.utils.SendMail;
@@ -27,8 +23,11 @@ import user.mngm.usermanagement.common.utils.redis.RedisPathEnum;
 import user.mngm.usermanagement.common.utils.redis.RedisUtil;
 import user.mngm.usermanagement.jpa.user.dto.AuthDto;
 import user.mngm.usermanagement.jpa.user.dto.UserDto;
+import user.mngm.usermanagement.jpa.user.entity.QUserEntity;
 import user.mngm.usermanagement.jpa.user.entity.UserEntity;
-import user.mngm.usermanagement.jpa.user.entity.UserRepository;
+import user.mngm.usermanagement.jpa.user.repository.UserRepository;
+
+import java.util.Optional;
 
 /* 유저 서비스 */
 @RequiredArgsConstructor
@@ -192,6 +191,7 @@ public class UserService implements UserDetailsService {
 
             redisUtil.delete(userDto.getEmail(), RedisPathEnum.WEB_EMAIL_CERT); // 이전 인증 내역 삭제
 
+            // TODO ModelMapper() 사용 검토
             UserEntity user = new UserEntity();
             user.setName(userDto.getName());
             user.setMemberId(userDto.getMemberId());
