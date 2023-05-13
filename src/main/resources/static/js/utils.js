@@ -20,3 +20,14 @@ function lockBackGround(flag1) {
 function searchParam(key) {
     return new URLSearchParams(location.search).get(key);
 }
+
+/**********************************************
+ * 서버에서 응답해준 Pageable 객체를 통해 페이지 번호가 들어있는 html 코드를 반환
+ * @param page - 서버에서 응답해준 pageable 값
+ *********************************************/
+function calPageNum(page){
+    console.log(page)
+    let pageObject = {pageNumber : "", pageSize : "", totalPages : "", startPage : "", endPage : ""}
+
+
+}

@@ -1,33 +1,93 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
-<head>
-    <link rel="stylesheet" href="/static/css/admin/admin.css">
-    <script>
-        const gbl = {}
-        $(function () {
-            /*init()*/                                                          // 초기화
-        })
+    <head>
+        <link rel="stylesheet" href="/static/css/admin/admin.css">
+        <script>
+            const gbl = {}
+            $(function () {
+                init()                                                          // 초기화
+                $(".searchBtn").on("click", beforeSearch)
+            })
 
-    </script>
-</head>
-<body>
-    <section layout:fragment="content" class="admin container">
-        <div class="titleDiv">
-            <span class="tabTitle">회원관리</span>
-        </div>
-        <div class="contentDiv" style="">
-            <div class="left" style="width: 15%;height: 95%;border: 1px solid #ddd;display: flex;flex-direction: column;align-items: center;">
-                <span class="leftTab tab-1 hover" style="width: 100%;height: 15%;border-bottom: 2px solid #ddd;display: flex;justify-content: start;align-items: center;text-indent: 10px;">회원관리</span>
-                <span class="leftTab tab-2 hover" style="width: 100%;height: 15%;border-bottom: 2px solid #ddd;display: flex;justify-content: start;align-items: center;text-indent: 10px;">메일발송</span>
-                <span class="leftTab tab-3 hover" style="width: 100%;height: 15%;border-bottom: 2px solid #ddd;display: flex;justify-content: start;align-items: center;text-indent: 10px;">메뉴관리</span>
-                <span class="leftTab tab-4 hover" style="width: 100%;height: 15%;border-bottom: 2px solid #ddd;display: flex;justify-content: start;align-items: center;text-indent: 10px;">접속통계</span>
-                <span class="leftTab tab-3 hover" style="width: 100%;height: 15%;border-bottom: 2px solid #ddd;display: flex;justify-content: start;align-items: center;text-indent: 10px;">배치프로그램 관리</span>
+            function init() {
+                search()
+            }
+
+            function search(data) {
+                data = (data === undefined) ? {"page":0,"size":5} : data
+                ajaxCall("POST", "/api/admin/userList", data, true, null,
+                    (data) => {
+                        calPageNum(data.data)
+                    }, null)
+            }
+
+            function beforeSearch(e) {
+                let obj = {
+                    "page":0,
+                    "size":5
+                }
+                obj[$(".searchSct option:selected").val()] = $(".searchInp").val()
+                search(obj);
+            }
+        </script>
+    </head>
+    <body>
+        <section layout:fragment="content" class="admin container">
+            <div class="titleDiv">
+                <span class="tabTitle">회원관리</span>
             </div>
-            <div class="center" style="width: 85%;height: 95%;border: 1px solid #ddd;">
-                <div th:replace="~{/page/admin/userManagement :: userMngm}"></div>
-                <div th:replace="~{/page/admin/notOpen :: notOpen}"></div>
+            <div class="contentDiv" style="">
+                <div th:replace="~{/page/admin/adminLeftMenu :: leftMenu}"></div>
+                <div class="center" style="width: 85%;height: 95%;border: 1px solid #ddd;">
+                    <div class="userMngmDiv" style="width: 100%;height: 100%;display: flex;flex-direction: column;justify-content: start;align-items: center;">
+
+                        <div class="searchDiv" style="width: 90%;height: 15%;border: 1px solid;display: flex;justify-content: start;align-items: center;background: lightgrey">
+                            <span class="form-text" style="width: 10%;font-size: 1.1rem;font-weight: bold;margin-left: 3%;">검색구분</span>
+                            <select class="searchSct defaultSct form-select" style="width: 12%;height: 45%;">
+                                <option value="name">이름</option>
+                                <option value="memberId">아이디</option>
+                                <option value="email">이메일</option>
+                            </select>
+                            <input type="text" class="searchInp form-control" style="width: 20%;height: 45%;margin-left: 1%;">
+                            <span class="form-text" style="width: 10%;font-size: 1.1rem;font-weight: bold;margin-left: 5%;">회원상태</span>
+                            <select class="searchSct statSct form-select" style="width: 12%;height: 45%;">
+                                <option value="">전체</option>
+                                <option value="01">가입중</option>
+                                <option value="02">정지</option>
+                                <option value="03">탈퇴</option>
+                            </select>
+                            <button class="searchBtn btn btn-outline-dark" style="width: 19%;height: 45%;margin-left: 5%;text-align: center;">검색</button>
+                        </div>
+
+                        <div class="manageContent" style="width: 90%;height: 85%;border: 1px solid;display: flex;flex-direction: column;">
+                            <div class="head" style="width: 100%;height: 15%;display: flex;justify-content: space-around;align-items: center;">
+                                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">이름</span>
+                                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">아이디</span>
+                                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">이메일</span>
+                                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">인증상태</span>
+                                <span style="width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;">회원상태</span>
+                            </div>
+                            <div class="body" style="width: 100%;height: 75%;display: flex;flex-direction: column;align-items: start;justify-content: center;border-bottom: 1px solid black;">
+
+                            </div>
+
+                            <div class="footer" style="width: 30%;height: 10%;display: flex;align-items: center;align-self: center;justify-content: space-evenly;">
+                                <span class="prev hover" style="display: flex;align-items: center;justify-content: center;width: 15%;height: 100%;">
+                                    <img src="/static/img/common/prevIcon.png" style="object-fit: fill;width: 100%;height: 100%;" alt="이전">
+                                </span>
+
+                                <div class="nums" style="display: flex;width: 35%;align-items: center;justify-content: space-evenly;">
+
+                                </div>
+
+                                <span class="prev hover" style="display: flex;align-items: center;justify-content: center;width: 15%;height: 100%;">
+                                    <img src="/static/img/common/prevIcon.png" style="object-fit: fill;width: 100%;height: 100%;transform: rotate(180deg);" alt="다음">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-</body>
+        </section>
+    </body>
 </html>

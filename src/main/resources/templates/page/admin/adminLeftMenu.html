@@ -1,0 +1,14 @@
+<div class="leftMenus" th:fragment="leftMenu">
+    <script>
+        $(function () {
+            const menu = searchParam("menu");
+            $(".leftMenu").removeClass("active");
+            (menu === null) ? $(".leftMenu.tab-1").addClass("active") : $(".leftMenu.tab-" + menu).addClass("active");
+        })
+    </script>
+    <a href="/front/admin/myPage?menu=1" class="leftMenu tab-1 hover active">회원관리</a>
+    <a href="/front/admin/notOpen?menu=2" class="leftMenu tab-2 hover">메일발송</a>
+    <a href="/front/admin/notOpen?menu=3" class="leftMenu tab-3 hover">메뉴관리</a>
+    <a href="/front/admin/notOpen?menu=4" class="leftMenu tab-4 hover">접속통계</a>
+    <a href="/front/admin/notOpen?menu=5" class="leftMenu tab-5 hover">배치프로그램 관리</a>
+</div>

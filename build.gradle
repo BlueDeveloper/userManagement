@@ -1,7 +1,14 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.5'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // 작성
 }
 
 group = 'user.mngm'
@@ -27,6 +34,9 @@ configurations {
 repositories {
     mavenCentral()
 }
+
+// QueryDSL 설정 start
+def querydslDir = "$buildDir/generated/querydsl"
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'      // ORM
@@ -60,7 +70,28 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.7.3'      // Redis
 
+    // [QueryDSL]
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+// QueryDSL 설정 end
 
 tasks.named('test') {
     useJUnitPlatform()

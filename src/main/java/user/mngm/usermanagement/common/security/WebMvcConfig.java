@@ -49,6 +49,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         //{관리자}
         registry.addViewController("/front/admin/myPage").setViewName("/page/admin/adminPage");//{관리자_페이지}
+        registry.addViewController("/front/admin/notOpen").setViewName("/page/admin/notOpen");//{관리자_페이지}
 
 //        //{공지사항}
 //        registry.addViewController("/api/view/notice/list").setViewName("/page/notice/notice_list");//{공지사항_리스트}
