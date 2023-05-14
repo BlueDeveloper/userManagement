@@ -50,4 +50,8 @@ public class UserController {
     // [관리자] 유저관리를 위한 유저 목록
     @PostMapping("/admin/userList")
     public ResponseEntity<ApiResponseEntity> userList(Pageable pageable, UserDto userDto) {return adminService.userList(pageable,userDto);}
+
+    // [관리자] 유저관리를 위한 유저 목록
+    @PostMapping("/admin/changeUserStat")
+    public ResponseEntity<ApiResponseEntity> changeUserStat(Pageable pageable, UserDto userDto) {return adminService.changeUserStat(userDto);}
 }

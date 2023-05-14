@@ -10,6 +10,7 @@ public class UserDto {
     private String pwd;
     private String pwd2;
     private String email;
+    private String stat;
 
     public UserDto(UserEntity user) {
         this.name = user.getName();

@@ -1,9 +1,9 @@
 package user.mngm.usermanagement.jpa.user.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class UserSearchDto {
     private String memberId;
     private String name;

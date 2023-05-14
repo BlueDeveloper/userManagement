@@ -25,9 +25,24 @@ function searchParam(key) {
  * 서버에서 응답해준 Pageable 객체를 통해 페이지 번호가 들어있는 html 코드를 반환
  * @param page - 서버에서 응답해준 pageable 값
  *********************************************/
-function calPageNum(page){
-    console.log(page)
-    let pageObject = {pageNumber : "", pageSize : "", totalPages : "", startPage : "", endPage : ""}
+function calPageNum(page, callBack) {
+    const pageNumber = page.pageable.pageNumber + 1;
+    const pageSize = page.pageable.pageSize;
+    const totalPages = page.totalPages;
+    const startPage = Math.floor((pageNumber - 1) / pageSize) * pageSize + 1
+    const tempEndPage = startPage + pageSize - 1
+    const endPage = (tempEndPage > totalPages) ? totalPages : tempEndPage
 
 
+    let pageNumHtml = ``;
+    pageNumHtml += `<span class="first hover num" data-num="1"></span>`
+    pageNumHtml += `<span class="prev hover num" data-num="${(!page.first) ? pageNumber - 1 : 1}"></span>`
+    pageNumHtml += `<div class="nums noselect">`
+    for (let i = startPage; i <= endPage; i++) {
+        pageNumHtml += `<span class='num hover ${(pageNumber === i) ? "currentPage" : ""}' data-num="${i}">${i}</span>`
+    }
+    pageNumHtml += `</div>`
+    pageNumHtml += `<span class="next hover num" data-num="${(!page.last) ? pageNumber + 1 : pageNumber}"></span>`
+    pageNumHtml += `<span class="last hover num" data-num="${totalPages}"></span>`
+    return pageNumHtml
 }
