@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import user.mngm.usermanagement.common.exception.AjaxAuthenticationEntryPoint;
 import user.mngm.usermanagement.common.response.ApiResponseEntity;
 import user.mngm.usermanagement.common.response.CodeEnum;
+import user.mngm.usermanagement.common.utils.Utils;
 import user.mngm.usermanagement.jpa.user.entity.UserEntity;
 import user.mngm.usermanagement.jpa.user.repository.UserRepository;
 import user.mngm.usermanagement.jpa.user.service.UserService;
@@ -83,10 +84,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
 
         public void updateLoginDat(String memberId){
-            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-//            String date = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance().getTime());
             Optional<UserEntity> userEntity = userRepository.findByMemberId(memberId);
-//            userEntity.get().setLoginDat(date); // JPA 변경감지(Dirty Checking)
+            userEntity.get().setLoginDat(Utils.getSqlDateTime());
             userRepository.save(userEntity.get());
         }
     }

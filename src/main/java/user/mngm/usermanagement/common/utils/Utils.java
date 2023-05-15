@@ -3,9 +3,12 @@ package user.mngm.usermanagement.common.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+
 @Component
 public class Utils {
 
+    // object가 문자열인지 판독
     public static String toStr(Object o) {
         if(o == null){
             return "";
@@ -14,7 +17,8 @@ public class Utils {
         }
     }
 
-    public String Masking(String str) {      // 절반 마스킹처리
+    // 절반 마스킹처리
+    public String Masking(String str) {
         if(StringUtils.isEmpty(str)) {
             return "";
         } else {
@@ -22,5 +26,9 @@ public class Utils {
             String maskingStr = str.replaceAll("(?<=.{" + strLength + "}).", "*");
             return maskingStr;
         }
+    }
+
+    public static Date getSqlDateTime(){
+        return new java.sql.Date(new java.util.Date().getTime());
     }
 }

@@ -276,12 +276,4 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
     }*/
 
-    public static void main(String arg[]){
-        java.util.Date utilDate = new java.util.Date();
-        long currentMilliseconds = utilDate.getTime();
-        java.sql.Date sqlDate = new java.sql.Date(currentMilliseconds);
-
-        System.out.println("utilDate = " + utilDate);
-        System.out.println("sqlDate = " + sqlDate);
-    }
 }

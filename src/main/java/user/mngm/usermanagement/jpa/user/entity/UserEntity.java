@@ -49,7 +49,6 @@ public class UserEntity extends GenUuid implements UserDetails {
 
     // 최종 로그인 시간
     @Column(name = "LOGIN_DAT", columnDefinition = "date default sysdate")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date loginDat;
 
     // 로그인 실패 횟수

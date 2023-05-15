@@ -91,7 +91,7 @@
                         $.each(data.data.content, (idx, target) => {
                             userHtml += `<div class='usersDiv num${idx}'>
                                             <span>${target.name}</span><span>${target.memberId}</span>
-                                            <span>${target.email}</span><span>구현필요</span>
+                                            <span>${target.email}</span><span>${target.loginDat}</span>
                                             <span>
                                                 <select class="form-select w-u70 userStatSct" data-memberId="${target.memberId}">
                                                     <option value="01" ${(target.stat === "활동") ? "selected" : ""}>활동</option>
