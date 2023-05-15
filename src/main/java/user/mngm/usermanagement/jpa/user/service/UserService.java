@@ -27,6 +27,7 @@ import user.mngm.usermanagement.jpa.user.entity.QUserEntity;
 import user.mngm.usermanagement.jpa.user.entity.UserEntity;
 import user.mngm.usermanagement.jpa.user.repository.UserRepository;
 
+import java.sql.Date;
 import java.util.Optional;
 
 /* 유저 서비스 */
@@ -274,4 +275,13 @@ public class UserService implements UserDetailsService {
         ApiResponseEntity response = new ApiResponseEntity(userEntity, CodeEnum.SUCCESS, "ok");
         return new ResponseEntity<ApiResponseEntity>(response, HttpStatus.OK);
     }*/
+
+    public static void main(String arg[]){
+        java.util.Date utilDate = new java.util.Date();
+        long currentMilliseconds = utilDate.getTime();
+        java.sql.Date sqlDate = new java.sql.Date(currentMilliseconds);
+
+        System.out.println("utilDate = " + utilDate);
+        System.out.println("sqlDate = " + sqlDate);
+    }
 }

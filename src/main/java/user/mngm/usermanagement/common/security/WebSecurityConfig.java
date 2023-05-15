@@ -1,7 +1,9 @@
 package user.mngm.usermanagement.common.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,12 +14,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import user.mngm.usermanagement.common.exception.AjaxAuthenticationEntryPoint;
+import user.mngm.usermanagement.common.response.ApiResponseEntity;
+import user.mngm.usermanagement.common.response.CodeEnum;
+import user.mngm.usermanagement.jpa.user.entity.UserEntity;
+import user.mngm.usermanagement.jpa.user.repository.UserRepository;
 import user.mngm.usermanagement.jpa.user.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
 
 /* Security 설정 */
 @RequiredArgsConstructor
@@ -27,6 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // 로그인 로직이 실행될 서비스
     // 해당 서비스(userService)에서는 UserDetailsService를 implements해서 loadUserByUsername() 구현해야함 (서비스 참고)
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -64,8 +78,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private class loginSuccess implements AuthenticationSuccessHandler {
         @Override
         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-            System.out.println("authentication : " + authentication.getPrincipal());
+            updateLoginDat(((UserEntity) authentication.getPrincipal()).getMemberId());
             response.sendRedirect("/"); // 인증이 성공한 후에는 root로 이동
+        }
+
+        public void updateLoginDat(String memberId){
+            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//            String date = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance().getTime());
+            Optional<UserEntity> userEntity = userRepository.findByMemberId(memberId);
+//            userEntity.get().setLoginDat(date); // JPA 변경감지(Dirty Checking)
+            userRepository.save(userEntity.get());
         }
     }
 

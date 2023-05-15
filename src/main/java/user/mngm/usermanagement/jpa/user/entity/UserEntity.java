@@ -1,13 +1,13 @@
 package user.mngm.usermanagement.jpa.user.entity;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
@@ -48,8 +48,9 @@ public class UserEntity extends GenUuid implements UserDetails {
     private LocalDateTime crtDat = LocalDateTime.now();
 
     // 최종 로그인 시간
-    @Column(name = "LOGIN_DAT")
-    private String loginDat;
+    @Column(name = "LOGIN_DAT", columnDefinition = "date default sysdate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date loginDat;
 
     // 로그인 실패 횟수
     @Column(name = "LOGIN_FAIL")
