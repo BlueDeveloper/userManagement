@@ -25,10 +25,10 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
     }
 
     @Override
-    public Page<UserSearchDto> findBySearchOption(Pageable pageable, String memberId, String name, String email) {
+    public Page<UserSearchDto> findBySearchOption(Pageable pageable, String memberId, String name, String email, String stat) {
         JPQLQuery<UserSearchDto> result = queryFactory.select(new QUserSearchDto(qUserEntity.memberId, qUserEntity.name, qUserEntity.email, qUserEntity.stat, qUserEntity.loginDat))
                 .from(qUserEntity)
-                .where(containMemberId(memberId), containName(name), containEmail(email), qUserEntity.grade.eq("ROLE_USER")).orderBy(qUserEntity.loginDat.desc());
+                .where(containMemberId(memberId), containName(name), containEmail(email), containStat(stat),qUserEntity.grade.eq("ROLE_USER")).orderBy(qUserEntity.loginDat.desc());
         List<UserSearchDto> content = this.getQuerydsl().applyPagination(pageable, result).fetch();
         Long total = result.fetchCount();
         return new PageImpl<UserSearchDto>(content, pageable, total);
@@ -49,11 +49,18 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
         return qUserEntity.name.containsIgnoreCase(name);
     }
 
-    private BooleanExpression containEmail(String gu) {
-        if (gu == null || gu.isEmpty()) {
+    private BooleanExpression containEmail(String Email) {
+        if (Email == null || Email.isEmpty()) {
             return null;
         }
-        return qUserEntity.email.containsIgnoreCase(gu);
+        return qUserEntity.email.containsIgnoreCase(Email);
+    }
+
+    private BooleanExpression containStat(String Stat) {
+        if (Stat == null || Stat.isEmpty()) {
+            return null;
+        }
+        return qUserEntity.stat.containsIgnoreCase(Stat);
     }
 
 }

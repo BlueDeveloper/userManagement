@@ -24,7 +24,7 @@ public class AdminService {
     private final UserRepository userRepository;
 
     public ResponseEntity<ApiResponseEntity> userList(Pageable pageable, UserDto userDto) {
-        Page<UserSearchDto> page = userRepository.findBySearchOption(pageable, userDto.getMemberId(), userDto.getName(), userDto.getEmail());
+        Page<UserSearchDto> page = userRepository.findBySearchOption(pageable, userDto.getMemberId(), userDto.getName(), userDto.getEmail(), userDto.getStat());
         page.getContent().stream().forEach(e -> {
             if (e.getStat().equalsIgnoreCase("01")) e.setStat("활동");
             if (e.getStat().equalsIgnoreCase("02")) e.setStat("정지");

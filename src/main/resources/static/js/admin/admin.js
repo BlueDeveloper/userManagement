@@ -43,13 +43,15 @@ function search(data) {
 
 function beforeSearchFromBtn(e) {
     let obj = {"page": 0, "size": 5}
-    obj[$(".searchSct option:selected").val()] = $(".searchInp").val()
+    obj[$(".searchSct.defaultSct option:selected").val()] = $(".searchInp").val()
+    obj["stat"] = $(".searchSct.statSct option:selected").val()
     search(obj);
 }
 
 function beforeSearchFromNums(e) {
     let obj = {"page": Number(e.target.dataset.num) - 1, "size": "5"}
     obj[$(".searchSct option:selected").val()] = $(".searchInp").val()
+    obj["stat"] = $(".searchSct.statSct option:selected").val()
     search(obj);
 }
 

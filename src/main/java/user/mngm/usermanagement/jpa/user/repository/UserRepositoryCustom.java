@@ -6,5 +6,5 @@ import user.mngm.usermanagement.jpa.user.dto.UserSearchDto;
 import user.mngm.usermanagement.jpa.user.entity.UserEntity;
 
 public interface UserRepositoryCustom {
-    Page<UserSearchDto> findBySearchOption(Pageable pageable, String memberId, String name, String email);
+    Page<UserSearchDto> findBySearchOption(Pageable pageable, String memberId, String name, String email, String stat);
 }
