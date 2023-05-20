@@ -1,69 +1,69 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
-<head>
-    <link rel="stylesheet" href="/static/css/user/myPage.css">
-    <script src="/static/js/user/myPage.js"></script>
-</head>
-<body>
-    <section layout:fragment="content" class="myPage container">
-        <div class="titleDiv">
-            <span class="myPageTitle">마이페이지</span>
-        </div>
+    <head>
+        <link rel="stylesheet" href="/static/css/user/myPage.css">
+        <script src="/static/js/user/myPage.js"></script>
+    </head>
+    <body>
+        <section layout:fragment="content" class="myPage container">
+            <div class="titleDiv">
+                <span class="myPageTitle">마이페이지</span>
+            </div>
 
-        <!--회원가입-->
-        <div class="myInfo">
-            <div class="box bt-2 bb-1">
-                <span class="boxName">이름</span>
-                <span class="boxInfo">
+            <!--회원가입-->
+            <div class="myInfo">
+                <div class="box bt-2 bb-1">
+                    <span class="boxName">이름</span>
+                    <span class="boxInfo">
                     <input type="text" class="infoText form-control" id="name" disabled>
                 </span>
-            </div>
-            <div class="box bb-1">
-                <span class="boxName">아이디</span>
-                <span class="boxInfo">
+                </div>
+                <div class="box bb-1">
+                    <span class="boxName">아이디</span>
+                    <span class="boxInfo">
                     <input type="text" class="infoText form-control" id="memberId" disabled>
                 </span>
-            </div>
-            <div class="box bb-1">
-                <span class="boxName">이메일</span>
-                <span class="boxInfo">
+                </div>
+                <div class="box bb-1">
+                    <span class="boxName">이메일</span>
+                    <span class="boxInfo">
                     <input type="text" class="infoText form-control" id="email" disabled>
                     <button type="button" class="emailBtn changeEmail btn btn-outline-dark">이메일변경</button>
                     <button type="button" class="authEmail btn btn-outline-dark d-none">인증하기</button>
                     <button type="button" class="emailBtn cancleChange btn btn-outline-dark d-none">이메일변경취소</button>
                 </span>
-            </div>
-            <div class="box bb-2">
-                <span class="boxName">비밀번호</span>
-                <span class="boxInfo">
+                </div>
+                <div class="box bb-2">
+                    <span class="boxName">비밀번호</span>
+                    <span class="boxInfo">
                     <button type="button" class="beforeChgPw btn btn-outline-dark">비밀번호변경</button>
                 </span>
-            </div>
-            <div class="mypageAuthModal authModal transform-50-50 d-none">
-                <div class="authNumDiv form-floating">
-                    <input type="text" class="form-control" id="auth" name="auth" autocomplete="off">
-                    <label for="auth">인증번호</label>
                 </div>
-                <span class="timeOut" style="">
+                <div class="mypageAuthModal authModal transform-50-50 d-none">
+                    <div class="authNumDiv form-floating">
+                        <input type="text" class="form-control" id="auth" name="auth" autocomplete="off">
+                        <label for="auth">인증번호</label>
+                    </div>
+                    <span class="timeOut">
                 </span>
-                <div class="authBtnDiv" style="">
-                    <button type="button" class="btn btn-outline-success checkAuthNumberBtn">인증확인</button>
-                    <button type="button" class="btn btn-outline-danger checkCancel">취소</button>
+                    <div class="authBtnDiv">
+                        <button type="button" class="btn btn-outline-success checkAuthNumberBtn">인증확인</button>
+                        <button type="button" class="btn btn-outline-danger checkCancel">취소</button>
+                    </div>
+                </div>
+                <div class="chgPwModal transform-50-50 d-none">
+                    <span class="pwChgTitle">비밀번호 변경</span>
+                    <div class="pwDiv">
+                        <input type="password" class="pwInp" id="op" placeholder="기존 비밀번호">
+                        <input type="password" class="pwInp" id="np1" placeholder="신규 비밀번호">
+                        <input type="password" class="pwInp" id="np2" placeholder="비밀번호 확이">
+                    </div>
+                    <div class="pwBtnDiv">
+                        <button type="button" class="btn btn-outline-success changePwBtn">변경하기</button>
+                        <button type="button" class="btn btn-outline-danger chagnePwCancel">취소</button>
+                    </div>
                 </div>
             </div>
-            <div class="chgPwModal transform-50-50 d-none">
-                <span class="pwChgTitle">비밀번호 변경</span>
-                <div class="pwDiv">
-                    <input type="password" class="pwInp" id="op" placeholder="기존 비밀번호">
-                    <input type="password" class="pwInp" id="np1" placeholder="신규 비밀번호">
-                    <input type="password" class="pwInp" id="np2" placeholder="비밀번호 확이">
-                </div>
-                <div class="pwBtnDiv">
-                    <button type="button" class="btn btn-outline-success changePwBtn">변경하기</button>
-                    <button type="button" class="btn btn-outline-danger chagnePwCancel">취소</button>
-                </div>
-            </div>
-        </div>
-    </section>
-</body>
+        </section>
+    </body>
 </html>

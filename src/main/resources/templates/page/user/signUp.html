@@ -1,62 +1,62 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
-<head>
-    <link rel="stylesheet" href="/static/css/user/signUp.css">
-    <script src="/static/js/user/signUp.js"></script>
-</head>
-<body>
-    <section layout:fragment="content" class="signUp container">
-        <div class="titleDiv">
-            <div class="backArrowDiv">
-                <img class="backArrow hover d-none" src="/img/login/backArrow.png" alt="뒤로가기 아이콘">
-            </div>
-            <div class="signUpTitleIcon">
-                <img src="/img/common/profileImg.png" alt="로그인 유저 아이콘">
-            </div>
-            <span class="signUpTitle">회원가입</span>
-        </div>
-
-        <!--회원가입-->
-        <div class="sign-up-form">
-            <div class="nameDiv form-floating">
-                <input type="text" class="form-control" id="name" name="name" autocomplete="off">
-                <label for="name">이름</label>
-            </div>
-
-            <div class="idDIv form-floating mt-u5">
-                <input type="text" class="form-control" id="memberId" name="memberId" autocomplete="off">
-                <label for="memberId">아이디</label>
-            </div>
-
-            <div class="pwdDiv form-floating mt-u5">
-                <input type="password" class="form-control" id="pwd" name="pwd">
-                <label for="pwd">패스워드</label>
-            </div>
-
-            <div class="emailDiv form-floating mt-u5">
-                <input type="email" class="form-control" id="email" name="email" autocomplete="off">
-                <label for="email">이메일</label>
-                <button type="button" class="btn btn-outline-secondary" id="sendAuth">인증하기</button>
-            </div>
-
-            <div class="joinCancleDiv">
-                <button type="button" class="joinBtn btn btn-outline-success">회원가입</button>
-                <button type="button" class="cancleBtn btn btn-outline-danger">취소</button>
-            </div>
-
-            <div class="singUp-auth-modal authModal d-none transform-50-50">
-                <div class="authNumDiv form-floating">
-                    <input type="text" class="form-control" id="auth" name="auth" autocomplete="off">
-                    <label for="auth">인증번호</label>
+    <head>
+        <link rel="stylesheet" href="/static/css/user/signUp.css">
+        <script src="/static/js/user/signUp.js"></script>
+    </head>
+    <body>
+        <section layout:fragment="content" class="signUp container">
+            <div class="titleDiv">
+                <div class="backArrowDiv">
+                    <img class="backArrow hover d-none" src="/img/login/backArrow.png" alt="뒤로가기 아이콘">
                 </div>
-                <span class="timeOut" style="">
+                <div class="signUpTitleIcon">
+                    <img src="/img/common/profileImg.png" alt="로그인 유저 아이콘">
+                </div>
+                <span class="signUpTitle">회원가입</span>
+            </div>
+
+            <!--회원가입-->
+            <div class="sign-up-form">
+                <div class="nameDiv form-floating">
+                    <input type="text" class="form-control" id="name" name="name" autocomplete="off">
+                    <label for="name">이름</label>
+                </div>
+
+                <div class="idDIv form-floating mt-u5">
+                    <input type="text" class="form-control" id="memberId" name="memberId" autocomplete="off">
+                    <label for="memberId">아이디</label>
+                </div>
+
+                <div class="pwdDiv form-floating mt-u5">
+                    <input type="password" class="form-control" id="pwd" name="pwd">
+                    <label for="pwd">패스워드</label>
+                </div>
+
+                <div class="emailDiv form-floating mt-u5">
+                    <input type="email" class="form-control" id="email" name="email" autocomplete="off">
+                    <label for="email">이메일</label>
+                    <button type="button" class="btn btn-outline-secondary" id="sendAuth">인증하기</button>
+                </div>
+
+                <div class="joinCancleDiv">
+                    <button type="button" class="joinBtn btn btn-outline-success">회원가입</button>
+                    <button type="button" class="cancleBtn btn btn-outline-danger">취소</button>
+                </div>
+
+                <div class="singUp-auth-modal authModal d-none transform-50-50">
+                    <div class="authNumDiv form-floating">
+                        <input type="text" class="form-control" id="auth" name="auth" autocomplete="off">
+                        <label for="auth">인증번호</label>
+                    </div>
+                    <span class="timeOut">
                 </span>
-                <div class="authBtnDiv" style="">
-                    <button type="button" class="btn btn-outline-success checkAuthNumberBtn">인증확인</button>
-                    <button type="button" class="btn btn-outline-danger checkCancel">취소</button>
+                    <div class="authBtnDiv">
+                        <button type="button" class="btn btn-outline-success checkAuthNumberBtn">인증확인</button>
+                        <button type="button" class="btn btn-outline-danger checkCancel">취소</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-</body>
+        </section>
+    </body>
 </html>

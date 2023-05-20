@@ -5,13 +5,13 @@
         <script src="/static/js/admin/admin.js"></script>
     </head>
     <body>
-        <section layout:fragment="content" class="admin container">
+        <section layout:fragment="content" class="admin container notOpen">
             <div class="titleDiv">
                 <span class="tabTitle">회원관리</span>
             </div>
-            <div class="contentDiv" style="">
+            <div class="contentDiv" >
                 <div th:replace="~{/page/admin/adminLeftMenu :: leftMenu}"></div>
-                <div class="center" style="width: 85%;height: 95%;border: 1px solid #ddd;">
+                <div class="center">
                     <h1>미오픈</h1>
                 </div>
             </div>
