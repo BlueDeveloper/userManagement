@@ -1,6 +1,5 @@
 const gbl = {timer: "", mailAuthYn: false}
 $(function () {
-    $(".authModal").removeClass("d-none");
     $("#sendAuth").on("click", authEmail)                           // 인증하기 버튼
     $(".checkAuthNumberBtn").on("click", beforeCheckAuthNum);       // 인증번호 확인 버튼
     $(".checkCancel").on("click", checkCancel)                      // 인증창 닫기
