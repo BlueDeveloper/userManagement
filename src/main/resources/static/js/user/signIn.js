@@ -12,6 +12,13 @@ $(function () {
 })
 
 function init() {
+    // 로그인 실패 시
+    const fStr = searchParam("fail")
+    console.log(decodeURI(location.href))
+    if (fStr !== "" && fStr !== null) {
+        alert(fStr);
+        history.pushState(null, null, location.pathname)
+    }
     $("#memberId").focus()
 }
 

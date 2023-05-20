@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -83,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             response.sendRedirect("/"); // 인증이 성공한 후에는 root로 이동
         }
 
-        public void updateLoginDat(String memberId){
+        public void updateLoginDat(String memberId) {
             Optional<UserEntity> userEntity = userRepository.findByMemberId(memberId);
             userEntity.get().setLoginDat(Utils.getSqlDateTime());
             userRepository.save(userEntity.get());
@@ -93,8 +96,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private class loginFailure implements AuthenticationFailureHandler {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-            System.out.println("exception : " + exception.toString());
-            response.sendRedirect("/front/view/signIn?fail"); // 인증이 실패하면 로그인 화면 유지
+            String failStr = "";
+            if (exception instanceof UsernameNotFoundException) {
+                failStr = "일치하는 계정이 없습니다. 다시 확인해 주십시오.";
+            } else if (exception instanceof BadCredentialsException || exception instanceof InternalAuthenticationServiceException) {
+                failStr = "아이디나 비밀번호가 맞지 않습니다. 다시 확인해 주십시오";
+            } else if (exception instanceof DisabledException || exception instanceof LockedException) {
+                failStr = "계정이 정지되었습니다.\r\n관리자에게 문의바랍니다.(010-2480-7840)";
+            } else if (exception instanceof CredentialsExpiredException) {
+                failStr = "비밀번호 유효기간이 만료 되었습니다.\r\n관리자에게 문의바랍니다.(010-2480-7840)\";";
+            } else {
+                failStr = "알 수 없는 오류가 발생했습니다.\r\n관리자에게 문의바랍니다.(010-2480-7840)\";";
+            }
+
+            response.sendRedirect("/front/view/signIn?fail=" + URLEncoder.encode(failStr, "UTF-8")); // 인증이 실패하면 로그인 화면 유지
         }
     }
 }
