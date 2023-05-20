@@ -28,7 +28,7 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
     public Page<UserSearchDto> findBySearchOption(Pageable pageable, String memberId, String name, String email) {
         JPQLQuery<UserSearchDto> result = queryFactory.select(new QUserSearchDto(qUserEntity.memberId, qUserEntity.name, qUserEntity.email, qUserEntity.stat, qUserEntity.loginDat))
                 .from(qUserEntity)
-                .where(containMemberId(memberId), containName(name), containEmail(email), qUserEntity.grade.eq("ROLE_USER")).orderBy(qUserEntity.crtDat.asc());
+                .where(containMemberId(memberId), containName(name), containEmail(email), qUserEntity.grade.eq("ROLE_USER")).orderBy(qUserEntity.loginDat.desc());
         List<UserSearchDto> content = this.getQuerydsl().applyPagination(pageable, result).fetch();
         Long total = result.fetchCount();
         return new PageImpl<UserSearchDto>(content, pageable, total);
