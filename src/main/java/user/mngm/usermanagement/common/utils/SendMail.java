@@ -22,21 +22,22 @@ public class SendMail {
     private String authCode; // 인증번호
 
     // 메일 내용 작성
-    public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
+    public MimeMessage createMessage(String to, String type) throws MessagingException, UnsupportedEncodingException {
         try {
             MimeMessage message = mailSender.createMimeMessage();
 
             message.addRecipients(RecipientType.TO, to);// 보내는 대상
-            message.setSubject("회원가입 이메일 인증");// 제목
+            message.setSubject(type + " 이메일 인증번호입니다.");// 제목
 
             String msgg = "";
             msgg += "<div style='margin:100px;'>";
             msgg += "<h1> 안녕하세요</h1>";
             msgg += "<br>";
-            msgg += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+            msgg += "<p>아래 코드를 인증번호 입력창으로 돌아가 입력해주세요<p>";
             msgg += "<br>";
             msgg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
-            msgg += "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
+            msgg += "<br>";
+            msgg += "<br>";
             msgg += "<div style='font-size:130%'>";
             msgg += "CODE : <strong>";
             msgg += authCode + "</strong><div><br/> "; // 메일에 인증번호 넣기
@@ -81,9 +82,9 @@ public class SendMail {
 
     // 메일 발송
     // MimeMessage 객체 안에 내가 전송할 메일의 내용을 담는다.
-    public String sendSimpleMessage(String to) throws Exception {
+    public String sendSimpleMessage(String to, String type) throws Exception {
         authCode = createKey(); // 랜덤 인증번호 생성
-        MimeMessage message = createMessage(to); // 메일 발송
+        MimeMessage message = createMessage(to, type); // 메일 발송
 
         try {
             mailSender.send(message);

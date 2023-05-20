@@ -72,16 +72,22 @@ public class UserService implements UserDetailsService {
             // 회원가입 시
             if (authDto.getAuthType().equalsIgnoreCase("J")) {
                 Optional<UserEntity> userEntity = userRepository.findByEmail(authDto.getEmail());
-                if (userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "이미 등록된 이메일 입니다.", HttpStatus.BAD_REQUEST);
+                if (userEntity.isPresent())
+                    return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "이미 등록된 이메일 입니다.", HttpStatus.BAD_REQUEST);
             }
 
             // 비밀번호 찾기 일 경우 ID로 사용자 조회
             if (authDto.getAuthType().equalsIgnoreCase("P")) {
                 Optional<UserEntity> userEntity = userRepository.findByMemberId(authDto.getId());
-                if (!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+                if (!userEntity.isPresent())
+                    return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
             }
+            String type = "";
+            if (authDto.getAuthType().equalsIgnoreCase("J")) type = "회원가입";
+            if (authDto.getAuthType().equalsIgnoreCase("I")) type = "아이디찾기";
+            if (authDto.getAuthType().equalsIgnoreCase("P")) type = "비밀번호찾기";
 
-            String authNum = sendMail.sendSimpleMessage(userEmail); //메일전송
+            String authNum = sendMail.sendSimpleMessage(userEmail, type); //메일전송
             // 메일전송 실패시 return
             if (StringUtils.isEmpty(authNum)) {
                 return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "인증번호 전송 실패\r\n관리자에게 문의바랍니다.(010-2480-7840)", HttpStatus.BAD_REQUEST);
@@ -152,7 +158,8 @@ public class UserService implements UserDetailsService {
 
             if (authDto.getAuthType().equalsIgnoreCase("P")) { // 비밀번호 찾기
                 Optional<UserEntity> userEntity = userRepository.findByMemberId(authDto.getId());
-                if (!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+                if (!userEntity.isPresent())
+                    return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
                 return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "인증되었습니다.", HttpStatus.OK); // 보안을 위해 성공여부만 전송
             }
 
@@ -228,7 +235,8 @@ public class UserService implements UserDetailsService {
     @Transactional
     public ResponseEntity<ApiResponseEntity> emailUpdate(UserDto userDto) {
         Optional<UserEntity> userEntity = userRepository.findByMemberId(userDto.getMemberId());
-        if (!userEntity.isPresent()) return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+        if (!userEntity.isPresent())
+            return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
         userEntity.get().setEmail(userDto.getEmail()); // JPA 변경감지(Dirty Checking)
 
         // 업데이트된 정보를  Spring Security로 인증해서 HttpSession에 반영
