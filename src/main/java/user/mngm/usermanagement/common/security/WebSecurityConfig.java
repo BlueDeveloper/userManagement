@@ -1,9 +1,7 @@
 package user.mngm.usermanagement.common.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,8 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import user.mngm.usermanagement.common.exception.AjaxAuthenticationEntryPoint;
-import user.mngm.usermanagement.common.response.ApiResponseEntity;
-import user.mngm.usermanagement.common.response.CodeEnum;
 import user.mngm.usermanagement.common.utils.Utils;
 import user.mngm.usermanagement.jpa.user.entity.UserEntity;
 import user.mngm.usermanagement.jpa.user.repository.UserRepository;
@@ -26,14 +22,8 @@ import user.mngm.usermanagement.jpa.user.service.UserService;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 
 /* Security 설정 */

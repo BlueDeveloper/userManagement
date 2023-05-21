@@ -1,23 +1,17 @@
 package user.mngm.usermanagement.mybatis.test.service.impl;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import user.mngm.usermanagement.mybatis.test.service.TestService;
-import user.mngm.usermanagement.mybatis.test.service.dao.TestDao;
-import user.mngm.usermanagement.mybatis.test.service.vo.ResponseVo;
-import user.mngm.usermanagement.mybatis.test.service.vo.UserVo;
 
 @Service("TestService")
 public class TestServiceImpl implements TestService {
 
-    @Autowired
+    /*@Autowired
     private TestDao testDao;
 
-    /*
+    *//*
      * 일반유저 회원가입
-     */
+     *//*
     @Override
     public ResponseVo userSignUp(UserVo vo) {
 
@@ -84,6 +78,6 @@ public class TestServiceImpl implements TestService {
             return resVo;
         }
         return resVo;
-    }
+    }*/
 
 }

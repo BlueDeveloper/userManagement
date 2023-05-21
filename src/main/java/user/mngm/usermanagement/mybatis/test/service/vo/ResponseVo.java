@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class ResponseVo {
     
-    private int status = 200;
+    /*private int status = 200;
 
     private boolean success = true;
 
     private String error;
 
-    private String message;
+    private String message;*/
 
 }

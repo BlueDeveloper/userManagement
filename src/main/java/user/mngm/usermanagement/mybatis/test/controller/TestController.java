@@ -1,24 +1,11 @@
 package user.mngm.usermanagement.mybatis.test.controller;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.mail.MessagingException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import user.mngm.usermanagement.common.utils.SendMail;
-import user.mngm.usermanagement.common.utils.redis.RedisPathEnum;
-import user.mngm.usermanagement.common.utils.redis.RedisUtil;
-import user.mngm.usermanagement.mybatis.test.service.TestService;
-import user.mngm.usermanagement.mybatis.test.service.vo.ResponseVo;
-import user.mngm.usermanagement.mybatis.test.service.vo.UserVo;
 
 @RestController
 public class TestController {
 
-    @Autowired
+    /*@Autowired
     private TestService testService;
 
     @Autowired
@@ -67,6 +54,6 @@ public class TestController {
         System.out.println("value : " + value);
 
         return value;
-    }
+    }*/
 
 }

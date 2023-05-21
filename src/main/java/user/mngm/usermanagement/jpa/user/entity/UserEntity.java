@@ -1,22 +1,21 @@
 package user.mngm.usermanagement.jpa.user.entity;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.*;
-
+import lombok.Builder;
+import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import lombok.Builder;
-import lombok.Data;
 import user.mngm.usermanagement.common.jpa.GenUuid;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity //[JPA] --> DB 테이블과 1:1 매칭되는 클래스 선언
 @Table(name = "TB_USER") //[JPA] --> 테이블 명

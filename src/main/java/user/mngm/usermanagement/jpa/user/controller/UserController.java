@@ -1,14 +1,13 @@
 package user.mngm.usermanagement.jpa.user.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import user.mngm.usermanagement.common.response.ApiResponseEntity;
-import user.mngm.usermanagement.common.response.CodeEnum;
 import user.mngm.usermanagement.jpa.user.dto.AuthDto;
 import user.mngm.usermanagement.jpa.user.dto.UserDto;
 import user.mngm.usermanagement.jpa.user.entity.UserEntity;
