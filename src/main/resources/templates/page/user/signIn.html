@@ -62,18 +62,19 @@
                 </div>
 
                 <!-- TODO 패스워드찾기 인증 성공 시 신규 패스워드로 변경하는 로직 추가 -->
-                <!--<div class="inputInfo pw form-floating">
-                    <input type="text" class="fEmail pw form-control" id="fPwEmail" style="background: #dcdcdc;">
-                    <label for="fPwEmail" style="right: unset">패스워드</label>
+                <div class="chPw form-floating d-none">
+                    <input type="password" class="chPwInp pw form-control" id="chPw1" style="background: #dcdcdc;">
+                    <label for="chPw1" style="right: unset">신규 비밀번호</label>
                 </div>
-                <div class="inputInfo pw form-floating" style="width: 100%;margin-top: 5%">
-                    <input type="text" class="fId pw form-control" id="fPwId" style="background: #dcdcdc;">
-                    <label for="fPwId" style="right: unset">패스워드</label>
-                </div>-->
+                <div class="chPw form-floating d-none" style="width: 100%;margin-top: 5%">
+                    <input type="password" class="chPwInp pw form-control" id="chPw2" style="background: #dcdcdc;">
+                    <label for="chPw2" style="right: unset">비밀번호 확인</label>
+                </div>
 
                 <span class="timeOut pw"></span>
                 <span class="authBtn sendAuthNumberBtn pw btn-outline-dark hover">인증번호 받기</span>
                 <span class="authBtn checkAuthNumberBtn pw btn-outline-dark hover d-none" data-authType="P">인증번호 확인</span>
+                <span class="changePwBtn pw btn-outline-dark hover d-none" data-authType="P">비밀번호 변경</span>
             </div>
 
 

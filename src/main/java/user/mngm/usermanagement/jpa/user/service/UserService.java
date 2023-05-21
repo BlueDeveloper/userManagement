@@ -251,14 +251,26 @@ public class UserService implements UserDetailsService {
      * @desc : 비밀번호 변경 서비스
      */
     @Transactional
-    public ResponseEntity<ApiResponseEntity> passwordUpdate(UserDto userDto) {
-        Optional<UserEntity> userEntity = userRepository.findByMemberId(userDto.getMemberId());
+    public ResponseEntity<ApiResponseEntity> passwordUpdate(UserDto userDto, String type) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (!encoder.matches(userDto.getPwd(), userEntity.get().getPwd())) {
-            return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "기존 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+        String msg = "";
+        if (type.equalsIgnoreCase("mypage")) {
+            Optional<UserEntity> userEntity = userRepository.findByMemberId(userDto.getMemberId());
+            if (!encoder.matches(userDto.getPwd(), userEntity.get().getPwd()))
+                return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "기존 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+            userEntity.get().pwdUpdate(encoder.encode(userDto.getPwd2())); // 신규 비밀번호 암호화 후 JPA 변경감지(Dirty Checking)
+            msg = "변경되었습니다.\r\n재로그인 해주시길 바랍니다.";
         }
-        userEntity.get().pwdUpdate(encoder.encode(userDto.getPwd2())); // 신규 비밀번호 암호화 후 JPA 변경감지(Dirty Checking)
-        return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, "변경되었습니다.\r\n재로그인 해주시길 바랍니다.", HttpStatus.OK);
+
+        if (type.equalsIgnoreCase("findPw")) {
+            Optional<UserEntity> userEntity = userRepository.findByMemberIdAndEmail(userDto.getMemberId(), userDto.getEmail());
+            if (!userEntity.isPresent())
+                return ApiResponseEntity.setResponse(null, CodeEnum.FAIL, "등록되지않은 사용자 입니다.", HttpStatus.BAD_REQUEST);
+            userEntity.get().pwdUpdate(encoder.encode(userDto.getPwd())); // 신규 비밀번호 암호화 후 JPA 변경감지(Dirty Checking)
+            msg = "변경되었습니다.";
+        }
+
+        return ApiResponseEntity.setResponse(null, CodeEnum.SUCCESS, msg, HttpStatus.OK);
     }
 
     /**

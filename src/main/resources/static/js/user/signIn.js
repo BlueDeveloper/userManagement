@@ -7,6 +7,7 @@ $(function () {
     $(".sendAuthNumberBtn.id").on("click", findId);                 // 아이디 찾기의 인증번호 찾기
     $(".sendAuthNumberBtn.pw").on("click", findPw);                 // 아이디 찾기의 인증번호 찾기
     $(".checkAuthNumberBtn").on("click", beforeCheckAuthNum);       // 인증번호 확인 버튼
+    $(".changePwBtn").on("click", changePwBtn);                     // 비밀번호변경
     $(".backArrow").on("click", backArrow);                         // 뒤로가기 버튼 클릭
     $("#pwd").on("keydown", enterLogin);                            // 비밀번호 엔터 로그인
 })
@@ -94,19 +95,44 @@ function beforeCheckAuthNum(e) {
                 authType: authType
             },
             (data) => {
-                // 비밀번호 변경 프로세스 추가
+                alert("인증되었습니다.")
+                $(".inputAuth.pw, .authBtn.pw").addClass("d-none")
+                $(".chPw, .changePwBtn").removeClass("d-none")
+                clearInterval(gbl.timer);
             })
     }
 }
 
+function changePwBtn() {
+    const n1 = $("#chPw1").val();
+    const n2 = $("#chPw2").val();
+    if (n1 === "") {
+        alert("신규 비밀번호 항목을 입력해주세요");
+    } else if (n2 === "") {
+        alert("비밀번호 확인 항목을 입력해주세요");
+    } else if (n1 !== n2) {
+        alert("비밀번호가 일치하지 않습니다.")
+    } else {
+        ajaxCall("POST", "/api/send/passwordUpdate?type=findPw", {
+                memberId: $("#fPwId").val(),
+                email: $("#fPwEmail").val(),
+                pwd: n1
+            }, true, null,
+            (data) => {
+                alert(data.msg)
+                location.href = "/front/view/signIn";
+            }, null)
+    }
+}
+
 function backArrow() {
-    $(`.loginTitle`).html(`로그인`).css("font-size", "1.5rem")                      //Title 변경
-    $(`.findIdDiv, .findPwDiv, .backArrow`).addClass("d-none")                      //아이디/비밀번호 찾기 div + 뒤로가기 화살표 숨김
-    $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).removeClass("d-none");               //로그인 화면 SHOW
-    $(".inputInfo, .sendAuthNumberBtn").removeClass("d-none")                       //아이디/비밀번호에서 보여질 폼
-    $(".inputAuth, .checkAuthNumberBtn, .success").addClass("d-none")               //아이디/비밀번호에서 숨겨질 품
-    $(".timeOut, .fEmail, .fId, .authNum, .successId").val("").html("");            //인증 유효시간, 이메일, 아이디, 인증번호
-    clearInterval(gbl.timer)                                                        //타임아웃 Interval 초기화
+    $(`.loginTitle`).html(`로그인`).css("font-size", "1.5rem")                     //Title 변경
+    $(`.findIdDiv, .findPwDiv, .backArrow`).addClass("d-none")                                  //아이디/비밀번호 찾기 div + 뒤로가기 화살표 숨김
+    $(`.loginFrm, .findIdPwDiv, .loginBtnDiv`).removeClass("d-none");                           //로그인 화면 SHOW
+    $(".inputInfo, .sendAuthNumberBtn").removeClass("d-none")                                   //아이디/비밀번호에서 보여질 폼
+    $(".inputAuth, .checkAuthNumberBtn, .success, .chPw, .changePwBtn").addClass("d-none")      //아이디/비밀번호에서 숨겨질 품
+    $(".timeOut, .fEmail, .fId, .authNum, .successId, .chPwInp").val("").html("");                 //인증 유효시간, 이메일, 아이디, 인증번호
+    clearInterval(gbl.timer)                                                                           //타임아웃 Interval 초기화
 }
 
 function enterLogin(e) {

@@ -108,7 +108,7 @@ function changePwBtn() {
     } else if (n1 !== n2) {
         alert("비밀번호가 일치하지 않습니다.")
     } else {
-        ajaxCall("POST", "/api/user/passwordUpdate", {memberId: gbl.ori.memberId, pwd: o, pwd2: n1}, true, null,
+        ajaxCall("POST", "/api/send/passwordUpdate?type=mypage", {memberId: gbl.ori.memberId, pwd: o, pwd2: n1}, true, null,
             (data) => {
                 alert(data.msg)
                 location.href = "/api/user/signOut";

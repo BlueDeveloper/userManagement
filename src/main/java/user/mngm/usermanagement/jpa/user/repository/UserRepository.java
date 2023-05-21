@@ -14,5 +14,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String>, UserR
     //email를 기반으로 유저 조회 [SELECT * FROM TB_USER WHERE ID = email]
     Optional<UserEntity> findByEmail(String email);
 
+    //memberId & email 기반으로 유저 조회
+    Optional<UserEntity> findByMemberIdAndEmail(String memberId, String email);
+
 
 }
