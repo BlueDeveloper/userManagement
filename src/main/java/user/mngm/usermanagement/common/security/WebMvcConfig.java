@@ -1,18 +1,27 @@
 package user.mngm.usermanagement.common.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import user.mngm.usermanagement.jpa.accessLog.repository.AccessLogRepository;
 
 
 /* mvc 관련 */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    @Autowired
+    private AccessLogRepository accessLogRepository;
 
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {"classpath:/static/", "classpath:/public/", "classpath:/", "classpath:/resources/", "classpath:/META-INF/resources/"};
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new WebInterceptor(accessLogRepository)).addPathPatterns("/**").excludePathPatterns("/static/**").excludePathPatterns("/img/**");
+    }
 
     /**
      * 주소의 기본적인 형태
