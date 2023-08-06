@@ -21,7 +21,7 @@ public class WebInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String rUri = request.getRequestURI();
-        String rHost = request.getHeader("host");
+        String rHost = request.getRemoteAddr();
         String referer = request.getHeader("referer");
 
 
