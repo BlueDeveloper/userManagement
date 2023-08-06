@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import user.mngm.usermanagement.common.utils.Utils;
 import user.mngm.usermanagement.jpa.accessLog.entity.AccessLogEntity;
 import user.mngm.usermanagement.jpa.accessLog.repository.AccessLogRepository;
 
@@ -21,7 +22,7 @@ public class WebInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String rUri = request.getRequestURI();
-        String rHost = request.getRemoteAddr();
+        String rHost = Utils.getClientIP(request);
         String referer = request.getHeader("referer");
 
 
