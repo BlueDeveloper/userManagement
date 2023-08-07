@@ -8,7 +8,7 @@
             <a sec:authorize="hasRole('ANONYMOUS')" href="/front/view/signIn">로그인</a>
             <a sec:authorize="hasRole('ANONYMOUS')" href="/front/view/signUp">회원가입</a>
             <a sec:authorize="hasRole('USER')" href="/front/user/myPage">마이페이지</a>
-            <a sec:authorize="hasRole('ADMIN')" href="/front/admin/myPage">관리자</a>
+            <a sec:authorize="hasRole('ADMIN')" href="/front/admin/userMng">관리자</a>
             <a sec:authorize="hasAnyRole('USER','ADMIN')" href="/api/user/signOut">로그아웃</a>
         </div>
     </header>

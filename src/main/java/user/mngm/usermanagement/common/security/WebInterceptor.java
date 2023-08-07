@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import user.mngm.usermanagement.common.utils.Utils;
-import user.mngm.usermanagement.jpa.accessLog.entity.AccessLogEntity;
-import user.mngm.usermanagement.jpa.accessLog.repository.AccessLogRepository;
+import user.mngm.usermanagement.jpa.admin.entity.AccessLogEntity;
+import user.mngm.usermanagement.jpa.admin.repository.AccessLogRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,19 +18,19 @@ public class WebInterceptor implements HandlerInterceptor {
 
 
 
-    /* 클라이언트 요청을 컨트롤러에 전달하기 전에 호출됨, false리턴 시 컨트롤러를 호출하지 않음 */ 
+    /* 클라이언트 요청을 컨트롤러에 전달하기 전에 호출됨, false리턴 시 컨트롤러를 호출하지 않음 */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String rUri = request.getRequestURI();
-        String rHost = Utils.getClientIP(request);
+        String rHost = Utils.getClientIP(request); // 접속자 아이피
         String referer = request.getHeader("referer");
-
 
 
         if(referer != null || rUri.equalsIgnoreCase("/")){
             AccessLogEntity accessLogEntity = new AccessLogEntity();
             accessLogEntity.setRUri(rUri);
             accessLogEntity.setRHost(rHost);
+            accessLogEntity.setAccDat(Utils.getStringDateTime());
             accessLogRepository.save(accessLogEntity);
         }
 

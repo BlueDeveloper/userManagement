@@ -46,3 +46,11 @@ function calPageNum(page, callBack) {
     pageNumHtml += `<span class="last hover num" data-num="${totalPages}"></span>`
     return pageNumHtml
 }
+
+/**********************************************
+ * 날짜 포맷 yyyyMMddHHmmss -> yyyy/MM/dd HH:mm:ss
+ * @param date - 파싱할 날짜 문자열
+ *********************************************/
+function dateFormat(date) {
+    return `${date.substring(0,4)}/${date.substring(4,6)}/${date.substring(6,8)} ${date.substring(8,10)}:${date.substring(10,12)}:${date.substring(12,14)}`
+}

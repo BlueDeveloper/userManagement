@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import user.mngm.usermanagement.jpa.accessLog.repository.AccessLogRepository;
+import user.mngm.usermanagement.jpa.admin.repository.AccessLogRepository;
 
 
 /* mvc 관련 */
@@ -20,7 +20,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new WebInterceptor(accessLogRepository)).addPathPatterns("/**").excludePathPatterns("/static/**").excludePathPatterns("/img/**").excludePathPatterns("/favicon.ico");
+        registry.addInterceptor(new WebInterceptor(accessLogRepository)).addPathPatterns("/**")
+                .excludePathPatterns("/static/**")
+                .excludePathPatterns("/bootstrap/**")
+                .excludePathPatterns("/css/**")
+                .excludePathPatterns("/font/**")
+                .excludePathPatterns("/img/**")
+                .excludePathPatterns("/jquery/**")
+                .excludePathPatterns("/js/**")
+                .excludePathPatterns("/favicon.ico");
     }
 
     /**
@@ -57,7 +65,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/front/user/myPage").setViewName("/page/user/myPage");//{유저_마이페이지}
 
         //{관리자}
-        registry.addViewController("/front/admin/myPage").setViewName("/page/admin/adminPage");//{관리자_페이지}
+        registry.addViewController("/front/admin/userMng").setViewName("/page/admin/userMng");//{관리자_페이지}
+        registry.addViewController("/front/admin/accessLog").setViewName("/page/admin/accessLog");//{관리자_페이지}
         registry.addViewController("/front/admin/notOpen").setViewName("/page/admin/notOpen");//{관리자_페이지}
 
 //        //{공지사항}

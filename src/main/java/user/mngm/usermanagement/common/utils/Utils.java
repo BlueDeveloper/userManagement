@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class Utils {
@@ -29,10 +31,17 @@ public class Utils {
         }
     }
 
+    // DB의 날짜관련 컬럼 타입이 DATE인 경우에 자바에서 INSERT하기 위해서 sql.date타입의 데이터를 생성해줌
     public static Date getSqlDateTime(){
         return new java.sql.Date(new java.util.Date().getTime());
     }
 
+    // DB의 날짜관련 컬럼 타입이 VARCHAR2인 경우에 자바에서 INSERT하기 위해서 String 타입의 데이터를 생성해줌 (포맷 : yyyyMMddHHmmss)
+    public static String getStringDateTime(){
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
+    
+    // 현재 접속자의 실제 IP주소를 리턴함
     public static String getClientIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
 

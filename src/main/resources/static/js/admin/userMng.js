@@ -5,23 +5,14 @@ $(function () {
 })
 
 function init() {
-    search()
+    search("/api/admin/userList", "", drowUserList)
     leftMenu();
 }
 
-function leftMenu() {
-    const menu = searchParam("menu");
-    $(".leftMenu").removeClass("active");
-    (menu === null) ? $(".leftMenu.tab-1").addClass("active") : $(".leftMenu.tab-" + menu).addClass("active");
-}
-
-function search(data) {
-    data = (data === undefined) ? {"page": 0, "size": 5} : data
-    ajaxCall("POST", "/api/admin/userList", data, true, null,
-        (data) => {
-            let userHtml = ``
-            $.each(data.data.content, (idx, target) => {
-                userHtml += `<div class='usersDiv num${idx}'>
+function drowUserList(data) {
+    let userHtml = ``
+    $.each(data.data.content, (idx, target) => {
+        userHtml += `<div class='bodyDiv num${idx}'>
                                             <span>${target.name}</span><span>${target.memberId}</span>
                                             <span>${target.email}</span><span>${target.loginDat}</span>
                                             <span>
@@ -32,27 +23,26 @@ function search(data) {
                                                 </select>
                                             </span>
                                          </div>`
-            })
-            $(".body").html(userHtml); // 유저 리스트
-            $(".footer").html(calPageNum(data.data)) // 페이지 번호 세팅
-            $(".num").on("click", beforeSearchFromNums) // 페이지 이벤트 설정
-            $(".userStatSct").on("change", chagneUserStat) // 페이지 이벤트 설정
-
-        }, null)
+    })
+    $(".body").html(userHtml); // 유저 리스트
+    $(".footer").html(calPageNum(data.data)) // 페이지 번호 세팅
+    $(".num").on("click", beforeSearchFromNums) // 페이지 이벤트 설정
+    $(".userStatSct").on("change", chagneUserStat) // 페이지 이벤트 설정
 }
+
 
 function beforeSearchFromBtn(e) {
     let obj = {"page": 0, "size": 5}
     obj[$(".searchSct.defaultSct option:selected").val()] = $(".searchInp").val()
     obj["stat"] = $(".searchSct.statSct option:selected").val()
-    search(obj);
+    search("/api/admin/userList", obj, drowUserList);
 }
 
 function beforeSearchFromNums(e) {
     let obj = {"page": Number(e.target.dataset.num) - 1, "size": "5"}
     obj[$(".searchSct option:selected").val()] = $(".searchInp").val()
     obj["stat"] = $(".searchSct.statSct option:selected").val()
-    search(obj);
+    search("/api/admin/userList", obj, drowUserList);
 }
 
 function chagneUserStat(e) {
@@ -62,7 +52,7 @@ function chagneUserStat(e) {
             (data) => {
                 let obj = {"page": Number($(".currentPage")[0].dataset.num) - 1, "size": "5",}
                 obj[$(".searchSct option:selected").val()] = $(".searchInp").val()
-                search(obj)
+                search("/api/admin/userList", obj, drowUserList);
             }, null)
     }
 }

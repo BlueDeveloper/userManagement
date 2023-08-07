@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
     <head>
         <link rel="stylesheet" href="/static/css/admin/admin.css">
-        <script src="/static/js/admin/admin.js"></script>
+        <script src="/js/admin/userMng.js"></script>
     </head>
     <body>
         <section layout:fragment="content" class="admin container userMngmPage">
@@ -12,7 +12,7 @@
             <div class="contentDiv">
                 <div th:replace="~{/page/admin/adminLeftMenu :: leftMenu}"></div>
                 <div class="center">
-                    <div class="userMngmDiv">
+                    <div class="content">
                         <div class="searchDiv">
                             <span class="form-text searchType">검색구분</span>
                             <select class="searchSct defaultSct form-select">
@@ -30,7 +30,7 @@
                             </select>
                             <button class="searchBtn btn btn-outline-dark">검색</button>
                         </div>
-                        <div class="manageContent">
+                        <div class="listContent">
                             <div class="head">
                                 <span>이름</span>
                                 <span>아이디</span>

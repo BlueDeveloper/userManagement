@@ -1,7 +1,6 @@
 package user.mngm.usermanagement.jpa.user.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +10,6 @@ import user.mngm.usermanagement.common.response.ApiResponseEntity;
 import user.mngm.usermanagement.jpa.user.dto.AuthDto;
 import user.mngm.usermanagement.jpa.user.dto.UserDto;
 import user.mngm.usermanagement.jpa.user.entity.UserEntity;
-import user.mngm.usermanagement.jpa.user.service.AdminService;
 import user.mngm.usermanagement.jpa.user.service.UserService;
 
 
@@ -20,7 +18,6 @@ import user.mngm.usermanagement.jpa.user.service.UserService;
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
-    private AdminService adminService;
 
     // [유저] 이메일 인증번호 전송
     @PostMapping("/view/sendAuth")
@@ -58,15 +55,5 @@ public class UserController {
         return userService.emailUpdate(userDto);
     }
 
-    // [관리자] 유저관리를 위한 유저 목록
-    @PostMapping("/admin/userList")
-    public ResponseEntity<ApiResponseEntity> userList(Pageable pageable, UserDto userDto) {
-        return adminService.userList(pageable, userDto);
-    }
 
-    // [관리자] 유저관리를 위한 유저 목록
-    @PostMapping("/admin/changeUserStat")
-    public ResponseEntity<ApiResponseEntity> changeUserStat(Pageable pageable, UserDto userDto) {
-        return adminService.changeUserStat(userDto);
-    }
 }

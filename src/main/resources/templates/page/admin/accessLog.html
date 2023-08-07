@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/common/layout/layout.html}">
+<head>
+    <link rel="stylesheet" href="/static/css/admin/admin.css">
+    <script src="/js/admin/accessLog.js"></script>
+</head>
+<body>
+<section layout:fragment="content" class="admin container userMngmPage">
+    <div class="titleDiv">
+        <span class="tabTitle">접속기록</span>
+    </div>
+    <div class="contentDiv">
+        <div th:replace="~{/page/admin/adminLeftMenu :: leftMenu}"></div>
+        <div class="center">
+            <div class="content">
+                <div class="searchDiv">
+                    <span class="form-text searchType">IP검색</span>
+                    <input type="text" class="searchInp form-control rHost">
+                    <span class="form-text userStat">날짜검색</span>
+                    <input type="text" class="searchInp form-control accDatStart" placeholder="YYYYMMDD" maxlength="8" minlength="8">
+                    <span class="searchTilde">~</span>
+                    <input type="text" class="searchInp form-control accDatEnd" placeholder="YYYYMMDD" maxlength="8" minlength="8">
+                    <button class="searchBtn btn btn-outline-dark">검색</button>
+                </div>
+                <div class="listContent">
+                    <div class="head">
+                        <span>IP</span>
+                        <span>접속URL</span>
+                        <span>접속날짜</span>
+                    </div>
+                    <div class="body"></div>
+                    <div class="footer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

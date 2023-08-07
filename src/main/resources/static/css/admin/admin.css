@@ -4,6 +4,7 @@
 .tabTitle{width: 100%;height: 30%;display: flex;justify-content: start;align-items: center;margin-top: 10px;font-size: 1.5rem;font-weight: bold;}
 .contentDiv{width: 100%;height: 100%;margin-top: 2%;display: flex;justify-content: center;}
 
+
 /* 좌측메뉴 */
 .leftMenus{width: 15%;height: 95%;border: 1px solid #ddd;display: flex;flex-direction: column;align-items: center;}
 .leftMenu{width: 100%;height: 15%;border-bottom: 2px solid #ddd;display: flex;justify-content: start;align-items: center;text-indent: 10px;background: lightgray;}
@@ -20,23 +21,24 @@
 /* 컨텐츠 */
 
 
-/* 회원관리페이지 */
-.userMngmPage > .contentDiv > .center{width: 85%;height: 95%;border: 1px solid #ddd;}
-.center > .userMngmDiv{width: 100%;height: 100%;display: flex;flex-direction: column;justify-content: start;align-items: center;}
-.center > .userMngmDiv > .searchDiv{width: 90%;height: 15%;border: 1px solid;display: flex;justify-content: start;align-items: center;background: lightgrey}
-.userMngmDiv > .searchDiv{width: 90%;height: 15%;border: 1px solid;display: flex;justify-content: start;align-items: center;background: lightgrey}
-.userMngmDiv > .searchDiv > .searchType{width: 10%;font-size: 1.1rem;font-weight: bold;margin-left: 3%;}
-.userMngmDiv > .searchDiv > .searchSct{width: 12%;height: 45%;}
-.userMngmDiv > .searchDiv > .searchInp{width: 20%;height: 45%;margin-left: 1%;}
-.userMngmDiv > .searchDiv > .userStat{width: 10%;font-size: 1.1rem;font-weight: bold;margin-left: 5%;}
-.userMngmDiv > .searchDiv > .searchBtn{width: 19%;height: 45%;margin-left: 5%;text-align: center;}
-.userMngmDiv > .manageContent{width: 90%;height: 85%;border: 1px solid;display: flex;flex-direction: column;}
-.userMngmDiv > .manageContent > .head{width: 100%;height: 15%;display: flex;justify-content: space-around;align-items: center;}
-.userMngmDiv > .manageContent > .head > span{width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;}
-.userMngmDiv > .manageContent > .body{width: 100%;height: 75%;display: flex;flex-direction: column;align-items: start;justify-content: start;border-bottom: 1px solid black;}
-.userMngmDiv > .manageContent > .body > .usersDiv {width: 100%;height: 20%;display: flex;justify-content: space-around;align-items: start;}
-.userMngmDiv > .manageContent > .body > .usersDiv > span {width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;}
-.userMngmDiv > .manageContent > .footer{width: 30%;height: 10%;display: flex;align-items: center;align-self: center;justify-content: space-evenly;}
+/* 회원관리페이지, 접속기록*/
+.center{width: 85%;height: 95%;border: 1px solid #ddd;}
+.center > .content{width: 100%;height: 100%;display: flex;flex-direction: column;justify-content: start;align-items: center;}
+.center > .content > .searchDiv{width: 90%;height: 15%;border: 1px solid;display: flex;justify-content: start;align-items: center;background: lightgrey}
+.center > .content > .searchDiv{width: 90%;height: 15%;border: 1px solid;display: flex;justify-content: start;align-items: center;background: lightgrey}
+.center > .content > .searchDiv > .searchType{width: 10%;font-size: 1.1rem;font-weight: bold;margin-left: 3%;}
+.center > .content > .searchDiv > .searchSct{width: 12%;height: 45%;}
+.center > .content > .searchDiv > .searchInp{width: 20%;height: 45%;margin-left: 1%;}
+.center > .content > .searchDiv > .searchTilde{margin-left: 1%;}
+.center > .content > .searchDiv > .userStat{width: 10%;font-size: 1.1rem;font-weight: bold;margin-left: 5%;}
+.center > .content > .searchDiv > .searchBtn{width: 19%;height: 45%;margin-left: 5%;text-align: center;}
+.center > .content > .listContent{width: 90%;height: 85%;border: 1px solid;display: flex;flex-direction: column;}
+.center > .content > .listContent > .head{width: 100%;height: 15%;display: flex;justify-content: space-around;align-items: center;}
+.center > .content > .listContent > .head > span{width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;}
+.center > .content > .listContent > .body{width: 100%;height: 75%;display: flex;flex-direction: column;align-items: start;justify-content: start;border-bottom: 1px solid black;}
+.center > .content > .listContent > .body > .bodyDiv {width: 100%;height: 20%;display: flex;justify-content: space-around;align-items: start;}
+.center > .content > .listContent > .body > .bodyDiv > span {width: 20%;height: 100%;display: flex;align-items: center;justify-content: center;}
+.center > .content > .listContent > .footer{width: 30%;height: 10%;display: flex;align-items: center;align-self: center;justify-content: space-evenly;}
 
 /* 미오픈 */
 .admin.container.notOpen > .contentDiv > .center{width: 85%;height: 95%;border: 1px solid #ddd;}
